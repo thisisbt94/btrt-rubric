@@ -13,6 +13,8 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: #F5F1EA; }
   ::-webkit-scrollbar-thumb { background: #C8973A88; border-radius: 3px; }
+  textarea { resize: vertical; }
+  textarea:focus, input:focus { outline: none; border-color: #B8832A !important; box-shadow: 0 0 0 3px #C8973A18; }
 </style>
 </head>
 <body>
@@ -21,26 +23,19 @@
 const { useState } = React;
 
 const VALUES = [
-  { id: "honesty",      label: "Honesty",             icon: "◈", color: "#B8832A", desc: "Integrity, transparency, and trustworthiness in all actions" },
-  { id: "hardwork",     label: "Hard Work",            icon: "◆", color: "#1A5BB5", desc: "Dedication, diligence, and going above and beyond" },
-  { id: "moral",        label: "Moral Responsibility", icon: "◉", color: "#1E8055", desc: "Ethical conduct, accountability, and principled decisions" },
-  { id: "togetherness", label: "Togetherness",         icon: "◎", color: "#7B3AAF", desc: "Collaboration, unity, and lifting others up" },
-  { id: "vitality",     label: "Vitality",             icon: "◈", color: "#C03A20", desc: "Energy, innovation, and bringing life to every endeavour" },
+  { id: "honesty",       label: "Honesty",             icon: "◈", color: "#B8832A", desc: "Integrity, transparency, and trustworthiness in all actions" },
+  { id: "hardwork",      label: "Hard Work",            icon: "◆", color: "#1A5BB5", desc: "Dedication, diligence, and going above and beyond" },
+  { id: "moral",         label: "Moral Responsibility", icon: "◉", color: "#1E8055", desc: "Ethical conduct, accountability, and principled decisions" },
+  { id: "togetherness",  label: "Togetherness",         icon: "◎", color: "#7B3AAF", desc: "Collaboration, unity, and lifting others up" },
+  { id: "vitality",      label: "Vitality",             icon: "◈", color: "#C03A20", desc: "Energy, innovation, and bringing life to every endeavour" },
 ];
 
 const CRITERIA = [
-  { id: "excellence",   title: "Excellence in Output",    value: "Hard Work",           valueColor: "#1A5BB5", weight: 20, description: "Quality, consistency, and measurable impact of work delivered throughout the year.", indicators: ["Delivers work that sets a benchmark for quality","Consistently meets or exceeds targets and KPIs","Output creates visible impact on business or team goals","Takes ownership from start to finish without prompting"] },
-  { id: "integrity",    title: "Integrity & Transparency", value: "Honesty",             valueColor: "#B8832A", weight: 20, description: "Demonstrates consistent honesty, transparency, and ethical conduct in all situations.", indicators: ["Communicates openly even when it's uncomfortable","Takes responsibility for mistakes without deflecting","Builds trust through consistent, reliable behaviour","Does the right thing even when no one is watching"] },
-  { id: "collaboration",title: "Collaboration & Unity",    value: "Togetherness",        valueColor: "#7B3AAF", weight: 20, description: "Actively builds bridges across teams, departments, and geographies within YTL Group.", indicators: ["Goes beyond their team to support others","Creates an environment where peers feel valued","Shares knowledge, credit, and resources generously","Strengthens team cohesion during high-pressure moments"] },
-  { id: "responsibility",title:"Moral Responsibility",     value: "Moral Responsibility",valueColor: "#1E8055", weight: 20, description: "Acts with principled accountability — to the organisation, community, and environment.", indicators: ["Demonstrates ethical judgment in complex situations","Champions responsible practices (sustainability, inclusion, fairness)","Considers impact on stakeholders beyond immediate task","Leads by example in upholding YTL Group standards"] },
-  { id: "vitality",     title: "Vitality & Innovation",   value: "Vitality",            valueColor: "#C03A20", weight: 20, description: "Brings energy, fresh thinking, and initiative that pushes YTL Group forward.", indicators: ["Proactively identifies problems and drives solutions","Brings new ideas that improve processes or outcomes","Energises others through enthusiasm and commitment","Adapts positively and fast to change and new challenges"] },
-];
-
-const JUDGE_PANELS = [
-  { role: "Peers",                        weight: 25, icon: "◎", description: "Same-level colleagues who observe day-to-day behaviour, collaboration style, and cultural contribution." },
-  { role: "HOD / Team Lead",              weight: 35, icon: "◆", description: "Direct managers who assess output quality, reliability, growth trajectory, and professional conduct." },
-  { role: "Directors & Senior Leadership",weight: 25, icon: "◈", description: "Senior leaders evaluating strategic contribution, values embodiment, and leadership potential." },
-  { role: "HR Panel",                     weight: 15, icon: "◉", description: "HR representatives ensuring fairness, eligibility, and alignment with YTL Group policies." },
+  { id: "excellence",    title: "Excellence in Output",    value: "Hard Work",            valueColor: "#1A5BB5", weight: 20, description: "Quality, consistency, and measurable impact of work delivered throughout the year.", indicators: ["Delivers work that sets a benchmark for quality","Consistently meets or exceeds targets and KPIs","Output creates visible impact on business or team goals","Takes ownership from start to finish without prompting"] },
+  { id: "integrity",     title: "Integrity & Transparency",value: "Honesty",              valueColor: "#B8832A", weight: 20, description: "Demonstrates consistent honesty, transparency, and ethical conduct in all situations.", indicators: ["Communicates openly even when it's uncomfortable","Takes responsibility for mistakes without deflecting","Builds trust through consistent, reliable behaviour","Does the right thing even when no one is watching"] },
+  { id: "collaboration", title: "Collaboration & Unity",   value: "Togetherness",         valueColor: "#7B3AAF", weight: 20, description: "Actively builds bridges across teams, departments, and geographies within YTL Group.", indicators: ["Goes beyond their team to support others","Creates an environment where peers feel valued","Shares knowledge, credit, and resources generously","Strengthens team cohesion during high-pressure moments"] },
+  { id: "responsibility",title: "Moral Responsibility",    value: "Moral Responsibility", valueColor: "#1E8055", weight: 20, description: "Acts with principled accountability — to the organisation, community, and environment.", indicators: ["Demonstrates ethical judgment in complex situations","Champions responsible practices (sustainability, inclusion, fairness)","Considers impact on stakeholders beyond immediate task","Leads by example in upholding YTL Group standards"] },
+  { id: "vitality",      title: "Vitality & Innovation",   value: "Vitality",             valueColor: "#C03A20", weight: 20, description: "Brings energy, fresh thinking, and initiative that pushes YTL Group forward.", indicators: ["Proactively identifies problems and drives solutions","Brings new ideas that improve processes or outcomes","Energises others through enthusiasm and commitment","Adapts positively and fast to change and new challenges"] },
 ];
 
 const SCALE = [
@@ -51,25 +46,31 @@ const SCALE = [
   { score: "1–2",  label: "Below Expectations", desc: "Limited evidence this cycle. Significant development needed.", border: "#C03A20", bg: "#FBF0EE" },
 ];
 
-// Scoring logic:
-// Each criterion is scored 1-10, weighted at 20%.
-// Max per criterion = 10 × 20 = 200 points. Total max = 5 × 200 = 1000 points.
-// criterionPoints = score × weight (e.g. 10 × 20 = 200)
+const STORY_PROMPTS = [
+  { id: "challenge",  icon: "◆", color: "#1A5BB5", label: "The Challenge or Opportunity", prompt: "What situation, challenge, or opportunity did this person step up for — and what was at stake?", placeholder: "e.g. When our biggest client threatened to pull out mid-project, [Name] took the initiative to..." },
+  { id: "beyond",     icon: "◉", color: "#1E8055", label: "Going Beyond Their Role",       prompt: "How did they go beyond what was expected of them? What did they do that others might not have?", placeholder: "e.g. Without being asked, [Name] stayed back three weekends to help the team..." },
+  { id: "values",     icon: "◈", color: "#B8832A", label: "Values in Action",              prompt: "How did their actions reflect YTL Group's core values? Give a specific example.", placeholder: "e.g. Even under pressure, [Name] was transparent with the client about delays instead of..." },
+  { id: "impact",     icon: "◎", color: "#7B3AAF", label: "The Impact They Made",          prompt: "How did their contribution positively affect their team, department, customers, or the company?", placeholder: "e.g. Because of [Name]'s efforts, the team was able to deliver two weeks early, which led to..." },
+  { id: "memorable",  icon: "◈", color: "#C03A20", label: "Why It Matters This Year",      prompt: "What makes their contribution stand out and be remembered — specifically this year?", placeholder: "e.g. This year was especially difficult for the department, and [Name] was the reason we..." },
+];
+
+const labelStyle = { fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#8A7A68" };
+const card = { border: "1px solid #DDD5C8", borderRadius: 6, background: "#FFFFFF", padding: 24 };
 
 function App() {
-  const [activeTab, setActiveTab] = useState("criteria");
+  const [activeTab, setActiveTab]           = useState("criteria");
   const [expandedCriteria, setExpandedCriteria] = useState(null);
-  const [scores, setScores] = useState({});
+  const [scores, setScores]                 = useState({});
+  const [story, setStory]                   = useState({});
 
   const toggleCriteria = (id) => setExpandedCriteria(expandedCriteria === id ? null : id);
 
-  const filledCount = Object.keys(scores).length;
-  const totalScore = Object.entries(scores).reduce((sum, [id, s]) => {
+  const filledCount  = Object.keys(scores).length;
+  const totalScore   = Object.entries(scores).reduce((sum, [id, s]) => {
     const c = CRITERIA.find(x => x.id === id);
     return sum + (c ? s * c.weight : 0);
   }, 0);
-  const maxScore = 1000;
-  const percentage = Math.round((totalScore / maxScore) * 100);
+  const percentage   = Math.round((totalScore / 1000) * 100);
 
   const getScoreLabel = (pct) => {
     if (pct >= 90) return { label: "Exceptional Nominee", color: "#1E8055" };
@@ -80,77 +81,75 @@ function App() {
   };
   const result = getScoreLabel(percentage);
 
-  const panelColors = ["#B8832A","#1A5BB5","#7B3AAF","#1E8055"];
+  const storyFilled   = Object.values(story).filter(v => v && v.trim().length > 20).length;
+  const storyStrength = storyFilled === 0 ? null : storyFilled <= 2 ? { label: "Getting there — add more detail", color: "#B8832A" } : storyFilled <= 4 ? { label: "Good — a few more specifics will strengthen this", color: "#1A5BB5" } : { label: "Strong nomination — this tells a clear story", color: "#1E8055" };
+
   const tabs = [
-    { id: "criteria",    label: "Judging Criteria" },
-    { id: "panels",      label: "Judge Panels" },
-    { id: "scale",       label: "Scoring Scale" },
-    { id: "calculator",  label: "Score Calculator" },
+    { id: "criteria",   label: "Judging Criteria" },
+    { id: "story",      label: "Tell Their Story" },
+    { id: "scale",      label: "Scoring Scale" },
+    { id: "calculator", label: "Score Calculator" },
   ];
 
-  // shared styles
-  const card = { border:"1px solid #DDD5C8", borderRadius:6, background:"#FFFFFF", padding:24 };
-  const label = { fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase", color:"#8A7A68" };
-
   return (
-    <div style={{ minHeight:"100vh", background:"#F5F1EA", fontFamily:"Georgia,'Times New Roman',serif", color:"#1A1410" }}>
-      <div style={{ maxWidth:900, margin:"0 auto", padding:"0 24px 80px" }}>
+    <div style={{ minHeight: "100vh", background: "#F5F1EA", fontFamily: "Georgia,'Times New Roman',serif", color: "#1A1410" }}>
+      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px 80px" }}>
 
         {/* Header */}
-        <header style={{ textAlign:"center", paddingTop:64, paddingBottom:48 }}>
-          <div style={{ display:"inline-block", border:"1px solid #C8973A", borderRadius:2, padding:"5px 18px", fontSize:10, letterSpacing:"0.3em", color:"#B8832A", marginBottom:24, textTransform:"uppercase" }}>
+        <header style={{ textAlign: "center", paddingTop: 64, paddingBottom: 48 }}>
+          <div style={{ display: "inline-block", border: "1px solid #C8973A", borderRadius: 2, padding: "5px 18px", fontSize: 10, letterSpacing: "0.3em", color: "#B8832A", marginBottom: 24, textTransform: "uppercase" }}>
             YTL Group · Annual Recognition Programme
           </div>
-          <h1 style={{ fontSize:"clamp(40px,8vw,68px)", fontWeight:400, margin:"0 0 8px", lineHeight:1, letterSpacing:"-0.02em", color:"#1A1410" }}>BTRT Awards</h1>
-          <div style={{ width:60, height:2, background:"linear-gradient(90deg,transparent,#C8973A,transparent)", margin:"18px auto" }} />
-          <p style={{ fontSize:15, color:"#6A5A48", letterSpacing:"0.03em", maxWidth:480, margin:"0 auto", lineHeight:1.8, fontStyle:"italic" }}>
+          <h1 style={{ fontSize: "clamp(40px,8vw,68px)", fontWeight: 400, margin: "0 0 8px", lineHeight: 1, letterSpacing: "-0.02em", color: "#1A1410" }}>BTRT Awards</h1>
+          <div style={{ width: 60, height: 2, background: "linear-gradient(90deg,transparent,#C8973A,transparent)", margin: "18px auto" }} />
+          <p style={{ fontSize: 15, color: "#6A5A48", letterSpacing: "0.03em", maxWidth: 500, margin: "0 auto", lineHeight: 1.8, fontStyle: "italic" }}>
             Recognising the best of YTL Group — across honesty, hard work,<br/>moral responsibility, togetherness, and vitality.
           </p>
         </header>
 
         {/* Values Strip */}
-        <div style={{ display:"flex", gap:8, marginBottom:48, overflowX:"auto", paddingBottom:4 }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 48, overflowX: "auto", paddingBottom: 4 }}>
           {VALUES.map(v => (
-            <div key={v.id} style={{ flex:"1 0 140px", border:`1px solid ${v.color}30`, borderRadius:6, padding:"16px 14px", background:`${v.color}0A`, textAlign:"center" }}>
-              <div style={{ fontSize:18, color:v.color, marginBottom:6 }}>{v.icon}</div>
-              <div style={{ fontSize:10, letterSpacing:"0.15em", textTransform:"uppercase", color:v.color, marginBottom:5, fontWeight:600 }}>{v.label}</div>
-              <div style={{ fontSize:11, color:"#7A6A58", lineHeight:1.5 }}>{v.desc}</div>
+            <div key={v.id} style={{ flex: "1 0 140px", border: `1px solid ${v.color}30`, borderRadius: 6, padding: "16px 14px", background: `${v.color}0A`, textAlign: "center" }}>
+              <div style={{ fontSize: 18, color: v.color, marginBottom: 6 }}>{v.icon}</div>
+              <div style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: v.color, marginBottom: 5, fontWeight: 600 }}>{v.label}</div>
+              <div style={{ fontSize: 11, color: "#7A6A58", lineHeight: 1.5 }}>{v.desc}</div>
             </div>
           ))}
         </div>
 
         {/* Tabs */}
-        <div style={{ display:"flex", gap:0, marginBottom:32, borderBottom:"2px solid #DDD5C8", overflowX:"auto" }}>
+        <div style={{ display: "flex", gap: 0, marginBottom: 32, borderBottom: "2px solid #DDD5C8", overflowX: "auto" }}>
           {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ background:"none", border:"none", cursor:"pointer", padding:"12px 22px", fontSize:11, letterSpacing:"0.12em", textTransform:"uppercase", color:activeTab===tab.id?"#B8832A":"#8A7A68", borderBottom:activeTab===tab.id?"2px solid #B8832A":"2px solid transparent", marginBottom:-2, transition:"all 0.2s", fontFamily:"inherit", whiteSpace:"nowrap" }}>
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: "12px 22px", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: activeTab === tab.id ? "#B8832A" : "#8A7A68", borderBottom: activeTab === tab.id ? "2px solid #B8832A" : "2px solid transparent", marginBottom: -2, transition: "all 0.2s", fontFamily: "inherit", whiteSpace: "nowrap" }}>
               {tab.label}
             </button>
           ))}
         </div>
 
-        {/* CRITERIA TAB */}
+        {/* ── CRITERIA TAB ── */}
         {activeTab === "criteria" && (
           <div>
-            <p style={{ fontSize:13, color:"#7A6A58", marginBottom:28, lineHeight:1.7 }}>Five criteria — each carrying equal weight — anchored to YTL Group's five core values. Every criterion is scored 1–10 by each judge panel.</p>
+            <p style={{ fontSize: 13, color: "#7A6A58", marginBottom: 28, lineHeight: 1.7 }}>Five criteria — each carrying equal weight — anchored to YTL Group's five core values. Every criterion is scored 1–10.</p>
             {CRITERIA.map((c, i) => (
-              <div key={c.id} style={{ border:"1px solid #DDD5C8", borderRadius:6, marginBottom:10, overflow:"hidden", background:expandedCriteria===c.id?"#FDFAF5":"#FFFFFF" }}>
-                <button onClick={() => toggleCriteria(c.id)} style={{ width:"100%", background:"none", border:"none", cursor:"pointer", padding:"18px 22px", display:"flex", alignItems:"center", gap:16, textAlign:"left", fontFamily:"inherit" }}>
-                  <span style={{ fontSize:11, color:"#BDB0A0", letterSpacing:"0.1em", minWidth:24 }}>{String(i+1).padStart(2,"0")}</span>
-                  <span style={{ flex:1 }}>
-                    <span style={{ fontSize:15, color:"#1A1410", display:"block", marginBottom:3 }}>{c.title}</span>
-                    <span style={{ fontSize:10, letterSpacing:"0.2em", textTransform:"uppercase", color:c.valueColor }}>Core Value: {c.value}</span>
+              <div key={c.id} style={{ border: "1px solid #DDD5C8", borderRadius: 6, marginBottom: 10, overflow: "hidden", background: expandedCriteria === c.id ? "#FDFAF5" : "#FFFFFF" }}>
+                <button onClick={() => toggleCriteria(c.id)} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "18px 22px", display: "flex", alignItems: "center", gap: 16, textAlign: "left", fontFamily: "inherit" }}>
+                  <span style={{ fontSize: 11, color: "#BDB0A0", letterSpacing: "0.1em", minWidth: 24 }}>{String(i+1).padStart(2,"0")}</span>
+                  <span style={{ flex: 1 }}>
+                    <span style={{ fontSize: 15, color: "#1A1410", display: "block", marginBottom: 3 }}>{c.title}</span>
+                    <span style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: c.valueColor }}>Core Value: {c.value}</span>
                   </span>
-                  <span style={{ fontSize:11, color:"#B8832A", border:"1px solid #C8973A50", borderRadius:2, padding:"3px 10px", letterSpacing:"0.08em", background:"#FBF6EE" }}>{c.weight}%</span>
-                  <span style={{ color:"#BDB0A0", fontSize:14, marginLeft:8 }}>{expandedCriteria===c.id?"−":"+"}</span>
+                  <span style={{ fontSize: 11, color: "#B8832A", border: "1px solid #C8973A50", borderRadius: 2, padding: "3px 10px", letterSpacing: "0.08em", background: "#FBF6EE" }}>{c.weight}%</span>
+                  <span style={{ color: "#BDB0A0", fontSize: 14, marginLeft: 8 }}>{expandedCriteria === c.id ? "−" : "+"}</span>
                 </button>
-                {expandedCriteria===c.id && (
-                  <div style={{ padding:"0 22px 22px 62px", borderTop:"1px solid #EDE7DC" }}>
-                    <p style={{ fontSize:13, color:"#6A5A48", lineHeight:1.8, margin:"16px 0 18px", fontStyle:"italic" }}>{c.description}</p>
-                    <div style={{ ...label, marginBottom:12 }}>What judges look for</div>
+                {expandedCriteria === c.id && (
+                  <div style={{ padding: "0 22px 22px 62px", borderTop: "1px solid #EDE7DC" }}>
+                    <p style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.8, margin: "16px 0 18px", fontStyle: "italic" }}>{c.description}</p>
+                    <div style={{ ...labelStyle, marginBottom: 12 }}>What judges look for</div>
                     {c.indicators.map((ind, j) => (
-                      <div key={j} style={{ display:"flex", gap:12, alignItems:"flex-start", marginBottom:10 }}>
-                        <span style={{ color:c.valueColor, fontSize:7, marginTop:6, flexShrink:0 }}>◆</span>
-                        <span style={{ fontSize:13, color:"#3A2E22", lineHeight:1.6 }}>{ind}</span>
+                      <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
+                        <span style={{ color: c.valueColor, fontSize: 7, marginTop: 6, flexShrink: 0 }}>◆</span>
+                        <span style={{ fontSize: 13, color: "#3A2E22", lineHeight: 1.6 }}>{ind}</span>
                       </div>
                     ))}
                   </div>
@@ -160,122 +159,142 @@ function App() {
           </div>
         )}
 
-        {/* PANELS TAB */}
-        {activeTab === "panels" && (
+        {/* ── STORY TAB ── */}
+        {activeTab === "story" && (
           <div>
-            <p style={{ fontSize:13, color:"#7A6A58", marginBottom:28, lineHeight:1.7 }}>Four judge panels with weighted voting rights. Combined, they produce a single composite score per nominee.</p>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:14, marginBottom:36 }}>
-              {JUDGE_PANELS.map((p, i) => (
-                <div key={p.role} style={{ ...card, borderLeft:`3px solid ${panelColors[i]}` }}>
-                  <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:12 }}>
-                    <div>
-                      <div style={{ fontSize:14, color:panelColors[i], marginBottom:4 }}>{p.icon}</div>
-                      <div style={{ fontSize:15, color:"#1A1410" }}>{p.role}</div>
-                    </div>
-                    <div style={{ fontSize:30, fontWeight:300, color:panelColors[i], lineHeight:1 }}>{p.weight}<span style={{ fontSize:14 }}>%</span></div>
-                  </div>
-                  <p style={{ fontSize:13, color:"#7A6A58", lineHeight:1.7, margin:0 }}>{p.description}</p>
-                </div>
-              ))}
-            </div>
-            <div style={{ marginBottom:12, ...label }}>Composite Weight Distribution</div>
-            <div style={{ display:"flex", height:10, borderRadius:5, overflow:"hidden", gap:2, marginBottom:12 }}>
-              {JUDGE_PANELS.map((p, i) => (
-                <div key={p.role} style={{ width:`${p.weight}%`, height:"100%", background:panelColors[i], borderRadius:3 }} />
-              ))}
-            </div>
-            <div style={{ display:"flex", gap:16, flexWrap:"wrap", marginBottom:32 }}>
-              {JUDGE_PANELS.map((p, i) => (
-                <div key={p.role} style={{ display:"flex", alignItems:"center", gap:6 }}>
-                  <div style={{ width:8, height:8, borderRadius:"50%", background:panelColors[i] }} />
-                  <span style={{ fontSize:11, color:"#7A6A58" }}>{p.role} ({p.weight}%)</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ ...card, borderColor:"#C8973A50", background:"#FBF6EE" }}>
-              <div style={{ ...label, color:"#B8832A", marginBottom:14 }}>How the Final Score is Calculated</div>
-              <div style={{ fontSize:13, color:"#5A4A38", lineHeight:2.1 }}>
-                Each judge panel scores a nominee across all 5 criteria (1–10 each).<br/>
-                Their panel score is multiplied by the panel's weight.<br/>
-                All weighted panel scores are summed to produce the <strong style={{ color:"#1A1410" }}>Final Composite Score</strong>.<br/>
-                The nominee with the highest composite score in each category wins.
+            {/* Hero callout */}
+            <div style={{ background: "#FBF6EE", border: "1px solid #C8973A40", borderLeft: "4px solid #B8832A", borderRadius: "0 6px 6px 0", padding: "24px 28px", marginBottom: 36 }}>
+              <div style={{ fontSize: 18, color: "#1A1410", lineHeight: 1.6, marginBottom: 10, fontStyle: "italic" }}>
+                "Tell us the story of why this person deserves to be nominated."
               </div>
+              <div style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.8 }}>
+                What did they do, how did they show up for others, and why did their contribution matter?<br/>
+                <strong style={{ color: "#1A1410" }}>Be specific. Be real. Make a case.</strong> A great nomination reads like a story — not a checklist.
+              </div>
+            </div>
+
+            {/* Strength indicator */}
+            {storyStrength && (
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24, padding: "12px 18px", border: `1px solid ${storyStrength.color}30`, borderRadius: 6, background: `${storyStrength.color}08` }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: storyStrength.color, flexShrink: 0 }} />
+                <span style={{ fontSize: 12, color: storyStrength.color, letterSpacing: "0.05em" }}>{storyStrength.label}</span>
+                <span style={{ fontSize: 11, color: "#8A7A68", marginLeft: "auto" }}>{storyFilled} of {STORY_PROMPTS.length} prompts answered</span>
+              </div>
+            )}
+
+            {/* Story prompts */}
+            {STORY_PROMPTS.map((sp, i) => (
+              <div key={sp.id} style={{ ...card, marginBottom: 14, borderLeft: `3px solid ${sp.color}` }}>
+                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 14 }}>
+                  <div style={{ fontSize: 14, color: sp.color, marginTop: 2, flexShrink: 0 }}>{sp.icon}</div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1A1410", marginBottom: 4 }}>{String(i+1).padStart(2,"0")}. {sp.label}</div>
+                    <div style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.7, fontStyle: "italic" }}>{sp.prompt}</div>
+                  </div>
+                </div>
+                <textarea
+                  rows={4}
+                  value={story[sp.id] || ""}
+                  onChange={e => setStory(s => ({ ...s, [sp.id]: e.target.value }))}
+                  placeholder={sp.placeholder}
+                  style={{ width: "100%", border: "1px solid #DDD5C8", borderRadius: 4, padding: "12px 14px", fontSize: 13, fontFamily: "Georgia,'Times New Roman',serif", color: "#1A1410", background: "#FDFAF5", lineHeight: 1.7, transition: "border 0.2s" }}
+                />
+                {story[sp.id] && story[sp.id].trim().length > 0 && (
+                  <div style={{ fontSize: 11, color: "#BDB0A0", textAlign: "right", marginTop: 6 }}>
+                    {story[sp.id].trim().split(/\s+/).length} words
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Tips */}
+            <div style={{ ...card, background: "#F5F1EA", borderColor: "#DDD5C8", marginTop: 8 }}>
+              <div style={{ ...labelStyle, marginBottom: 14 }}>Tips for a strong nomination</div>
+              {[
+                "Use the nominee's name — it makes the story feel personal and real.",
+                "Describe the context first — what was the situation or challenge?",
+                "Focus on actions and behaviours, not just outcomes.",
+                "Quantify impact where you can — team size, deadlines, results.",
+                "Write as if you're speaking to someone who doesn't know this person yet.",
+              ].map((tip, i) => (
+                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+                  <span style={{ color: "#B8832A", fontSize: 7, marginTop: 6, flexShrink: 0 }}>◆</span>
+                  <span style={{ fontSize: 13, color: "#5A4A38", lineHeight: 1.6 }}>{tip}</span>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
-        {/* SCALE TAB */}
+        {/* ── SCALE TAB ── */}
         {activeTab === "scale" && (
           <div>
-            <p style={{ fontSize:13, color:"#7A6A58", marginBottom:28, lineHeight:1.7 }}>Every criterion is rated on a 1–10 scale. Use these descriptors to anchor your scores consistently across all judge panels.</p>
+            <p style={{ fontSize: 13, color: "#7A6A58", marginBottom: 28, lineHeight: 1.7 }}>Every criterion is rated on a 1–10 scale. Use these descriptors to anchor your scores consistently.</p>
             {SCALE.map((s) => (
-              <div key={s.score} style={{ display:"flex", gap:24, alignItems:"center", border:`1px solid ${s.border}30`, borderLeft:`3px solid ${s.border}`, borderRadius:"0 6px 6px 0", padding:"18px 22px", marginBottom:10, background:s.bg }}>
-                <div style={{ fontSize:22, fontWeight:400, color:s.border, minWidth:52, lineHeight:1 }}>{s.score}</div>
+              <div key={s.score} style={{ display: "flex", gap: 24, alignItems: "center", border: `1px solid ${s.border}30`, borderLeft: `3px solid ${s.border}`, borderRadius: "0 6px 6px 0", padding: "18px 22px", marginBottom: 10, background: s.bg }}>
+                <div style={{ fontSize: 22, fontWeight: 400, color: s.border, minWidth: 52, lineHeight: 1 }}>{s.score}</div>
                 <div>
-                  <div style={{ fontSize:14, color:"#1A1410", marginBottom:4 }}>{s.label}</div>
-                  <div style={{ fontSize:13, color:"#6A5A48", lineHeight:1.6 }}>{s.desc}</div>
+                  <div style={{ fontSize: 14, color: "#1A1410", marginBottom: 4 }}>{s.label}</div>
+                  <div style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.6 }}>{s.desc}</div>
                 </div>
               </div>
             ))}
-            <div style={{ ...card, marginTop:28 }}>
-              <div style={{ ...label, marginBottom:12 }}>Scoring Formula (per criterion)</div>
-              <div style={{ fontFamily:"monospace", fontSize:13, color:"#B8832A", lineHeight:2.2 }}>
+            <div style={{ ...card, marginTop: 28 }}>
+              <div style={{ ...labelStyle, marginBottom: 12 }}>Scoring Formula</div>
+              <div style={{ fontFamily: "monospace", fontSize: 13, color: "#B8832A", lineHeight: 2.2 }}>
                 Criterion Points = Score (1–10) × Weight (20) → max 200 per criterion<br/>
-                Total Score = Sum of all 5 Criterion Points → max 1,000<br/>
-                Final = weighted across judge panels → composite out of 1,000
+                Total Score = Sum of all 5 Criterion Points → max 1,000
               </div>
             </div>
           </div>
         )}
 
-        {/* CALCULATOR TAB */}
+        {/* ── CALCULATOR TAB ── */}
         {activeTab === "calculator" && (
           <div>
-            <p style={{ fontSize:13, color:"#7A6A58", marginBottom:28, lineHeight:1.7 }}>Rate each criterion from 1 to 10. Each score is multiplied by the criterion weight (20) — max 200 per criterion, 1,000 total.</p>
-            <div style={{ ...card, marginBottom:16 }}>
+            <p style={{ fontSize: 13, color: "#7A6A58", marginBottom: 28, lineHeight: 1.7 }}>Rate each criterion from 1 to 10. Each score is multiplied by the criterion weight (20) — max 200 per criterion, 1,000 total.</p>
+            <div style={{ ...card, marginBottom: 16 }}>
               {CRITERIA.map((c, idx) => (
-                <div key={c.id} style={{ display:"flex", alignItems:"center", gap:16, padding:"16px 0", borderBottom: idx < CRITERIA.length-1 ? "1px solid #EDE7DC" : "none", flexWrap:"wrap" }}>
-                  <div style={{ flex:1, minWidth:160 }}>
-                    <div style={{ fontSize:14, color:"#1A1410", marginBottom:3 }}>{c.title}</div>
-                    <div style={{ fontSize:10, letterSpacing:"0.15em", textTransform:"uppercase", color:c.valueColor }}>{c.value} · {c.weight}% weight</div>
+                <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: idx < CRITERIA.length - 1 ? "1px solid #EDE7DC" : "none", flexWrap: "wrap" }}>
+                  <div style={{ flex: 1, minWidth: 160 }}>
+                    <div style={{ fontSize: 14, color: "#1A1410", marginBottom: 3 }}>{c.title}</div>
+                    <div style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: c.valueColor }}>{c.value} · {c.weight}% weight</div>
                   </div>
-                  <div style={{ display:"flex", gap:4, flexWrap:"wrap" }}>
+                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                     {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                      <button key={n} onClick={() => setScores(s => ({ ...s, [c.id]: n }))} style={{ width:30, height:30, border:scores[c.id]===n?`2px solid ${c.valueColor}`:"1px solid #DDD5C8", borderRadius:4, background:scores[c.id]===n?`${c.valueColor}18`:"#FAFAFA", color:scores[c.id]===n?c.valueColor:"#8A7A68", fontSize:12, cursor:"pointer", fontFamily:"inherit", fontWeight:scores[c.id]===n?600:400, transition:"all 0.12s" }}>{n}</button>
+                      <button key={n} onClick={() => setScores(s => ({ ...s, [c.id]: n }))} style={{ width: 30, height: 30, border: scores[c.id] === n ? `2px solid ${c.valueColor}` : "1px solid #DDD5C8", borderRadius: 4, background: scores[c.id] === n ? `${c.valueColor}18` : "#FAFAFA", color: scores[c.id] === n ? c.valueColor : "#8A7A68", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: scores[c.id] === n ? 600 : 400, transition: "all 0.12s" }}>{n}</button>
                     ))}
                   </div>
-                  <div style={{ minWidth:52, textAlign:"right", fontSize:13, fontWeight:600, color: scores[c.id] ? c.valueColor : "#C0B8B0" }}>
+                  <div style={{ minWidth: 52, textAlign: "right", fontSize: 13, fontWeight: 600, color: scores[c.id] ? c.valueColor : "#C0B8B0" }}>
                     {scores[c.id] ? scores[c.id] * c.weight : "—"}
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Result card */}
-            <div style={{ ...card, textAlign:"center", borderColor: filledCount===5 ? result.color+"50" : "#DDD5C8", background: filledCount===5 ? `${result.color}08` : "#FFFFFF", transition:"all 0.3s" }}>
+            <div style={{ ...card, textAlign: "center", borderColor: filledCount === 5 ? result.color + "50" : "#DDD5C8", background: filledCount === 5 ? `${result.color}08` : "#FFFFFF", transition: "all 0.3s" }}>
               {filledCount < 5 ? (
-                <div style={{ color:"#BDB0A0", fontSize:13, fontStyle:"italic", padding:"16px 0" }}>Score all five criteria to see the result</div>
+                <div style={{ color: "#BDB0A0", fontSize: 13, fontStyle: "italic", padding: "16px 0" }}>Score all five criteria to see the result</div>
               ) : (
                 <>
-                  <div style={{ ...label, marginBottom:10 }}>Composite Score</div>
-                  <div style={{ fontSize:72, fontWeight:300, color:result.color, lineHeight:1, marginBottom:6 }}>
-                    {totalScore}<span style={{ fontSize:22, color:"#BDB0A0" }}>/1000</span>
+                  <div style={{ ...labelStyle, marginBottom: 10 }}>Composite Score</div>
+                  <div style={{ fontSize: 72, fontWeight: 300, color: result.color, lineHeight: 1, marginBottom: 6 }}>
+                    {totalScore}<span style={{ fontSize: 22, color: "#BDB0A0" }}>/1000</span>
                   </div>
-                  <div style={{ fontSize:18, color:result.color, marginBottom:6, fontWeight:600 }}>{result.label}</div>
-                  <div style={{ fontSize:13, color:"#8A7A68", marginBottom:20 }}>{percentage}% of maximum score</div>
-                  {/* mini bar */}
-                  <div style={{ height:6, background:"#EDE7DC", borderRadius:3, maxWidth:400, margin:"0 auto 24px" }}>
-                    <div style={{ height:"100%", width:`${percentage}%`, background:result.color, borderRadius:3, transition:"width 0.4s" }} />
+                  <div style={{ fontSize: 18, color: result.color, marginBottom: 6, fontWeight: 600 }}>{result.label}</div>
+                  <div style={{ fontSize: 13, color: "#8A7A68", marginBottom: 20 }}>{percentage}% of maximum score</div>
+                  <div style={{ height: 6, background: "#EDE7DC", borderRadius: 3, maxWidth: 400, margin: "0 auto 24px" }}>
+                    <div style={{ height: "100%", width: `${percentage}%`, background: result.color, borderRadius: 3, transition: "width 0.4s" }} />
                   </div>
-                  <button onClick={() => setScores({})} style={{ background:"none", border:"1px solid #DDD5C8", borderRadius:4, padding:"8px 28px", color:"#8A7A68", fontSize:11, letterSpacing:"0.15em", textTransform:"uppercase", cursor:"pointer", fontFamily:"inherit" }}>Reset</button>
+                  <button onClick={() => setScores({})} style={{ background: "none", border: "1px solid #DDD5C8", borderRadius: 4, padding: "8px 28px", color: "#8A7A68", fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", cursor: "pointer", fontFamily: "inherit" }}>Reset</button>
                 </>
               )}
             </div>
           </div>
         )}
 
-        <footer style={{ marginTop:80, paddingTop:28, borderTop:"1px solid #DDD5C8", textAlign:"center" }}>
-          <div style={{ fontSize:10, letterSpacing:"0.3em", textTransform:"uppercase", color:"#BDB0A0" }}>YTL Group · BTRT Awards · Confidential Judging Framework</div>
+        <footer style={{ marginTop: 80, paddingTop: 28, borderTop: "1px solid #DDD5C8", textAlign: "center" }}>
+          <div style={{ fontSize: 10, letterSpacing: "0.3em", textTransform: "uppercase", color: "#BDB0A0" }}>YTL Group · BTRT Awards · Confidential Judging Framework</div>
         </footer>
       </div>
     </div>
