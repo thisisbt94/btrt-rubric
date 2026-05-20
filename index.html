@@ -79,8 +79,7 @@ const MOCK_NOMINATIONS=[
 const tierColor=(t)=>t==="Outstanding"?GREEN:t==="Compelling"?BLUE:t==="Developing"?GOLD:RED;
 const tierBg=(t)=>t==="Outstanding"?"#EDF7F2":t==="Compelling"?"#EEF4FC":t==="Developing"?"#FBF6EE":"#FBF0EE";
 
-const ILMU_KEY="sk-af71bb1e093ac403fe5fca500838250db074b94caf973dea";
-const ILMU_URL="https://api.ilmu.ai/v1/chat/completions";
+const ANTHROPIC_URL="https://api.anthropic.com/v1/messages";
 
 async function scoreWithILMU(text){
   const systemPrompt=`You are a senior HR judge for the BTRT Awards at YTL Group — a prestigious annual peer-nomination programme recognising employees who demonstrated excellence and YTL's five core values (Honesty, Hard Work, Moral Responsibility, Togetherness, Vitality) over the past year.
@@ -107,13 +106,13 @@ JSON shape:
   "overall_verdict":""
 }`;
 
-  const res=await fetch(ILMU_URL,{
+  const res=await fetch(ANTHROPIC_URL,{
     method:"POST",
-    headers:{"Content-Type":"application/json","Authorization":`Bearer ${ILMU_KEY}`},
-    body:JSON.stringify({model:"nemo-super",max_tokens:600,messages:[{role:"system",content:systemPrompt},{role:"user",content:`Nomination text:\n\n${text}`}]})
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,system:systemPrompt,messages:[{role:"user",content:`Nomination text:\n\n${text}`}]})
   });
   const data=await res.json();
-  const raw=data?.choices?.[0]?.message?.content||"";
+  const raw=data?.content?.[0]?.text||"";
   const clean=raw.replace(/```json|```/g,"").trim();
   return JSON.parse(clean);
 }
