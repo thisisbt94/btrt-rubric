@@ -227,25 +227,6 @@ function App(){
               ★ Fields 12 and 13 are suggested additions — not yet in the live form. They strengthen the shortlisting process significantly.
             </div>
 
-            {/* API Key input */}
-            <div style={{...card,marginBottom:32,background:"#F5F1EA",borderColor:"#DDD5C8"}}>
-              <div style={{...lbl,marginBottom:10}}>ILMU API Key — optional override</div>
-              <div style={{fontSize:12,color:"#8A7A68",marginBottom:12,lineHeight:1.7}}>A default key is pre-loaded. Only enter one here if you want to use a different ILMU key.</div>
-              <div style={{display:"flex",gap:8,alignItems:"center"}}>
-                <input
-                  type={showKey?"text":"password"}
-                  value={apiKey}
-                  onChange={e=>setApiKey(e.target.value)}
-                  placeholder="sk-... (leave blank to use default)"
-                  style={{flex:1,border:"1px solid #DDD5C8",borderRadius:4,padding:"10px 14px",fontSize:13,color:"#1A1410",background:"#FFF",fontFamily:"monospace",transition:"border 0.2s"}}
-                />
-                <button onClick={()=>setShowKey(s=>!s)} style={{background:"none",border:"1px solid #DDD5C8",borderRadius:4,padding:"10px 14px",fontSize:11,color:"#8A7A68",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
-                  {showKey?"Hide":"Show"}
-                </button>
-                {apiKey&&<div style={{fontSize:11,color:GREEN}}>✓ Key entered</div>}
-              </div>
-            </div>
-
             {/* Section 2: Draft Tool */}
             <div style={{...lbl,marginBottom:6}}>Draft your nomination here</div>
             <div style={{fontSize:13,color:"#7A6A58",marginBottom:16,lineHeight:1.7}}>
