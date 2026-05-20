@@ -79,9 +79,12 @@ const MOCK_NOMINATIONS=[
 const tierColor=(t)=>t==="Outstanding"?GREEN:t==="Compelling"?BLUE:t==="Developing"?GOLD:RED;
 const tierBg=(t)=>t==="Outstanding"?"#EDF7F2":t==="Compelling"?"#EEF4FC":t==="Developing"?"#FBF6EE":"#FBF0EE";
 
-const ANTHROPIC_URL="https://api.anthropic.com/v1/messages";
+const ILMU_BASE="https://api.ilmu.ai/v1";
+const ILMU_KEY="sk-0b1d145f73b45815cece83695c1fd2b1a0c30d485c07ab5c";
+const ILMU_MODEL="nemo-super";
 
-async function scoreWithILMU(text, apiKey){
+async function scoreWithILMU(text, userKey){
+  const key = userKey || ILMU_KEY;
   const systemPrompt=`You are a senior HR judge for the BTRT Awards at YTL Group — a prestigious annual peer-nomination programme recognising employees who demonstrated excellence and YTL's five core values (Honesty, Hard Work, Moral Responsibility, Togetherness, Vitality) over the past year.
 
 Your task: evaluate a nomination write-up and return ONLY a JSON object — no preamble, no markdown, no explanation outside the JSON.
@@ -106,13 +109,21 @@ JSON shape:
   "overall_verdict":""
 }`;
 
-  const res=await fetch(ANTHROPIC_URL,{
+  const res=await fetch(`${ILMU_BASE}/chat/completions`,{
     method:"POST",
-    headers:{"Content-Type":"application/json","x-api-key": apiKey,"anthropic-version":"2023-06-01"},
-    body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:600,system:systemPrompt,messages:[{role:"user",content:`Nomination text:\n\n${text}`}]})
+    headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`},
+    body:JSON.stringify({
+      model:ILMU_MODEL,
+      max_tokens:600,
+      messages:[
+        {role:"system",content:systemPrompt},
+        {role:"user",content:`Nomination text:\n\n${text}`}
+      ]
+    })
   });
+  if(!res.ok){const err=await res.text();throw new Error(err);}
   const data=await res.json();
-  const raw=data?.content?.[0]?.text||"";
+  const raw=data?.choices?.[0]?.message?.content||"";
   const clean=raw.replace(/```json|```/g,"").trim();
   return JSON.parse(clean);
 }
@@ -151,11 +162,10 @@ function App(){
   const calcResult=getLabel(pct);
 
   const handleScore=async()=>{
-    if(!apiKey.trim()){setError("Please enter your API key above before scoring.");return;}
     if(nomText.trim().length<30){setError("Write at least a sentence or two before scoring.");return;}
     setError("");setScoring(true);setResult(null);
     try{const r=await scoreWithILMU(nomText,apiKey.trim());setResult(r);}
-    catch(e){setError("Could not connect. Check your API key and try again.");}
+    catch(e){setError("Could not connect to ILMU. The API may be blocking browser requests (CORS). Try the tool from a deployed page instead.");}
     finally{setScoring(false);}
   };
 
@@ -234,14 +244,14 @@ function App(){
 
             {/* API Key input */}
             <div style={{...card,marginBottom:32,background:"#F5F1EA",borderColor:"#DDD5C8"}}>
-              <div style={{...lbl,marginBottom:10}}>API Key — required to score with AI</div>
-              <div style={{fontSize:12,color:"#8A7A68",marginBottom:12,lineHeight:1.7}}>Enter your Anthropic API key to enable AI scoring. It stays in your browser and is never stored or sent anywhere except the API call.</div>
+              <div style={{...lbl,marginBottom:10}}>ILMU API Key — optional override</div>
+              <div style={{fontSize:12,color:"#8A7A68",marginBottom:12,lineHeight:1.7}}>A default key is pre-loaded. Only enter one here if you want to use a different ILMU key.</div>
               <div style={{display:"flex",gap:8,alignItems:"center"}}>
                 <input
                   type={showKey?"text":"password"}
                   value={apiKey}
                   onChange={e=>setApiKey(e.target.value)}
-                  placeholder="sk-ant-..."
+                  placeholder="sk-... (leave blank to use default)"
                   style={{flex:1,border:"1px solid #DDD5C8",borderRadius:4,padding:"10px 14px",fontSize:13,color:"#1A1410",background:"#FFF",fontFamily:"monospace",transition:"border 0.2s"}}
                 />
                 <button onClick={()=>setShowKey(s=>!s)} style={{background:"none",border:"1px solid #DDD5C8",borderRadius:4,padding:"10px 14px",fontSize:11,color:"#8A7A68",cursor:"pointer",fontFamily:"inherit",whiteSpace:"nowrap"}}>
