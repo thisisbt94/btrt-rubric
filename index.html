@@ -1,155 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BTRT Awards – YTL Group</title>
+<title>BTRT Awards 2026 – Nomination Guide</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #F5F1EA; font-family: Georgia, 'Times New Roman', serif; color: #1A1410; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: #F5F1EA; }
-  ::-webkit-scrollbar-thumb { background: #C8973A88; border-radius: 3px; }
-  textarea { resize: vertical; }
-  textarea:focus, input:focus { outline: none; border-color: #B8832A !important; box-shadow: 0 0 0 3px #C8973A18; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#F5F1EA;font-family:Georgia,'Times New Roman',serif;color:#1A1410;}
+  textarea,input{font-family:Georgia,'Times New Roman',serif;}
+  textarea:focus,input:focus{outline:none;}
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-track{background:#F5F1EA;}
+  ::-webkit-scrollbar-thumb{background:#C8973A88;border-radius:3px;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .fade-in{animation:fadeIn 0.4s ease forwards;}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState } = React;
+const {useState,useRef} = React;
 
-const VALUES = [
-  { id: "honesty",       label: "Honesty",             icon: "◈", color: "#B8832A", desc: "Integrity, transparency, and trustworthiness in all actions" },
-  { id: "hardwork",      label: "Hard Work",            icon: "◆", color: "#1A5BB5", desc: "Dedication, diligence, and going above and beyond" },
-  { id: "moral",         label: "Moral Responsibility", icon: "◉", color: "#1E8055", desc: "Ethical conduct, accountability, and principled decisions" },
-  { id: "togetherness",  label: "Togetherness",         icon: "◎", color: "#7B3AAF", desc: "Collaboration, unity, and lifting others up" },
-  { id: "vitality",      label: "Vitality",             icon: "◈", color: "#C03A20", desc: "Energy, innovation, and bringing life to every endeavour" },
+const GOLD="#B8832A"; const BLUE="#1A5BB5"; const GREEN="#1E8055"; const PURPLE="#7B3AAF"; const RED="#C03A20";
+const lbl={fontSize:10,letterSpacing:"0.2em",textTransform:"uppercase",color:"#8A7A68"};
+const card={border:"1px solid #DDD5C8",borderRadius:6,background:"#FFF",padding:24};
+
+const VALUES=[
+  {id:"honesty",label:"Honesty",icon:"◈",color:GOLD,desc:"Integrity, transparency, trustworthiness"},
+  {id:"hardwork",label:"Hard Work",icon:"◆",color:BLUE,desc:"Dedication, diligence, going above and beyond"},
+  {id:"moral",label:"Moral Responsibility",icon:"◉",color:GREEN,desc:"Ethical conduct, accountability"},
+  {id:"togetherness",label:"Togetherness",icon:"◎",color:PURPLE,desc:"Collaboration, unity, lifting others up"},
+  {id:"vitality",label:"Vitality",icon:"◈",color:RED,desc:"Energy, innovation, bringing life to every endeavour"},
 ];
 
-const CRITERIA = [
-  { id: "excellence",    title: "Excellence in Output",    value: "Hard Work",            valueColor: "#1A5BB5", weight: 20, description: "Quality, consistency, and measurable impact of work delivered throughout the year.", indicators: ["Delivers work that sets a benchmark for quality","Consistently meets or exceeds targets and KPIs","Output creates visible impact on business or team goals","Takes ownership from start to finish without prompting"] },
-  { id: "integrity",     title: "Integrity & Transparency",value: "Honesty",              valueColor: "#B8832A", weight: 20, description: "Demonstrates consistent honesty, transparency, and ethical conduct in all situations.", indicators: ["Communicates openly even when it's uncomfortable","Takes responsibility for mistakes without deflecting","Builds trust through consistent, reliable behaviour","Does the right thing even when no one is watching"] },
-  { id: "collaboration", title: "Collaboration & Unity",   value: "Togetherness",         valueColor: "#7B3AAF", weight: 20, description: "Actively builds bridges across teams, departments, and geographies within YTL Group.", indicators: ["Goes beyond their team to support others","Creates an environment where peers feel valued","Shares knowledge, credit, and resources generously","Strengthens team cohesion during high-pressure moments"] },
-  { id: "responsibility",title: "Moral Responsibility",    value: "Moral Responsibility", valueColor: "#1E8055", weight: 20, description: "Acts with principled accountability — to the organisation, community, and environment.", indicators: ["Demonstrates ethical judgment in complex situations","Champions responsible practices (sustainability, inclusion, fairness)","Considers impact on stakeholders beyond immediate task","Leads by example in upholding YTL Group standards"] },
-  { id: "vitality",      title: "Vitality & Innovation",   value: "Vitality",             valueColor: "#C03A20", weight: 20, description: "Brings energy, fresh thinking, and initiative that pushes YTL Group forward.", indicators: ["Proactively identifies problems and drives solutions","Brings new ideas that improve processes or outcomes","Energises others through enthusiasm and commitment","Adapts positively and fast to change and new challenges"] },
+const CRITERIA=[
+  {id:"excellence",title:"Excellence in Output",value:"Hard Work",valueColor:BLUE,weight:20,description:"Quality, consistency, and measurable impact of work delivered throughout the year.",indicators:["Delivers work that sets a benchmark for quality","Consistently meets or exceeds targets and KPIs","Output creates visible impact on business or team goals","Takes ownership from start to finish without prompting"]},
+  {id:"integrity",title:"Integrity & Transparency",value:"Honesty",valueColor:GOLD,weight:20,description:"Demonstrates consistent honesty, transparency, and ethical conduct in all situations.",indicators:["Communicates openly even when it's uncomfortable","Takes responsibility for mistakes without deflecting","Builds trust through consistent, reliable behaviour","Does the right thing even when no one is watching"]},
+  {id:"collaboration",title:"Collaboration & Unity",value:"Togetherness",valueColor:PURPLE,weight:20,description:"Actively builds bridges across teams, departments, and geographies within YTL Group.",indicators:["Goes beyond their team to support others","Creates an environment where peers feel valued","Shares knowledge, credit, and resources generously","Strengthens team cohesion during high-pressure moments"]},
+  {id:"responsibility",title:"Moral Responsibility",value:"Moral Responsibility",valueColor:GREEN,weight:20,description:"Acts with principled accountability — to the organisation, community, and environment.",indicators:["Demonstrates ethical judgment in complex situations","Champions responsible practices","Considers impact on stakeholders beyond immediate task","Leads by example in upholding YTL Group standards"]},
+  {id:"vitality",title:"Vitality & Innovation",value:"Vitality",valueColor:RED,weight:20,description:"Brings energy, fresh thinking, and initiative that pushes YTL Group forward.",indicators:["Proactively identifies problems and drives solutions","Brings new ideas that improve processes or outcomes","Energises others through enthusiasm and commitment","Adapts positively and fast to change and new challenges"]},
 ];
 
-const SCALE = [
-  { score: "9–10", label: "Exceptional",        desc: "Visibly sets the standard. A benchmark for others across YTL Group.", border: "#1E8055", bg: "#EDF7F2" },
-  { score: "7–8",  label: "Strong",             desc: "Consistently exceeds expectations. Recognised impact beyond their role.", border: "#1A5BB5", bg: "#EEF4FC" },
-  { score: "5–6",  label: "Meets Expectations", desc: "Solid, reliable performance. Delivers well within their scope.", border: "#7B3AAF", bg: "#F5F0FB" },
-  { score: "3–4",  label: "Developing",         desc: "Some evidence present but inconsistent. Room for growth.", border: "#B8832A", bg: "#FBF6EE" },
-  { score: "1–2",  label: "Below Expectations", desc: "Limited evidence this cycle. Significant development needed.", border: "#C03A20", bg: "#FBF0EE" },
+const SCALE=[
+  {score:"9–10",label:"Exceptional",desc:"Visibly sets the standard. A benchmark for others across YTL Group.",border:GREEN,bg:"#EDF7F2"},
+  {score:"7–8",label:"Strong",desc:"Consistently exceeds expectations. Recognised impact beyond their role.",border:BLUE,bg:"#EEF4FC"},
+  {score:"5–6",label:"Meets Expectations",desc:"Solid, reliable performance. Delivers well within their scope.",border:PURPLE,bg:"#F5F0FB"},
+  {score:"3–4",label:"Developing",desc:"Some evidence present but inconsistent. Room for growth.",border:GOLD,bg:"#FBF6EE"},
+  {score:"1–2",label:"Below Expectations",desc:"Limited evidence this cycle. Significant development needed.",border:RED,bg:"#FBF0EE"},
 ];
 
-const STORY_PROMPTS = [
-  { id: "challenge",  icon: "◆", color: "#1A5BB5", label: "The Challenge or Opportunity", prompt: "What situation, challenge, or opportunity did this person step up for — and what was at stake?", placeholder: "e.g. When our biggest client threatened to pull out mid-project, [Name] took the initiative to..." },
-  { id: "beyond",     icon: "◉", color: "#1E8055", label: "Going Beyond Their Role",       prompt: "How did they go beyond what was expected of them? What did they do that others might not have?", placeholder: "e.g. Without being asked, [Name] stayed back three weekends to help the team..." },
-  { id: "values",     icon: "◈", color: "#B8832A", label: "Values in Action",              prompt: "How did their actions reflect YTL Group's core values? Give a specific example.", placeholder: "e.g. Even under pressure, [Name] was transparent with the client about delays instead of..." },
-  { id: "impact",     icon: "◎", color: "#7B3AAF", label: "The Impact They Made",          prompt: "How did their contribution positively affect their team, department, customers, or the company?", placeholder: "e.g. Because of [Name]'s efforts, the team was able to deliver two weeks early, which led to..." },
-  { id: "memorable",  icon: "◈", color: "#C03A20", label: "Why It Matters This Year",      prompt: "What makes their contribution stand out and be remembered — specifically this year?", placeholder: "e.g. This year was especially difficult for the department, and [Name] was the reason we..." },
+const FORM_FIELDS=[
+  {q:"1. Your Name",tag:"existing",tip:"Straightforward — but remember your name stays with this nomination. Own it."},
+  {q:"2. Your Company",tag:"existing",tip:"Select from the YTL Group entity list. If yours isn't listed, use 'Other'."},
+  {q:"3. Your Company Email",tag:"existing",tip:"Use your work email — this helps the panel verify the nomination is legitimate."},
+  {q:"4. Your Contact Number",tag:"existing",tip:"The panel may reach out if they need more context on your nomination."},
+  {q:"5. Nomination Type",tag:"existing",tip:"Individual or Team. If nominating a team, name the team lead and the team together."},
+  {q:"6. Nominee's Name",tag:"existing",tip:"Full name preferred. If nominating a team, include all members or at least the core group."},
+  {q:"7. Nominee's Company",tag:"existing",tip:"Same entity list. Singapore, Vietnam, and UK nominators — check with your HR/Comms team first."},
+  {q:"8. Nominee's Company Email",tag:"existing",tip:"Helps the panel identify and contact the right person without ambiguity."},
+  {q:"9. Nominee's Designation / Position",tag:"existing",tip:"Their job title — useful context for the panel when assessing scope of contribution."},
+  {q:"10. Nominee's Contact Number",tag:"existing",tip:"Optional but helpful if the panel wants to verify or follow up."},
+  {q:"11. Why do they deserve a BTRT Award?",tag:"existing",highlight:true,tip:"This is the heart of your nomination. Everything else is admin — this is where you make the case. Be specific, be real, make us feel it. Use the draft tool below to prepare this before you submit."},
+  {q:"12. Which core value does this nomination best represent?",tag:"new",tip:"NEW — Helps the panel categorise nominations and ensures every value category is represented in the final shortlist."},
+  {q:"13. One sentence that defines this person's year",tag:"new",tip:"NEW — Forces nominators to distill their nominee into a single memorable line. Great nominations are quotable. This also becomes a pull-quote if the nominee wins."},
 ];
 
-const labelStyle = { fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: "#8A7A68" };
-const card = { border: "1px solid #DDD5C8", borderRadius: 6, background: "#FFFFFF", padding: 24 };
+const MOCK_NOMINATIONS=[
+  {name:"Amirah R.",score:91,tier:"Outstanding",preview:"When the Penang data centre project faced a critical compliance failure three weeks before launch, Amirah volunteered to lead the emergency audit team across two weekends — coordinating five departments she had never worked with before..."},
+  {name:"Daniel T.",score:78,tier:"Compelling",preview:"Daniel redesigned the onboarding process for new engineers after noticing three consecutive hires left within their probation period. He interviewed each leaver privately, mapped the gaps, and built a structured 30-60-90 day plan..."},
+  {name:"Farah L.",score:61,tier:"Developing",preview:"Farah has been very helpful this year. She always helps the team when needed and is very responsible with her tasks. She also shows good values and is a team player who everyone likes working with..."},
+  {name:"Raj M.",score:34,tier:"Weak",preview:"He did a lot of projects this year and worked really hard. Very dedicated employee who comes in early and stays late. Deserves recognition for all his hard work throughout the year..."},
+];
 
-function App() {
-  const [activeTab, setActiveTab]           = useState("criteria");
-  const [expandedCriteria, setExpandedCriteria] = useState(null);
-  const [scores, setScores]                 = useState({});
-  const [story, setStory]                   = useState({});
+const tierColor=(t)=>t==="Outstanding"?GREEN:t==="Compelling"?BLUE:t==="Developing"?GOLD:RED;
+const tierBg=(t)=>t==="Outstanding"?"#EDF7F2":t==="Compelling"?"#EEF4FC":t==="Developing"?"#FBF6EE":"#FBF0EE";
 
-  const toggleCriteria = (id) => setExpandedCriteria(expandedCriteria === id ? null : id);
+const ILMU_KEY="sk-af71bb1e093ac403fe5fca500838250db074b94caf973dea";
+const ILMU_URL="https://api.ilmu.ai/v1/chat/completions";
 
-  const filledCount  = Object.keys(scores).length;
-  const totalScore   = Object.entries(scores).reduce((sum, [id, s]) => {
-    const c = CRITERIA.find(x => x.id === id);
-    return sum + (c ? s * c.weight : 0);
-  }, 0);
-  const percentage   = Math.round((totalScore / 1000) * 100);
+async function scoreWithILMU(text){
+  const systemPrompt=`You are a senior HR judge for the BTRT Awards at YTL Group — a prestigious annual peer-nomination programme recognising employees who demonstrated excellence and YTL's five core values (Honesty, Hard Work, Moral Responsibility, Togetherness, Vitality) over the past year.
 
-  const getScoreLabel = (pct) => {
-    if (pct >= 90) return { label: "Exceptional Nominee", color: "#1E8055" };
-    if (pct >= 75) return { label: "Strong Contender",    color: "#1A5BB5" };
-    if (pct >= 60) return { label: "Solid Nominee",       color: "#7B3AAF" };
-    if (pct >= 40) return { label: "Developing",          color: "#B8832A" };
-    return              { label: "Below Threshold",        color: "#C03A20" };
+Your task: evaluate a nomination write-up and return ONLY a JSON object — no preamble, no markdown, no explanation outside the JSON.
+
+Score on 4 dimensions (each out of 25, total 100):
+1. specificity — Does it cite real, concrete examples? Or is it vague and generic?
+2. values_evidence — Are YTL core values shown through actual behaviour, not just named?
+3. impact_clarity — Can we visualise what changed because of this person?
+4. storytelling — Does it read like a human story that makes you feel something?
+
+For each dimension return: score (number), verdict (one punchy sentence, max 12 words).
+Also return: total (sum of 4 scores), tier ("Weak" | "Developing" | "Compelling" | "Outstanding"), overall_verdict (2 sentences max — what works and what would make it stronger).
+
+JSON shape:
+{
+  "specificity":{"score":0,"verdict":""},
+  "values_evidence":{"score":0,"verdict":""},
+  "impact_clarity":{"score":0,"verdict":""},
+  "storytelling":{"score":0,"verdict":""},
+  "total":0,
+  "tier":"",
+  "overall_verdict":""
+}`;
+
+  const res=await fetch(ILMU_URL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Authorization":`Bearer ${ILMU_KEY}`},
+    body:JSON.stringify({model:"nemo-super",max_tokens:600,messages:[{role:"system",content:systemPrompt},{role:"user",content:`Nomination text:\n\n${text}`}]})
+  });
+  const data=await res.json();
+  const raw=data?.choices?.[0]?.message?.content||"";
+  const clean=raw.replace(/```json|```/g,"").trim();
+  return JSON.parse(clean);
+}
+
+function ScoreBar({score,max=25,color}){
+  const pct=(score/max)*100;
+  return(
+    <div style={{height:6,background:"#EDE7DC",borderRadius:3,marginTop:6}}>
+      <div style={{height:"100%",width:`${pct}%`,background:color,borderRadius:3,transition:"width 0.6s ease"}}/>
+    </div>
+  );
+}
+
+function App(){
+  const [activeTab,setActiveTab]=useState("guide");
+  const [expandedCriteria,setExpandedCriteria]=useState(null);
+  const [scores,setScores]=useState({});
+  const [nomText,setNomText]=useState("");
+  const [scoring,setScoring]=useState(false);
+  const [result,setResult]=useState(null);
+  const [error,setError]=useState("");
+
+  const toggleCriteria=(id)=>setExpandedCriteria(expandedCriteria===id?null:id);
+  const filledCount=Object.keys(scores).length;
+  const totalScore=Object.entries(scores).reduce((sum,[id,s])=>{const c=CRITERIA.find(x=>x.id===id);return sum+(c?s*c.weight:0);},0);
+  const pct=Math.round((totalScore/1000)*100);
+  const getLabel=(p)=>{
+    if(p>=90)return{label:"Exceptional Nominee",color:GREEN};
+    if(p>=75)return{label:"Strong Contender",color:BLUE};
+    if(p>=60)return{label:"Solid Nominee",color:PURPLE};
+    if(p>=40)return{label:"Developing",color:GOLD};
+    return{label:"Below Threshold",color:RED};
   };
-  const result = getScoreLabel(percentage);
+  const calcResult=getLabel(pct);
 
-  const storyFilled   = Object.values(story).filter(v => v && v.trim().length > 20).length;
-  const storyStrength = storyFilled === 0 ? null : storyFilled <= 2 ? { label: "Getting there — add more detail", color: "#B8832A" } : storyFilled <= 4 ? { label: "Good — a few more specifics will strengthen this", color: "#1A5BB5" } : { label: "Strong nomination — this tells a clear story", color: "#1E8055" };
+  const handleScore=async()=>{
+    if(nomText.trim().length<30){setError("Write at least a sentence or two before scoring.");return;}
+    setError("");setScoring(true);setResult(null);
+    try{const r=await scoreWithILMU(nomText);setResult(r);}
+    catch(e){setError("Could not reach ILMU. Check connection and try again.");}
+    finally{setScoring(false);}
+  };
 
-  const tabs = [
-    { id: "criteria",   label: "Judging Criteria" },
-    { id: "story",      label: "Tell Their Story" },
-    { id: "scale",      label: "Scoring Scale" },
-    { id: "calculator", label: "Score Calculator" },
+  const tabs=[
+    {id:"guide",label:"Nomination Guide"},
+    {id:"criteria",label:"Judging Criteria"},
+    {id:"scale",label:"Scoring Scale"},
+    {id:"calculator",label:"Score Calculator"},
   ];
 
-  return (
-    <div style={{ minHeight: "100vh", background: "#F5F1EA", fontFamily: "Georgia,'Times New Roman',serif", color: "#1A1410" }}>
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "0 24px 80px" }}>
+  return(
+    <div style={{minHeight:"100vh",background:"#F5F1EA",fontFamily:"Georgia,'Times New Roman',serif",color:"#1A1410"}}>
+      <div style={{maxWidth:900,margin:"0 auto",padding:"0 24px 80px"}}>
 
         {/* Header */}
-        <header style={{ textAlign: "center", paddingTop: 64, paddingBottom: 48 }}>
-          <div style={{ display: "inline-block", border: "1px solid #C8973A", borderRadius: 2, padding: "5px 18px", fontSize: 10, letterSpacing: "0.3em", color: "#B8832A", marginBottom: 24, textTransform: "uppercase" }}>
+        <header style={{textAlign:"center",paddingTop:64,paddingBottom:48}}>
+          <div style={{display:"inline-block",border:`1px solid ${GOLD}`,borderRadius:2,padding:"5px 18px",fontSize:10,letterSpacing:"0.3em",color:GOLD,marginBottom:24,textTransform:"uppercase"}}>
             YTL Group · Annual Recognition Programme
           </div>
-          <h1 style={{ fontSize: "clamp(40px,8vw,68px)", fontWeight: 400, margin: "0 0 8px", lineHeight: 1, letterSpacing: "-0.02em", color: "#1A1410" }}>BTRT Awards</h1>
-          <div style={{ width: 60, height: 2, background: "linear-gradient(90deg,transparent,#C8973A,transparent)", margin: "18px auto" }} />
-          <p style={{ fontSize: 15, color: "#6A5A48", letterSpacing: "0.03em", maxWidth: 500, margin: "0 auto", lineHeight: 1.8, fontStyle: "italic" }}>
-            Recognising the best of YTL Group — across honesty, hard work,<br/>moral responsibility, togetherness, and vitality.
+          <h1 style={{fontSize:"clamp(38px,7vw,64px)",fontWeight:400,margin:"0 0 8px",lineHeight:1,letterSpacing:"-0.02em",color:"#1A1410"}}>BTRT Awards 2026</h1>
+          <div style={{width:60,height:2,background:`linear-gradient(90deg,transparent,${GOLD},transparent)`,margin:"18px auto"}}/>
+          <p style={{fontSize:15,color:"#6A5A48",maxWidth:500,margin:"0 auto",lineHeight:1.8,fontStyle:"italic"}}>
+            Recognising the best of YTL Group — employees who delivered, led with values,<br/>and made the people around them better.
           </p>
         </header>
 
         {/* Values Strip */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 48, overflowX: "auto", paddingBottom: 4 }}>
-          {VALUES.map(v => (
-            <div key={v.id} style={{ flex: "1 0 140px", border: `1px solid ${v.color}30`, borderRadius: 6, padding: "16px 14px", background: `${v.color}0A`, textAlign: "center" }}>
-              <div style={{ fontSize: 18, color: v.color, marginBottom: 6 }}>{v.icon}</div>
-              <div style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: v.color, marginBottom: 5, fontWeight: 600 }}>{v.label}</div>
-              <div style={{ fontSize: 11, color: "#7A6A58", lineHeight: 1.5 }}>{v.desc}</div>
+        <div style={{display:"flex",gap:8,marginBottom:48,overflowX:"auto",paddingBottom:4}}>
+          {VALUES.map(v=>(
+            <div key={v.id} style={{flex:"1 0 130px",border:`1px solid ${v.color}30`,borderRadius:6,padding:"14px 12px",background:`${v.color}0A`,textAlign:"center"}}>
+              <div style={{fontSize:16,color:v.color,marginBottom:5}}>{v.icon}</div>
+              <div style={{fontSize:10,letterSpacing:"0.13em",textTransform:"uppercase",color:v.color,marginBottom:4,fontWeight:600}}>{v.label}</div>
+              <div style={{fontSize:11,color:"#7A6A58",lineHeight:1.5}}>{v.desc}</div>
             </div>
           ))}
         </div>
 
         {/* Tabs */}
-        <div style={{ display: "flex", gap: 0, marginBottom: 32, borderBottom: "2px solid #DDD5C8", overflowX: "auto" }}>
-          {tabs.map(tab => (
-            <button key={tab.id} onClick={() => setActiveTab(tab.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: "12px 22px", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: activeTab === tab.id ? "#B8832A" : "#8A7A68", borderBottom: activeTab === tab.id ? "2px solid #B8832A" : "2px solid transparent", marginBottom: -2, transition: "all 0.2s", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+        <div style={{display:"flex",marginBottom:32,borderBottom:"2px solid #DDD5C8",overflowX:"auto"}}>
+          {tabs.map(tab=>(
+            <button key={tab.id} onClick={()=>setActiveTab(tab.id)} style={{background:"none",border:"none",cursor:"pointer",padding:"12px 22px",fontSize:11,letterSpacing:"0.12em",textTransform:"uppercase",color:activeTab===tab.id?GOLD:"#8A7A68",borderBottom:activeTab===tab.id?`2px solid ${GOLD}`:"2px solid transparent",marginBottom:-2,transition:"all 0.2s",fontFamily:"inherit",whiteSpace:"nowrap"}}>
               {tab.label}
             </button>
           ))}
         </div>
 
-        {/* ── CRITERIA TAB ── */}
-        {activeTab === "criteria" && (
+        {/* ── NOMINATION GUIDE TAB ── */}
+        {activeTab==="guide"&&(
           <div>
-            <p style={{ fontSize: 13, color: "#7A6A58", marginBottom: 28, lineHeight: 1.7 }}>Five criteria — each carrying equal weight — anchored to YTL Group's five core values. Every criterion is scored 1–10.</p>
-            {CRITERIA.map((c, i) => (
-              <div key={c.id} style={{ border: "1px solid #DDD5C8", borderRadius: 6, marginBottom: 10, overflow: "hidden", background: expandedCriteria === c.id ? "#FDFAF5" : "#FFFFFF" }}>
-                <button onClick={() => toggleCriteria(c.id)} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: "18px 22px", display: "flex", alignItems: "center", gap: 16, textAlign: "left", fontFamily: "inherit" }}>
-                  <span style={{ fontSize: 11, color: "#BDB0A0", letterSpacing: "0.1em", minWidth: 24 }}>{String(i+1).padStart(2,"0")}</span>
-                  <span style={{ flex: 1 }}>
-                    <span style={{ fontSize: 15, color: "#1A1410", display: "block", marginBottom: 3 }}>{c.title}</span>
-                    <span style={{ fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", color: c.valueColor }}>Core Value: {c.value}</span>
+
+            {/* Hero */}
+            <div style={{background:"#FBF6EE",border:`1px solid ${GOLD}40`,borderLeft:`4px solid ${GOLD}`,borderRadius:"0 6px 6px 0",padding:"22px 26px",marginBottom:36}}>
+              <div style={{fontSize:17,color:"#1A1410",lineHeight:1.6,marginBottom:8,fontStyle:"italic"}}>"Make us feel it. Make us see it. Make us sure."</div>
+              <div style={{fontSize:13,color:"#6A5A48",lineHeight:1.8}}>A strong nomination isn't a performance review. It's a story. You don't need perfect writing — you need <strong style={{color:"#1A1410"}}>real detail</strong>. What happened, how they showed up, and why it mattered. The best nominations take 10 minutes to write and last a career.</div>
+            </div>
+
+            {/* Section 1: Form Fields */}
+            <div style={{...lbl,marginBottom:16}}>What the form asks — and how to answer it well</div>
+            {FORM_FIELDS.map((f,i)=>(
+              <div key={i} style={{...card,marginBottom:10,borderLeft:f.tag==="new"?`3px solid ${GREEN}`:`3px solid #DDD5C8`,background:f.highlight?"#FDFAF5":"#FFF"}}>
+                <div style={{display:"flex",alignItems:"flex-start",gap:12}}>
+                  <div style={{flex:1}}>
+                    <div style={{fontSize:14,color:"#1A1410",marginBottom:4,fontWeight:f.highlight?600:400}}>{f.q}</div>
+                    <div style={{fontSize:13,color:"#6A5A48",lineHeight:1.7}}>{f.tip}</div>
+                  </div>
+                  <div style={{flexShrink:0,fontSize:9,letterSpacing:"0.15em",textTransform:"uppercase",padding:"3px 8px",borderRadius:3,border:`1px solid ${f.tag==="new"?GREEN+"50":"#DDD5C8"}`,color:f.tag==="new"?GREEN:"#BDB0A0",background:f.tag==="new"?"#EDF7F2":"transparent",marginTop:2}}>
+                    {f.tag==="new"?"★ New":"Existing"}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <div style={{fontSize:12,color:"#8A7A68",marginTop:8,marginBottom:40,fontStyle:"italic",paddingLeft:4}}>
+              ★ Fields 12 and 13 are suggested additions — not yet in the live form. They strengthen the shortlisting process significantly.
+            </div>
+
+            {/* Section 2: Draft Tool */}
+            <div style={{...lbl,marginBottom:6}}>Draft your nomination here</div>
+            <div style={{fontSize:13,color:"#7A6A58",marginBottom:16,lineHeight:1.7}}>
+              Write your answer to <strong style={{color:"#1A1410"}}>Question 11</strong> below. Don't overthink the structure — just tell us about this person. What did they do, how did they show up, and why did it matter? Then let ILMU score it.
+            </div>
+
+            {/* Example prompt pills */}
+            <div style={{display:"flex",flexWrap:"wrap",gap:8,marginBottom:16}}>
+              {["What challenge did they face?","How did they go beyond their role?","Which value did they show in action?","What changed because of them?","Why is this person memorable this year?"].map((p,i)=>(
+                <div key={i} style={{fontSize:11,padding:"5px 12px",border:"1px solid #DDD5C8",borderRadius:20,color:"#8A7A68",background:"#FAFAF8",letterSpacing:"0.02em"}}>{p}</div>
+              ))}
+            </div>
+
+            <textarea
+              rows={8}
+              value={nomText}
+              onChange={e=>{setNomText(e.target.value);setResult(null);}}
+              placeholder={"When [Name] found out the campaign brief had a two-day turnaround during Hari Raya week, they didn't complain — they reorganised the team's entire schedule and personally took on the parts no one else had bandwidth for...\n\nWrite naturally. Aim for 150–300 words."}
+              style={{width:"100%",border:"1px solid #DDD5C8",borderRadius:6,padding:"16px",fontSize:13,color:"#1A1410",background:"#FDFAF5",lineHeight:1.8,transition:"border 0.2s",marginBottom:8}}
+            />
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:20}}>
+              <div style={{fontSize:11,color:"#BDB0A0"}}>
+                {nomText.trim().split(/\s+/).filter(Boolean).length} words
+                {nomText.trim().split(/\s+/).filter(Boolean).length<80&&nomText.length>0&&<span style={{color:GOLD,marginLeft:8}}>— aim for at least 100 words</span>}
+                {nomText.trim().split(/\s+/).filter(Boolean).length>=100&&<span style={{color:GREEN,marginLeft:8}}>✓ good length</span>}
+              </div>
+              <button onClick={handleScore} disabled={scoring} style={{background:scoring?"#DDD5C8":GOLD,border:"none",borderRadius:4,padding:"10px 28px",color:scoring?"#8A7A68":"#FFF",fontSize:12,letterSpacing:"0.1em",textTransform:"uppercase",cursor:scoring?"default":"pointer",fontFamily:"inherit",fontWeight:600,transition:"all 0.2s"}}>
+                {scoring?"ILMU is reading...":"Score with ILMU →"}
+              </button>
+            </div>
+
+            {scoring&&(
+              <div style={{textAlign:"center",padding:"32px 0",color:"#8A7A68",fontSize:13,fontStyle:"italic"}}>
+                <span style={{animation:"pulse 1.4s ease infinite",display:"inline-block"}}>◆</span> ILMU is evaluating your nomination...
+              </div>
+            )}
+
+            {error&&<div style={{fontSize:13,color:RED,marginBottom:16,padding:"12px 16px",background:"#FBF0EE",border:`1px solid ${RED}30`,borderRadius:4}}>{error}</div>}
+
+            {/* ILMU Result */}
+            {result&&(
+              <div className="fade-in" style={{...card,borderColor:`${tierColor(result.tier)}40`,background:tierBg(result.tier),marginBottom:32}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:20,flexWrap:"wrap",gap:12}}>
+                  <div>
+                    <div style={{...lbl,marginBottom:6}}>ILMU Nomination Score</div>
+                    <div style={{fontSize:52,fontWeight:300,color:tierColor(result.tier),lineHeight:1}}>{result.total}<span style={{fontSize:18,color:"#BDB0A0"}}>/100</span></div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontSize:11,letterSpacing:"0.15em",textTransform:"uppercase",color:tierColor(result.tier),border:`1px solid ${tierColor(result.tier)}50`,borderRadius:4,padding:"6px 14px",background:`${tierColor(result.tier)}10`,display:"inline-block",marginBottom:8}}>{result.tier} Nomination</div>
+                    <div style={{fontSize:13,color:"#5A4A38",lineHeight:1.7,maxWidth:300}}>{result.overall_verdict}</div>
+                  </div>
+                </div>
+
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(200px,1fr))",gap:12}}>
+                  {[
+                    {key:"specificity",label:"Specificity",color:BLUE,icon:"◆"},
+                    {key:"values_evidence",label:"Values Evidence",color:GOLD,icon:"◈"},
+                    {key:"impact_clarity",label:"Impact Clarity",color:GREEN,icon:"◉"},
+                    {key:"storytelling",label:"Storytelling",color:PURPLE,icon:"◎"},
+                  ].map(dim=>(
+                    <div key={dim.key} style={{background:"#FFF",border:"1px solid #DDD5C8",borderRadius:6,padding:"14px 16px"}}>
+                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+                        <div style={{fontSize:11,letterSpacing:"0.1em",textTransform:"uppercase",color:dim.color}}>{dim.icon} {dim.label}</div>
+                        <div style={{fontSize:18,fontWeight:400,color:dim.color}}>{result[dim.key].score}<span style={{fontSize:11,color:"#BDB0A0"}}>/25</span></div>
+                      </div>
+                      <ScoreBar score={result[dim.key].score} color={dim.color}/>
+                      <div style={{fontSize:12,color:"#6A5A48",marginTop:8,lineHeight:1.5,fontStyle:"italic"}}>{result[dim.key].verdict}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Section 3: How ILMU Filters at Scale */}
+            <div style={{marginTop:8}}>
+              <div style={{...lbl,marginBottom:16}}>How ILMU helps when 200 nominations come in</div>
+              <div style={{fontSize:13,color:"#7A6A58",marginBottom:24,lineHeight:1.7}}>
+                When nominations close, the panel faces a real problem — hundreds of submissions, limited time, and no easy way to separate the heartfelt from the hollow. Here's where ILMU changes the game.
+              </div>
+
+              {/* Pipeline visual */}
+              <div style={{...card,marginBottom:24,background:"#FDFAF5"}}>
+                <div style={{display:"flex",alignItems:"center",gap:0,flexWrap:"wrap"}}>
+                  {[
+                    {icon:"📥",label:"200 Nominations submitted",color:"#DDD5C8",bg:"#F5F1EA"},
+                    {icon:"→",label:"",color:"transparent",bg:"transparent",arrow:true},
+                    {icon:"🤖",label:"ILMU scores all 200",color:GOLD+"40",bg:"#FBF6EE"},
+                    {icon:"→",label:"",color:"transparent",bg:"transparent",arrow:true},
+                    {icon:"⚠️",label:"Flags weak (<40) for review",color:RED+"30",bg:"#FBF0EE"},
+                    {icon:"→",label:"",color:"transparent",bg:"transparent",arrow:true},
+                    {icon:"⭐",label:"Surfaces top tier (>75) to panel",color:GREEN+"30",bg:"#EDF7F2"},
+                  ].map((s,i)=>s.arrow?(
+                    <div key={i} style={{fontSize:18,color:"#DDD5C8",padding:"0 4px"}}>→</div>
+                  ):(
+                    <div key={i} style={{flex:"1 0 130px",border:`1px solid ${s.color}`,borderRadius:6,padding:"14px 12px",background:s.bg,textAlign:"center",margin:4}}>
+                      <div style={{fontSize:22,marginBottom:6}}>{s.icon}</div>
+                      <div style={{fontSize:11,color:"#5A4A38",lineHeight:1.5}}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mock leaderboard */}
+              <div style={{...lbl,marginBottom:12}}>Example: ILMU-ranked shortlist</div>
+              {MOCK_NOMINATIONS.map((n,i)=>(
+                <div key={i} style={{...card,marginBottom:10,borderLeft:`3px solid ${tierColor(n.tier)}`,background:tierBg(n.tier)}}>
+                  <div style={{display:"flex",alignItems:"center",gap:14,marginBottom:8,flexWrap:"wrap"}}>
+                    <div style={{fontSize:11,color:"#BDB0A0",minWidth:18}}>#{i+1}</div>
+                    <div style={{flex:1,fontSize:14,color:"#1A1410"}}>{n.name}</div>
+                    <div style={{fontSize:22,fontWeight:300,color:tierColor(n.tier)}}>{n.score}<span style={{fontSize:11,color:"#BDB0A0"}}>/100</span></div>
+                    <div style={{fontSize:10,letterSpacing:"0.12em",textTransform:"uppercase",color:tierColor(n.tier),border:`1px solid ${tierColor(n.tier)}40`,borderRadius:3,padding:"3px 10px",background:"#FFF"}}>{n.tier}</div>
+                  </div>
+                  <div style={{height:5,background:"#EDE7DC",borderRadius:3,marginBottom:10}}>
+                    <div style={{height:"100%",width:`${n.score}%`,background:tierColor(n.tier),borderRadius:3}}/>
+                  </div>
+                  <div style={{fontSize:12,color:"#6A5A48",lineHeight:1.6,fontStyle:"italic"}}>"{n.preview}"</div>
+                </div>
+              ))}
+
+              <div style={{...card,background:"#EEF4FC",borderColor:`${BLUE}30`,marginTop:8}}>
+                <div style={{fontSize:12,color:BLUE,letterSpacing:"0.08em",marginBottom:10,fontWeight:600}}>◆ What this means for the panel</div>
+                <div style={{fontSize:13,color:"#3A4A5A",lineHeight:1.9}}>
+                  Instead of reading 200 nominations cold, the panel opens a ranked list. <strong>Outstanding and Compelling nominations are at the top</strong> — ready for human deliberation. Weak nominations are flagged, not discarded — a human still has final say. ILMU saves 60–70% of review time and ensures <strong>every nomination gets a fair first read</strong>, regardless of how early or late it was submitted.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── CRITERIA TAB ── */}
+        {activeTab==="criteria"&&(
+          <div>
+            <p style={{fontSize:13,color:"#7A6A58",marginBottom:28,lineHeight:1.7}}>Five criteria — each carrying equal weight — anchored to YTL Group's five core values. Every criterion is scored 1–10.</p>
+            {CRITERIA.map((c,i)=>(
+              <div key={c.id} style={{border:"1px solid #DDD5C8",borderRadius:6,marginBottom:10,overflow:"hidden",background:expandedCriteria===c.id?"#FDFAF5":"#FFF"}}>
+                <button onClick={()=>toggleCriteria(c.id)} style={{width:"100%",background:"none",border:"none",cursor:"pointer",padding:"18px 22px",display:"flex",alignItems:"center",gap:16,textAlign:"left",fontFamily:"inherit"}}>
+                  <span style={{fontSize:11,color:"#BDB0A0",minWidth:24}}>{String(i+1).padStart(2,"0")}</span>
+                  <span style={{flex:1}}>
+                    <span style={{fontSize:15,color:"#1A1410",display:"block",marginBottom:3}}>{c.title}</span>
+                    <span style={{fontSize:10,letterSpacing:"0.2em",textTransform:"uppercase",color:c.valueColor}}>Core Value: {c.value}</span>
                   </span>
-                  <span style={{ fontSize: 11, color: "#B8832A", border: "1px solid #C8973A50", borderRadius: 2, padding: "3px 10px", letterSpacing: "0.08em", background: "#FBF6EE" }}>{c.weight}%</span>
-                  <span style={{ color: "#BDB0A0", fontSize: 14, marginLeft: 8 }}>{expandedCriteria === c.id ? "−" : "+"}</span>
+                  <span style={{fontSize:11,color:GOLD,border:`1px solid ${GOLD}50`,borderRadius:2,padding:"3px 10px",background:"#FBF6EE"}}>{c.weight}%</span>
+                  <span style={{color:"#BDB0A0",fontSize:14,marginLeft:8}}>{expandedCriteria===c.id?"−":"+"}</span>
                 </button>
-                {expandedCriteria === c.id && (
-                  <div style={{ padding: "0 22px 22px 62px", borderTop: "1px solid #EDE7DC" }}>
-                    <p style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.8, margin: "16px 0 18px", fontStyle: "italic" }}>{c.description}</p>
-                    <div style={{ ...labelStyle, marginBottom: 12 }}>What judges look for</div>
-                    {c.indicators.map((ind, j) => (
-                      <div key={j} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
-                        <span style={{ color: c.valueColor, fontSize: 7, marginTop: 6, flexShrink: 0 }}>◆</span>
-                        <span style={{ fontSize: 13, color: "#3A2E22", lineHeight: 1.6 }}>{ind}</span>
+                {expandedCriteria===c.id&&(
+                  <div style={{padding:"0 22px 22px 62px",borderTop:"1px solid #EDE7DC"}}>
+                    <p style={{fontSize:13,color:"#6A5A48",lineHeight:1.8,margin:"16px 0 18px",fontStyle:"italic"}}>{c.description}</p>
+                    <div style={{...lbl,marginBottom:12}}>What judges look for</div>
+                    {c.indicators.map((ind,j)=>(
+                      <div key={j} style={{display:"flex",gap:12,alignItems:"flex-start",marginBottom:10}}>
+                        <span style={{color:c.valueColor,fontSize:7,marginTop:6,flexShrink:0}}>◆</span>
+                        <span style={{fontSize:13,color:"#3A2E22",lineHeight:1.6}}>{ind}</span>
                       </div>
                     ))}
                   </div>
@@ -159,89 +391,22 @@ function App() {
           </div>
         )}
 
-        {/* ── STORY TAB ── */}
-        {activeTab === "story" && (
-          <div>
-            {/* Hero callout */}
-            <div style={{ background: "#FBF6EE", border: "1px solid #C8973A40", borderLeft: "4px solid #B8832A", borderRadius: "0 6px 6px 0", padding: "24px 28px", marginBottom: 36 }}>
-              <div style={{ fontSize: 18, color: "#1A1410", lineHeight: 1.6, marginBottom: 10, fontStyle: "italic" }}>
-                "Tell us the story of why this person deserves to be nominated."
-              </div>
-              <div style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.8 }}>
-                What did they do, how did they show up for others, and why did their contribution matter?<br/>
-                <strong style={{ color: "#1A1410" }}>Be specific. Be real. Make a case.</strong> A great nomination reads like a story — not a checklist.
-              </div>
-            </div>
-
-            {/* Strength indicator */}
-            {storyStrength && (
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24, padding: "12px 18px", border: `1px solid ${storyStrength.color}30`, borderRadius: 6, background: `${storyStrength.color}08` }}>
-                <div style={{ width: 8, height: 8, borderRadius: "50%", background: storyStrength.color, flexShrink: 0 }} />
-                <span style={{ fontSize: 12, color: storyStrength.color, letterSpacing: "0.05em" }}>{storyStrength.label}</span>
-                <span style={{ fontSize: 11, color: "#8A7A68", marginLeft: "auto" }}>{storyFilled} of {STORY_PROMPTS.length} prompts answered</span>
-              </div>
-            )}
-
-            {/* Story prompts */}
-            {STORY_PROMPTS.map((sp, i) => (
-              <div key={sp.id} style={{ ...card, marginBottom: 14, borderLeft: `3px solid ${sp.color}` }}>
-                <div style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: 14 }}>
-                  <div style={{ fontSize: 14, color: sp.color, marginTop: 2, flexShrink: 0 }}>{sp.icon}</div>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1A1410", marginBottom: 4 }}>{String(i+1).padStart(2,"0")}. {sp.label}</div>
-                    <div style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.7, fontStyle: "italic" }}>{sp.prompt}</div>
-                  </div>
-                </div>
-                <textarea
-                  rows={4}
-                  value={story[sp.id] || ""}
-                  onChange={e => setStory(s => ({ ...s, [sp.id]: e.target.value }))}
-                  placeholder={sp.placeholder}
-                  style={{ width: "100%", border: "1px solid #DDD5C8", borderRadius: 4, padding: "12px 14px", fontSize: 13, fontFamily: "Georgia,'Times New Roman',serif", color: "#1A1410", background: "#FDFAF5", lineHeight: 1.7, transition: "border 0.2s" }}
-                />
-                {story[sp.id] && story[sp.id].trim().length > 0 && (
-                  <div style={{ fontSize: 11, color: "#BDB0A0", textAlign: "right", marginTop: 6 }}>
-                    {story[sp.id].trim().split(/\s+/).length} words
-                  </div>
-                )}
-              </div>
-            ))}
-
-            {/* Tips */}
-            <div style={{ ...card, background: "#F5F1EA", borderColor: "#DDD5C8", marginTop: 8 }}>
-              <div style={{ ...labelStyle, marginBottom: 14 }}>Tips for a strong nomination</div>
-              {[
-                "Use the nominee's name — it makes the story feel personal and real.",
-                "Describe the context first — what was the situation or challenge?",
-                "Focus on actions and behaviours, not just outcomes.",
-                "Quantify impact where you can — team size, deadlines, results.",
-                "Write as if you're speaking to someone who doesn't know this person yet.",
-              ].map((tip, i) => (
-                <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
-                  <span style={{ color: "#B8832A", fontSize: 7, marginTop: 6, flexShrink: 0 }}>◆</span>
-                  <span style={{ fontSize: 13, color: "#5A4A38", lineHeight: 1.6 }}>{tip}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* ── SCALE TAB ── */}
-        {activeTab === "scale" && (
+        {activeTab==="scale"&&(
           <div>
-            <p style={{ fontSize: 13, color: "#7A6A58", marginBottom: 28, lineHeight: 1.7 }}>Every criterion is rated on a 1–10 scale. Use these descriptors to anchor your scores consistently.</p>
-            {SCALE.map((s) => (
-              <div key={s.score} style={{ display: "flex", gap: 24, alignItems: "center", border: `1px solid ${s.border}30`, borderLeft: `3px solid ${s.border}`, borderRadius: "0 6px 6px 0", padding: "18px 22px", marginBottom: 10, background: s.bg }}>
-                <div style={{ fontSize: 22, fontWeight: 400, color: s.border, minWidth: 52, lineHeight: 1 }}>{s.score}</div>
+            <p style={{fontSize:13,color:"#7A6A58",marginBottom:28,lineHeight:1.7}}>Every criterion is rated on a 1–10 scale. Use these descriptors to anchor your scores consistently.</p>
+            {SCALE.map(s=>(
+              <div key={s.score} style={{display:"flex",gap:24,alignItems:"center",border:`1px solid ${s.border}30`,borderLeft:`3px solid ${s.border}`,borderRadius:"0 6px 6px 0",padding:"18px 22px",marginBottom:10,background:s.bg}}>
+                <div style={{fontSize:22,color:s.border,minWidth:52,lineHeight:1}}>{s.score}</div>
                 <div>
-                  <div style={{ fontSize: 14, color: "#1A1410", marginBottom: 4 }}>{s.label}</div>
-                  <div style={{ fontSize: 13, color: "#6A5A48", lineHeight: 1.6 }}>{s.desc}</div>
+                  <div style={{fontSize:14,color:"#1A1410",marginBottom:4}}>{s.label}</div>
+                  <div style={{fontSize:13,color:"#6A5A48",lineHeight:1.6}}>{s.desc}</div>
                 </div>
               </div>
             ))}
-            <div style={{ ...card, marginTop: 28 }}>
-              <div style={{ ...labelStyle, marginBottom: 12 }}>Scoring Formula</div>
-              <div style={{ fontFamily: "monospace", fontSize: 13, color: "#B8832A", lineHeight: 2.2 }}>
+            <div style={{...card,marginTop:28}}>
+              <div style={{...lbl,marginBottom:12}}>Scoring Formula</div>
+              <div style={{fontFamily:"monospace",fontSize:13,color:GOLD,lineHeight:2.2}}>
                 Criterion Points = Score (1–10) × Weight (20) → max 200 per criterion<br/>
                 Total Score = Sum of all 5 Criterion Points → max 1,000
               </div>
@@ -250,58 +415,55 @@ function App() {
         )}
 
         {/* ── CALCULATOR TAB ── */}
-        {activeTab === "calculator" && (
+        {activeTab==="calculator"&&(
           <div>
-            <p style={{ fontSize: 13, color: "#7A6A58", marginBottom: 28, lineHeight: 1.7 }}>Rate each criterion from 1 to 10. Each score is multiplied by the criterion weight (20) — max 200 per criterion, 1,000 total.</p>
-            <div style={{ ...card, marginBottom: 16 }}>
-              {CRITERIA.map((c, idx) => (
-                <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 16, padding: "16px 0", borderBottom: idx < CRITERIA.length - 1 ? "1px solid #EDE7DC" : "none", flexWrap: "wrap" }}>
-                  <div style={{ flex: 1, minWidth: 160 }}>
-                    <div style={{ fontSize: 14, color: "#1A1410", marginBottom: 3 }}>{c.title}</div>
-                    <div style={{ fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: c.valueColor }}>{c.value} · {c.weight}% weight</div>
+            <p style={{fontSize:13,color:"#7A6A58",marginBottom:28,lineHeight:1.7}}>Rate each criterion from 1 to 10. Max 200 per criterion, 1,000 total.</p>
+            <div style={{...card,marginBottom:16}}>
+              {CRITERIA.map((c,idx)=>(
+                <div key={c.id} style={{display:"flex",alignItems:"center",gap:16,padding:"16px 0",borderBottom:idx<CRITERIA.length-1?"1px solid #EDE7DC":"none",flexWrap:"wrap"}}>
+                  <div style={{flex:1,minWidth:160}}>
+                    <div style={{fontSize:14,color:"#1A1410",marginBottom:3}}>{c.title}</div>
+                    <div style={{fontSize:10,letterSpacing:"0.15em",textTransform:"uppercase",color:c.valueColor}}>{c.value} · {c.weight}% weight</div>
                   </div>
-                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                    {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                      <button key={n} onClick={() => setScores(s => ({ ...s, [c.id]: n }))} style={{ width: 30, height: 30, border: scores[c.id] === n ? `2px solid ${c.valueColor}` : "1px solid #DDD5C8", borderRadius: 4, background: scores[c.id] === n ? `${c.valueColor}18` : "#FAFAFA", color: scores[c.id] === n ? c.valueColor : "#8A7A68", fontSize: 12, cursor: "pointer", fontFamily: "inherit", fontWeight: scores[c.id] === n ? 600 : 400, transition: "all 0.12s" }}>{n}</button>
+                  <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                    {[1,2,3,4,5,6,7,8,9,10].map(n=>(
+                      <button key={n} onClick={()=>setScores(s=>({...s,[c.id]:n}))} style={{width:30,height:30,border:scores[c.id]===n?`2px solid ${c.valueColor}`:"1px solid #DDD5C8",borderRadius:4,background:scores[c.id]===n?`${c.valueColor}18`:"#FAFAFA",color:scores[c.id]===n?c.valueColor:"#8A7A68",fontSize:12,cursor:"pointer",fontFamily:"inherit",fontWeight:scores[c.id]===n?600:400,transition:"all 0.12s"}}>{n}</button>
                     ))}
                   </div>
-                  <div style={{ minWidth: 52, textAlign: "right", fontSize: 13, fontWeight: 600, color: scores[c.id] ? c.valueColor : "#C0B8B0" }}>
-                    {scores[c.id] ? scores[c.id] * c.weight : "—"}
+                  <div style={{minWidth:52,textAlign:"right",fontSize:13,fontWeight:600,color:scores[c.id]?c.valueColor:"#C0B8B0"}}>
+                    {scores[c.id]?scores[c.id]*c.weight:"—"}
                   </div>
                 </div>
               ))}
             </div>
-
-            <div style={{ ...card, textAlign: "center", borderColor: filledCount === 5 ? result.color + "50" : "#DDD5C8", background: filledCount === 5 ? `${result.color}08` : "#FFFFFF", transition: "all 0.3s" }}>
-              {filledCount < 5 ? (
-                <div style={{ color: "#BDB0A0", fontSize: 13, fontStyle: "italic", padding: "16px 0" }}>Score all five criteria to see the result</div>
-              ) : (
+            <div style={{...card,textAlign:"center",borderColor:filledCount===5?calcResult.color+"50":"#DDD5C8",background:filledCount===5?`${calcResult.color}08`:"#FFF",transition:"all 0.3s"}}>
+              {filledCount<5?(
+                <div style={{color:"#BDB0A0",fontSize:13,fontStyle:"italic",padding:"16px 0"}}>Score all five criteria to see the result</div>
+              ):(
                 <>
-                  <div style={{ ...labelStyle, marginBottom: 10 }}>Composite Score</div>
-                  <div style={{ fontSize: 72, fontWeight: 300, color: result.color, lineHeight: 1, marginBottom: 6 }}>
-                    {totalScore}<span style={{ fontSize: 22, color: "#BDB0A0" }}>/1000</span>
+                  <div style={{...lbl,marginBottom:10}}>Composite Score</div>
+                  <div style={{fontSize:72,fontWeight:300,color:calcResult.color,lineHeight:1,marginBottom:6}}>{totalScore}<span style={{fontSize:22,color:"#BDB0A0"}}>/1000</span></div>
+                  <div style={{fontSize:18,color:calcResult.color,marginBottom:6,fontWeight:600}}>{calcResult.label}</div>
+                  <div style={{fontSize:13,color:"#8A7A68",marginBottom:20}}>{pct}% of maximum score</div>
+                  <div style={{height:6,background:"#EDE7DC",borderRadius:3,maxWidth:400,margin:"0 auto 24px"}}>
+                    <div style={{height:"100%",width:`${pct}%`,background:calcResult.color,borderRadius:3,transition:"width 0.4s"}}/>
                   </div>
-                  <div style={{ fontSize: 18, color: result.color, marginBottom: 6, fontWeight: 600 }}>{result.label}</div>
-                  <div style={{ fontSize: 13, color: "#8A7A68", marginBottom: 20 }}>{percentage}% of maximum score</div>
-                  <div style={{ height: 6, background: "#EDE7DC", borderRadius: 3, maxWidth: 400, margin: "0 auto 24px" }}>
-                    <div style={{ height: "100%", width: `${percentage}%`, background: result.color, borderRadius: 3, transition: "width 0.4s" }} />
-                  </div>
-                  <button onClick={() => setScores({})} style={{ background: "none", border: "1px solid #DDD5C8", borderRadius: 4, padding: "8px 28px", color: "#8A7A68", fontSize: 11, letterSpacing: "0.15em", textTransform: "uppercase", cursor: "pointer", fontFamily: "inherit" }}>Reset</button>
+                  <button onClick={()=>setScores({})} style={{background:"none",border:"1px solid #DDD5C8",borderRadius:4,padding:"8px 28px",color:"#8A7A68",fontSize:11,letterSpacing:"0.15em",textTransform:"uppercase",cursor:"pointer",fontFamily:"inherit"}}>Reset</button>
                 </>
               )}
             </div>
           </div>
         )}
 
-        <footer style={{ marginTop: 80, paddingTop: 28, borderTop: "1px solid #DDD5C8", textAlign: "center" }}>
-          <div style={{ fontSize: 10, letterSpacing: "0.3em", textTransform: "uppercase", color: "#BDB0A0" }}>YTL Group · BTRT Awards · Confidential Judging Framework</div>
+        <footer style={{marginTop:80,paddingTop:28,borderTop:"1px solid #DDD5C8",textAlign:"center"}}>
+          <div style={{fontSize:10,letterSpacing:"0.3em",textTransform:"uppercase",color:"#BDB0A0"}}>YTL Group · BTRT Awards 2026 · Powered by ILMU</div>
         </footer>
       </div>
     </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
