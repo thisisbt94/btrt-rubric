@@ -79,51 +79,36 @@ const MOCK_NOMINATIONS=[
 const tierColor=(t)=>t==="Outstanding"?GREEN:t==="Compelling"?BLUE:t==="Developing"?GOLD:RED;
 const tierBg=(t)=>t==="Outstanding"?"#EDF7F2":t==="Compelling"?"#EEF4FC":t==="Developing"?"#FBF6EE":"#FBF0EE";
 
-const ILMU_BASE="https://api.ilmu.ai/v1";
-const ILMU_KEY="sk-0b1d145f73b45815cece83695c1fd2b1a0c30d485c07ab5c";
-const ILMU_MODEL="nemo-super";
-
-async function scoreWithILMU(text, userKey){
-  const key = userKey || ILMU_KEY;
+async function scoreWithILMU(text){
   const systemPrompt=`You are a senior HR judge for the BTRT Awards at YTL Group — a prestigious annual peer-nomination programme recognising employees who demonstrated excellence and YTL's five core values (Honesty, Hard Work, Moral Responsibility, Togetherness, Vitality) over the past year.
 
-Your task: evaluate a nomination write-up and return ONLY a JSON object — no preamble, no markdown, no explanation outside the JSON.
+Evaluate the nomination and return ONLY raw JSON — no markdown fences, no explanation, no preamble.
 
-Score on 4 dimensions (each out of 25, total 100):
-1. specificity — Does it cite real, concrete examples? Or is it vague and generic?
-2. values_evidence — Are YTL core values shown through actual behaviour, not just named?
-3. impact_clarity — Can we visualise what changed because of this person?
-4. storytelling — Does it read like a human story that makes you feel something?
+Score 4 dimensions (each out of 25):
+1. specificity — real concrete examples vs vague generic praise
+2. values_evidence — YTL core values shown through behaviour, not just named
+3. impact_clarity — can we visualise what changed because of this person
+4. storytelling — reads like a human story that makes you feel something
 
-For each dimension return: score (number), verdict (one punchy sentence, max 12 words).
-Also return: total (sum of 4 scores), tier ("Weak" | "Developing" | "Compelling" | "Outstanding"), overall_verdict (2 sentences max — what works and what would make it stronger).
+Each dimension: score (integer 0-25), verdict (one punchy sentence, max 12 words).
+Also: total (integer, sum of 4), tier (exactly one of: "Weak","Developing","Compelling","Outstanding"), overall_verdict (2 sentences: what works + what would strengthen it).
 
-JSON shape:
-{
-  "specificity":{"score":0,"verdict":""},
-  "values_evidence":{"score":0,"verdict":""},
-  "impact_clarity":{"score":0,"verdict":""},
-  "storytelling":{"score":0,"verdict":""},
-  "total":0,
-  "tier":"",
-  "overall_verdict":""
-}`;
+Return this exact shape:
+{"specificity":{"score":0,"verdict":""},"values_evidence":{"score":0,"verdict":""},"impact_clarity":{"score":0,"verdict":""},"storytelling":{"score":0,"verdict":""},"total":0,"tier":"","overall_verdict":""}`;
 
-  const res=await fetch(`${ILMU_BASE}/chat/completions`,{
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
-    headers:{"Content-Type":"application/json","Authorization":`Bearer ${key}`},
+    headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
-      model:ILMU_MODEL,
-      max_tokens:600,
-      messages:[
-        {role:"system",content:systemPrompt},
-        {role:"user",content:`Nomination text:\n\n${text}`}
-      ]
+      model:"claude-sonnet-4-20250514",
+      max_tokens:700,
+      system:systemPrompt,
+      messages:[{role:"user",content:`Score this nomination:\n\n${text}`}]
     })
   });
-  if(!res.ok){const err=await res.text();throw new Error(err);}
+  if(!res.ok) throw new Error(await res.text());
   const data=await res.json();
-  const raw=data?.choices?.[0]?.message?.content||"";
+  const raw=(data?.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("");
   const clean=raw.replace(/```json|```/g,"").trim();
   return JSON.parse(clean);
 }
@@ -164,8 +149,8 @@ function App(){
   const handleScore=async()=>{
     if(nomText.trim().length<30){setError("Write at least a sentence or two before scoring.");return;}
     setError("");setScoring(true);setResult(null);
-    try{const r=await scoreWithILMU(nomText,apiKey.trim());setResult(r);}
-    catch(e){setError("Could not connect to ILMU. The API may be blocking browser requests (CORS). Try the tool from a deployed page instead.");}
+    try{const r=await scoreWithILMU(nomText);setResult(r);}
+    catch(e){setError("Scoring failed: "+e.message);}
     finally{setScoring(false);}
   };
 
