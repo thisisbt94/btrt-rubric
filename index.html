@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BTRT Awards Working Prototype</title>
+  <title>BTRT Awards Working Prototype · 20 Finalists</title>
   <style>
     :root {
       --blue: #0072bc;
@@ -356,6 +356,52 @@
     .tool-row > div { min-width: 180px; flex: 1; }
     .small-note { color: var(--muted); font-size: 12px; line-height: 1.45; margin-top: 8px; }
 
+    .status-board {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+    }
+
+    .status-column {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fbfdff;
+      overflow: hidden;
+      min-height: 160px;
+    }
+
+    .status-column h4 {
+      margin: 0;
+      padding: 14px 14px 10px;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .status-list {
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .status-name {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: white;
+      padding: 9px 10px;
+      font-size: 12px;
+      line-height: 1.35;
+      cursor: pointer;
+    }
+
+    .status-name:hover { border-color: var(--blue); background: var(--blue-soft); }
+    .status-name b { display: block; font-size: 13px; margin-bottom: 2px; }
+    .status-name span { color: var(--muted); }
+
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -381,6 +427,7 @@
       .tabs { grid-template-columns: 1fr; }
       .timeline { grid-template-columns: repeat(2, 1fr); }
       .two-col { grid-template-columns: 1fr; }
+      .status-board { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -478,6 +525,18 @@
           </div>
         </div>
 
+
+        <div class="card" style="margin-bottom:18px;">
+          <div class="card-header">
+            <h3>HR Status Board</h3>
+            <p>Names are grouped by workflow status so HR/YTLCC can quickly see who needs follow-up, validation, shortlisting or judging.</p>
+          </div>
+          <div class="card-body">
+            <div class="status-board" id="statusBoard"></div>
+            <div class="small-note">This is based on nominee-level status, not raw nomination count. Click names in the summary table below to review or move them to another category.</div>
+          </div>
+        </div>
+
         <div class="dashboard-layout">
           <div class="card">
             <div class="card-header"><h3>Campaign Health</h3><p>Live totals based on nominations currently in the demo.</p></div>
@@ -572,18 +631,650 @@
     let selectedReviewName = null;
 
     const sampleData = [
-      { id: 1, date: '2026-08-02', nominatorName: 'Adam Wong', nominatorEmail: 'adam@ytl.com', nomineeName: 'Sarah Lim', nomineeCompany: 'YTL Power · Finance', btrtValue: 'Togetherness', story: 'Sarah helped two junior team members during a system migration. She stayed back after work, walked them through the new process, created a checklist, and helped the team avoid repeated errors during a critical reporting period.', beneficiaries: ['Our team'], status: 'Shortlisted', validated: true, judge: { score: 91, note: 'Strong team culture example.' } },
-      { id: 2, date: '2026-08-03', nominatorName: 'Mei Chen', nominatorEmail: 'mei@ytl.com', nomineeName: 'Sarah Lim', nomineeCompany: 'YTL Power · Finance', btrtValue: 'Togetherness', story: 'Sarah created a checklist that made the new finance workflow much easier for everyone to follow. She was patient and kept the team calm during the transition.', beneficiaries: ['Our team', 'Our department'], status: 'Shortlisted', validated: true, judge: { score: 91, note: 'Strong team culture example.' } },
-      { id: 3, date: '2026-08-04', nominatorName: 'Ravi Kumar', nominatorEmail: 'ravi@ytl.com', nomineeName: 'Amir Hassan', nomineeCompany: 'YTL Cement · Operations', btrtValue: 'Honesty', story: 'Before a report was submitted, Amir noticed that one section contained incorrect figures. Although the team was under time pressure, he flagged the issue, helped trace the source of the error, and worked with colleagues to correct the submission.', beneficiaries: ['Our department', 'The company'], status: 'Finalist', validated: true, judge: { score: 89, note: 'Powerful integrity example.' } },
-      { id: 4, date: '2026-08-05', nominatorName: 'Dina Lee', nominatorEmail: 'dina@ytl.com', nomineeName: 'Daniel Tan', nomineeCompany: 'YTL Land · Retail', btrtValue: 'Hard Work', story: 'Daniel is hardworking and positive. He always helps everyone and deserves to be recognised.', beneficiaries: ['Our team'], status: 'Validated', validated: true, judge: null },
-      { id: 5, date: '2026-08-06', nominatorName: 'Farah Ali', nominatorEmail: 'farah@ytl.com', nomineeName: 'Daniel Tan', nomineeCompany: 'YTL Land · Retail', btrtValue: 'Hard Work', story: 'Daniel is always reliable and works very hard. He is a good colleague.', beneficiaries: ['Our team'], status: 'Validated', validated: true, judge: null },
-      { id: 6, date: '2026-08-07', nominatorName: 'Jason Ong', nominatorEmail: 'jason@ytl.com', nomineeName: 'Priya Menon', nomineeCompany: 'ERL · Customer Experience', btrtValue: 'Moral Responsibility', story: 'During a service disruption, Priya calmly coordinated support for stranded passengers. She helped manage updates, checked on elderly passengers, and supported the frontline team until the situation stabilised.', beneficiaries: ['Customers / stakeholders'], status: 'Finalist', validated: true, judge: { score: 90, note: 'Strong customer care story.' } },
-      { id: 7, date: '2026-08-08', nominatorName: 'Nadia Rahman', nominatorEmail: 'nadia@ytl.com', nomineeName: 'Chloe Ng', nomineeCompany: 'YTL Communications · Marketing', btrtValue: 'Vitality', story: 'Chloe kept the campaign team energised during a difficult launch period. She organised quick check-ins, helped unblock copy approvals, and kept everyone focused even when timelines changed.', beneficiaries: ['Our team'], status: 'Submitted', validated: false, judge: null }
-    ];
+      {
+            "id": 1,
+            "date": "2026-09-02",
+            "nominatorName": "Nominator 1",
+            "nominatorEmail": "nominator1@ytl.com",
+            "nomineeName": "Amir Hassan",
+            "nomineeCompany": "YTL Cement \u00b7 Operations",
+            "btrtValue": "Honesty",
+            "story": "Amir flagged incorrect figures in a pre-submission report despite deadline pressure, traced the error with the team, and helped correct the final submission before it reached management.",
+            "beneficiaries": [
+                  "Our department",
+                  "The company"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 94,
+                  "note": "Powerful integrity example."
+            }
+      },
+      {
+            "id": 2,
+            "date": "2026-09-03",
+            "nominatorName": "Nominator 2",
+            "nominatorEmail": "nominator2@ytl.com",
+            "nomineeName": "Priya Menon",
+            "nomineeCompany": "ERL \u00b7 Customer Experience",
+            "btrtValue": "Moral Responsibility",
+            "story": "During a service disruption, Priya coordinated support for stranded passengers, checked on elderly passengers, and kept the frontline team calm until operations stabilised.",
+            "beneficiaries": [
+                  "Customers / stakeholders"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 92,
+                  "note": "Strong customer care story."
+            }
+      },
+      {
+            "id": 3,
+            "date": "2026-09-04",
+            "nominatorName": "Nominator 3",
+            "nominatorEmail": "nominator3@ytl.com",
+            "nomineeName": "Sarah Lim",
+            "nomineeCompany": "YTL Power \u00b7 Finance",
+            "btrtValue": "Togetherness",
+            "story": "Sarah guided two junior team members through a system migration, created a simple checklist, and helped the team avoid repeated reporting mistakes.",
+            "beneficiaries": [
+                  "Our team",
+                  "Our department"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 91,
+                  "note": "Strong team culture example."
+            }
+      },
+      {
+            "id": 4,
+            "date": "2026-09-05",
+            "nominatorName": "Nominator 4",
+            "nominatorEmail": "nominator4@ytl.com",
+            "nomineeName": "Chloe Ng",
+            "nomineeCompany": "YTL Communications \u00b7 Marketing",
+            "btrtValue": "Vitality",
+            "story": "Chloe kept the campaign team energised during a difficult launch period by organising quick check-ins, unblocking copy approvals, and keeping everyone focused.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 89,
+                  "note": "Clear vitality and resilience."
+            }
+      },
+      {
+            "id": 5,
+            "date": "2026-09-06",
+            "nominatorName": "Nominator 5",
+            "nominatorEmail": "nominator5@ytl.com",
+            "nomineeName": "Daniel Tan",
+            "nomineeCompany": "YTL Land \u00b7 Retail",
+            "btrtValue": "Hard Work",
+            "story": "Daniel personally tracked late-night store readiness issues before an opening, coordinated fixes with vendors, and ensured the launch team could proceed without delay.",
+            "beneficiaries": [
+                  "Our team",
+                  "Customers / stakeholders"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 88,
+                  "note": "Good hard work example."
+            }
+      },
+      {
+            "id": 6,
+            "date": "2026-09-07",
+            "nominatorName": "Nominator 6",
+            "nominatorEmail": "nominator6@ytl.com",
+            "nomineeName": "Nadia Rahman",
+            "nomineeCompany": "YTL Foundation \u00b7 Programmes",
+            "btrtValue": "Moral Responsibility",
+            "story": "Nadia redesigned a volunteer briefing so beneficiaries were treated with more care and dignity, helping volunteers understand the community context before arrival.",
+            "beneficiaries": [
+                  "The community"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 90,
+                  "note": "Strong care and responsibility."
+            }
+      },
+      {
+            "id": 7,
+            "date": "2026-09-08",
+            "nominatorName": "Nominator 7",
+            "nominatorEmail": "nominator7@ytl.com",
+            "nomineeName": "Jason Ong",
+            "nomineeCompany": "YTL Hotels \u00b7 Operations",
+            "btrtValue": "Togetherness",
+            "story": "Jason brought kitchen, service and housekeeping teams together to resolve a guest recovery issue quickly, ensuring the guest felt cared for instead of passed around.",
+            "beneficiaries": [
+                  "Customers / stakeholders",
+                  "Our team"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 87,
+                  "note": "Good cross-team teamwork."
+            }
+      },
+      {
+            "id": 8,
+            "date": "2026-09-09",
+            "nominatorName": "Nominator 8",
+            "nominatorEmail": "nominator8@ytl.com",
+            "nomineeName": "Mei Chen",
+            "nomineeCompany": "YTL AI Labs \u00b7 Product",
+            "btrtValue": "Vitality",
+            "story": "Mei helped the team recover momentum after a failed demo by reframing the problem, preparing a new test plan, and encouraging everyone to keep improving.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 86,
+                  "note": "Positive and specific."
+            }
+      },
+      {
+            "id": 9,
+            "date": "2026-09-10",
+            "nominatorName": "Nominator 9",
+            "nominatorEmail": "nominator9@ytl.com",
+            "nomineeName": "Farah Ali",
+            "nomineeCompany": "YTL Construction \u00b7 Project Team",
+            "btrtValue": "Hard Work",
+            "story": "Farah followed up on safety documentation across multiple workstreams, stayed late to close gaps, and helped the project team prepare for inspection.",
+            "beneficiaries": [
+                  "Our department",
+                  "The company"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 88,
+                  "note": "Reliable execution."
+            }
+      },
+      {
+            "id": 10,
+            "date": "2026-09-11",
+            "nominatorName": "Nominator 10",
+            "nominatorEmail": "nominator10@ytl.com",
+            "nomineeName": "Adam Wong",
+            "nomineeCompany": "Geneco \u00b7 Sustainability",
+            "btrtValue": "Moral Responsibility",
+            "story": "Adam organised a recycling education session for colleagues and turned a small internal effort into a repeatable habit across the team.",
+            "beneficiaries": [
+                  "Our team",
+                  "The community"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 85,
+                  "note": "Good BTRT behaviour."
+            }
+      },
+      {
+            "id": 11,
+            "date": "2026-09-12",
+            "nominatorName": "Nominator 11",
+            "nominatorEmail": "nominator11@ytl.com",
+            "nomineeName": "Ravi Kumar",
+            "nomineeCompany": "Wessex Water \u00b7 Engineering",
+            "btrtValue": "Honesty",
+            "story": "Ravi escalated a potential compliance concern early, even though it created extra work, and helped the team address it before it became a larger issue.",
+            "beneficiaries": [
+                  "The company",
+                  "The community"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 91,
+                  "note": "Strong risk prevention."
+            }
+      },
+      {
+            "id": 12,
+            "date": "2026-09-13",
+            "nominatorName": "Nominator 12",
+            "nominatorEmail": "nominator12@ytl.com",
+            "nomineeName": "Dina Lee",
+            "nomineeCompany": "Starhill \u00b7 Leasing",
+            "btrtValue": "Togetherness",
+            "story": "Dina helped coordinate between tenants, operations and marketing during a late change, keeping everyone aligned and preventing confusion on launch week.",
+            "beneficiaries": [
+                  "Our department",
+                  "Customers / stakeholders"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 84,
+                  "note": "Good stakeholder alignment."
+            }
+      },
+      {
+            "id": 13,
+            "date": "2026-09-14",
+            "nominatorName": "Nominator 13",
+            "nominatorEmail": "nominator13@ytl.com",
+            "nomineeName": "Marcus Teo",
+            "nomineeCompany": "YTL Data Center \u00b7 Facilities",
+            "btrtValue": "Hard Work",
+            "story": "Marcus worked through a critical handover checklist, identified missing items, and coordinated follow-ups so the facilities team could close readiness gaps.",
+            "beneficiaries": [
+                  "Our team",
+                  "The company"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 86,
+                  "note": "Strong ownership."
+            }
+      },
+      {
+            "id": 14,
+            "date": "2026-09-15",
+            "nominatorName": "Nominator 14",
+            "nominatorEmail": "nominator14@ytl.com",
+            "nomineeName": "Aisha Karim",
+            "nomineeCompany": "YTL PowerSeraya \u00b7 HR",
+            "btrtValue": "Togetherness",
+            "story": "Aisha supported a new joiner cohort by creating a buddy tracker, checking in weekly, and helping managers respond faster to onboarding issues.",
+            "beneficiaries": [
+                  "Our team",
+                  "Our department"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 85,
+                  "note": "Good people-first example."
+            }
+      },
+      {
+            "id": 15,
+            "date": "2026-09-16",
+            "nominatorName": "Nominator 15",
+            "nominatorEmail": "nominator15@ytl.com",
+            "nomineeName": "Wei Jian",
+            "nomineeCompany": "YTL Communications \u00b7 Network",
+            "btrtValue": "Hard Work",
+            "story": "Wei Jian responded quickly to repeated service issues, documented the pattern, and coordinated with engineering until the root cause was narrowed down.",
+            "beneficiaries": [
+                  "Customers / stakeholders",
+                  "The company"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 87,
+                  "note": "Strong persistence."
+            }
+      },
+      {
+            "id": 16,
+            "date": "2026-09-17",
+            "nominatorName": "Nominator 16",
+            "nominatorEmail": "nominator16@ytl.com",
+            "nomineeName": "Siti Amina",
+            "nomineeCompany": "YTLCC \u00b7 Design",
+            "btrtValue": "Vitality",
+            "story": "Siti kept a high-pressure design sprint moving by preparing clear options, encouraging feedback early, and helping the team stay positive through revisions.",
+            "beneficiaries": [
+                  "Our team",
+                  "Our department"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 86,
+                  "note": "Good creative energy."
+            }
+      },
+      {
+            "id": 17,
+            "date": "2026-09-18",
+            "nominatorName": "Nominator 17",
+            "nominatorEmail": "nominator17@ytl.com",
+            "nomineeName": "Kenneth Low",
+            "nomineeCompany": "YTL Cement \u00b7 Sales",
+            "btrtValue": "Honesty",
+            "story": "Kenneth corrected a client-facing quotation error before approval, explained the issue clearly, and helped preserve trust with the customer.",
+            "beneficiaries": [
+                  "Customers / stakeholders",
+                  "The company"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 90,
+                  "note": "Strong honesty example."
+            }
+      },
+      {
+            "id": 18,
+            "date": "2026-09-19",
+            "nominatorName": "Nominator 18",
+            "nominatorEmail": "nominator18@ytl.com",
+            "nomineeName": "Liyana Zain",
+            "nomineeCompany": "YTL Hotels \u00b7 Sustainability",
+            "btrtValue": "Moral Responsibility",
+            "story": "Liyana helped turn a beach clean-up into a learning activity by explaining the impact of waste on marine life and encouraging colleagues to keep contributing.",
+            "beneficiaries": [
+                  "The community",
+                  "Our team"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 84,
+                  "note": "Good community impact."
+            }
+      },
+      {
+            "id": 19,
+            "date": "2026-09-20",
+            "nominatorName": "Nominator 19",
+            "nominatorEmail": "nominator19@ytl.com",
+            "nomineeName": "Ivan Ho",
+            "nomineeCompany": "ERL \u00b7 Maintenance",
+            "btrtValue": "Hard Work",
+            "story": "Ivan volunteered to support weekend checks after recurring equipment issues and helped the team identify a practical preventive maintenance routine.",
+            "beneficiaries": [
+                  "Customers / stakeholders",
+                  "Our team"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 85,
+                  "note": "Solid operational commitment."
+            }
+      },
+      {
+            "id": 20,
+            "date": "2026-09-21",
+            "nominatorName": "Nominator 20",
+            "nominatorEmail": "nominator20@ytl.com",
+            "nomineeName": "Grace Tan",
+            "nomineeCompany": "YTL Land \u00b7 Customer Service",
+            "btrtValue": "Togetherness",
+            "story": "Grace mediated a tense customer handover by coordinating updates between sales, defects and management, helping the customer receive a clearer resolution path.",
+            "beneficiaries": [
+                  "Customers / stakeholders",
+                  "Our department"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": {
+                  "score": 88,
+                  "note": "Strong collaboration."
+            }
+      },
+      {
+            "id": 21,
+            "date": "2026-09-22",
+            "nominatorName": "Nominator 21",
+            "nominatorEmail": "nominator21@ytl.com",
+            "nomineeName": "Sarah Lim",
+            "nomineeCompany": "YTL Power \u00b7 Finance",
+            "btrtValue": "Togetherness",
+            "story": "Sarah also created a short guide that made the new finance workflow easier for everyone to follow.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 22,
+            "date": "2026-09-23",
+            "nominatorName": "Nominator 22",
+            "nominatorEmail": "nominator22@ytl.com",
+            "nomineeName": "Amir Hassan",
+            "nomineeCompany": "YTL Cement \u00b7 Operations",
+            "btrtValue": "Honesty",
+            "story": "Amir handled the reporting issue transparently and helped the team correct it before it caused problems.",
+            "beneficiaries": [
+                  "The company"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 23,
+            "date": "2026-09-24",
+            "nominatorName": "Nominator 23",
+            "nominatorEmail": "nominator23@ytl.com",
+            "nomineeName": "Priya Menon",
+            "nomineeCompany": "ERL \u00b7 Customer Experience",
+            "btrtValue": "Moral Responsibility",
+            "story": "Priya stayed calm with passengers and supported the frontline team during the disruption.",
+            "beneficiaries": [
+                  "Customers / stakeholders"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 24,
+            "date": "2026-09-25",
+            "nominatorName": "Nominator 24",
+            "nominatorEmail": "nominator24@ytl.com",
+            "nomineeName": "Grace Tan",
+            "nomineeCompany": "YTL Land \u00b7 Customer Service",
+            "btrtValue": "Togetherness",
+            "story": "Grace coordinated follow-ups across departments so the customer had one clear response.",
+            "beneficiaries": [
+                  "Customers / stakeholders"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 25,
+            "date": "2026-09-26",
+            "nominatorName": "Nominator 25",
+            "nominatorEmail": "nominator25@ytl.com",
+            "nomineeName": "Kenneth Low",
+            "nomineeCompany": "YTL Cement \u00b7 Sales",
+            "btrtValue": "Honesty",
+            "story": "Kenneth chose to correct the quotation even though it delayed approval, protecting customer trust.",
+            "beneficiaries": [
+                  "Customers / stakeholders"
+            ],
+            "status": "Finalist",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 26,
+            "date": "2026-09-27",
+            "nominatorName": "Nominator 26",
+            "nominatorEmail": "nominator26@ytl.com",
+            "nomineeName": "Kelvin Yap",
+            "nomineeCompany": "YTL Power \u00b7 IT",
+            "btrtValue": "Vitality",
+            "story": "Kelvin has been helpful and positive during IT support periods.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Submitted",
+            "validated": false,
+            "judge": null
+      },
+      {
+            "id": 27,
+            "date": "2026-09-28",
+            "nominatorName": "Nominator 27",
+            "nominatorEmail": "nominator27@ytl.com",
+            "nomineeName": "Rachel Foo",
+            "nomineeCompany": "YTL Foundation \u00b7 Comms",
+            "btrtValue": "Togetherness",
+            "story": "Rachel helped the team with a few urgent comms items and was very supportive.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Submitted",
+            "validated": false,
+            "judge": null
+      },
+      {
+            "id": 28,
+            "date": "2026-09-01",
+            "nominatorName": "Nominator 28",
+            "nominatorEmail": "nominator28@ytl.com",
+            "nomineeName": "Hafiz Noor",
+            "nomineeCompany": "YTL Cement \u00b7 Logistics",
+            "btrtValue": "Hard Work",
+            "story": "Hafiz always works hard and deserves recognition.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Needs Detail",
+            "validated": false,
+            "judge": null
+      },
+      {
+            "id": 29,
+            "date": "2026-09-02",
+            "nominatorName": "Nominator 29",
+            "nominatorEmail": "nominator29@ytl.com",
+            "nomineeName": "Joanne Lee",
+            "nomineeCompany": "YTL Hotels \u00b7 Sales",
+            "btrtValue": "Honesty",
+            "story": "Joanne is honest and reliable.",
+            "beneficiaries": [
+                  "Our department"
+            ],
+            "status": "Needs Detail",
+            "validated": false,
+            "judge": null
+      },
+      {
+            "id": 30,
+            "date": "2026-09-03",
+            "nominatorName": "Nominator 30",
+            "nominatorEmail": "nominator30@ytl.com",
+            "nomineeName": "Arun Das",
+            "nomineeCompany": "YTL Construction \u00b7 Safety",
+            "btrtValue": "Moral Responsibility",
+            "story": "Arun reminded site teams to follow safety checks during a rushed period and helped avoid shortcuts.",
+            "beneficiaries": [
+                  "Our team",
+                  "The company"
+            ],
+            "status": "Validated",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 31,
+            "date": "2026-09-04",
+            "nominatorName": "Nominator 31",
+            "nominatorEmail": "nominator31@ytl.com",
+            "nomineeName": "Emily Wong",
+            "nomineeCompany": "Starhill \u00b7 Marketing",
+            "btrtValue": "Vitality",
+            "story": "Emily brought good energy during campaign prep and helped the team stay focused.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Validated",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 32,
+            "date": "2026-09-05",
+            "nominatorName": "Nominator 32",
+            "nominatorEmail": "nominator32@ytl.com",
+            "nomineeName": "Ben Chua",
+            "nomineeCompany": "YTL Data Center \u00b7 Project Office",
+            "btrtValue": "Hard Work",
+            "story": "Ben took ownership of tracker updates, chased dependencies and made sure the team did not miss critical handover items.",
+            "beneficiaries": [
+                  "Our team",
+                  "The company"
+            ],
+            "status": "Shortlisted",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 33,
+            "date": "2026-09-06",
+            "nominatorName": "Nominator 33",
+            "nominatorEmail": "nominator33@ytl.com",
+            "nomineeName": "Hui Min",
+            "nomineeCompany": "YTL Communications \u00b7 CX",
+            "btrtValue": "Togetherness",
+            "story": "Hui Min helped resolve repeated customer pain points by coordinating between frontline and technical teams.",
+            "beneficiaries": [
+                  "Customers / stakeholders",
+                  "Our team"
+            ],
+            "status": "Shortlisted",
+            "validated": true,
+            "judge": null
+      },
+      {
+            "id": 34,
+            "date": "2026-09-07",
+            "nominatorName": "Nominator 34",
+            "nominatorEmail": "nominator34@ytl.com",
+            "nomineeName": "Oscar Lim",
+            "nomineeCompany": "YTL Land \u00b7 Admin",
+            "btrtValue": "Togetherness",
+            "story": "Oscar is nice to everyone and often helps around the office.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Not Selected",
+            "validated": false,
+            "judge": null
+      },
+      {
+            "id": 35,
+            "date": "2026-09-08",
+            "nominatorName": "Nominator 35",
+            "nominatorEmail": "nominator35@ytl.com",
+            "nomineeName": "Tara Singh",
+            "nomineeCompany": "ERL \u00b7 Admin",
+            "btrtValue": "Vitality",
+            "story": "Tara is cheerful at work and keeps morale up.",
+            "beneficiaries": [
+                  "Our team"
+            ],
+            "status": "Not Selected",
+            "validated": false,
+            "judge": null
+      }
+];
 
-    function save() { localStorage.setItem('btrtNominations', JSON.stringify(nominations)); }
-    function load() { const stored = localStorage.getItem('btrtNominations'); nominations = stored ? JSON.parse(stored) : sampleData; save(); }
-    function seedData(force=false) { if (force || !localStorage.getItem('btrtNominations')) { nominations = JSON.parse(JSON.stringify(sampleData)); save(); } renderAll(); }
+    function save() { localStorage.setItem('btrtNominations20Finalists', JSON.stringify(nominations)); }
+    function load() { const stored = localStorage.getItem('btrtNominations20Finalists'); nominations = stored ? JSON.parse(stored) : sampleData; save(); }
+    function seedData(force=false) { if (force || !localStorage.getItem('btrtNominations20Finalists')) { nominations = JSON.parse(JSON.stringify(sampleData)); save(); } renderAll(); }
     function clearData() { nominations = []; save(); renderAll(); }
 
     function showPanel(id, tab) {
@@ -746,6 +1437,25 @@
       document.getElementById('valueBars').innerHTML = Object.entries(counts).map(([k,v]) => `<div class="bar-row"><span>${k}</span><div class="bar-track"><div class="bar-fill" style="width:${(v/max)*100}%"></div></div><b>${v}</b></div>`).join('');
     }
 
+
+    function renderStatusBoard(groups) {
+      const statuses = ['Submitted', 'Needs Detail', 'Validated', 'Shortlisted', 'Finalist', 'Not Selected'];
+      const board = document.getElementById('statusBoard');
+      if (!board) return;
+      board.innerHTML = statuses.map(status => {
+        const list = groups.filter(g => g.status === status).sort((a,b) => a.name.localeCompare(b.name));
+        const shown = list.slice(0, 8);
+        const remaining = Math.max(0, list.length - shown.length);
+        return `<div class="status-column">
+          <h4>${status} <span class="tag ${tagClass(status)}">${list.length}</span></h4>
+          <div class="status-list">
+            ${shown.map(g => `<div class="status-name" onclick="openReview('${g.name.replace(/'/g, "\\'")}')"><b>${g.name}</b><span>${g.primaryValue} · ${g.total} nom.</span></div>`).join('') || '<div class="status-name"><span>No names yet</span></div>'}
+            ${remaining ? `<div class="status-name"><span>+${remaining} more</span></div>` : ''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
     function renderDashboard() {
       const search = (document.getElementById('searchInput')?.value || '').toLowerCase();
       const vf = document.getElementById('valueFilter')?.value || 'All';
@@ -753,6 +1463,7 @@
       let groups = getNomineeGroups();
       renderMetrics(groups);
       renderValueBars();
+      renderStatusBoard(groups);
       groups = groups.filter(g => (!search || g.name.toLowerCase().includes(search)) && (vf === 'All' || g.primaryValue === vf) && (sf === 'All' || g.status === sf));
       document.getElementById('nomineeTable').innerHTML = groups.map(g => `<tr class="clickable" onclick="openReview('${g.name.replace(/'/g, "\\'")}')"><td><b>${g.name}</b><br><span style="color:var(--muted)">${g.company}</span></td><td>${g.total}</td><td>${g.primaryValue}</td><td>${summariseStory(g.best.story)}</td><td><span class="tag ${tagClass(g.label)}">${g.strength} · ${g.label}</span></td><td><span class="tag ${tagClass(g.confidence)}">${g.confidence}</span></td><td><span class="tag ${tagClass(g.status)}">${g.status}</span></td></tr>`).join('') || '<tr><td colspan="7">No records found.</td></tr>';
       document.getElementById('rawTable').innerHTML = nominations.slice().reverse().map(n => `<tr><td>${n.id}</td><td>${n.date}</td><td>${n.nominatorName}</td><td>${n.nomineeName}<br><span style="color:var(--muted)">${n.nomineeCompany}</span></td><td>${n.btrtValue}</td><td>${n.story}</td></tr>`).join('') || '<tr><td colspan="6">No nominations yet.</td></tr>';
@@ -786,9 +1497,9 @@
     }
     function makeFinalist() { document.getElementById('reviewStatus').value = 'Finalist'; document.getElementById('reviewValidated').value = 'true'; saveReview(); }
     function autoScoreAll() { nominations.forEach(n => { if (checkStory(n.story).score < 60 && n.status === 'Submitted') n.status = 'Needs Detail'; if (checkStory(n.story).score >= 80 && n.status === 'Submitted') n.status = 'Shortlisted'; }); save(); renderAll(); }
-    function autoPickTopFinalists() { const top = getNomineeGroups().filter(g => g.strength >= 80).slice(0,5); top.forEach(g => nominations.forEach(n => { if (n.nomineeName === g.name) { n.status = 'Finalist'; n.validated = true; } })); save(); renderAll(); }
+    function autoPickTopFinalists() { const top = getNomineeGroups().filter(g => g.strength >= 80).slice(0,20); top.forEach(g => nominations.forEach(n => { if (n.nomineeName === g.name) { n.status = 'Finalist'; n.validated = true; } })); save(); renderAll(); }
 
-    function getFinalists() { return getNomineeGroups().filter(g => g.status === 'Finalist' || g.status === 'Shortlisted').sort((a,b) => (b.list.find(n=>n.judge)?.judge?.score || b.strength) - (a.list.find(n=>n.judge)?.judge?.score || a.strength)); }
+    function getFinalists() { return getNomineeGroups().filter(g => g.status === 'Finalist').sort((a,b) => (b.list.find(n=>n.judge)?.judge?.score || b.strength) - (a.list.find(n=>n.judge)?.judge?.score || a.strength)); }
     function renderJudges() {
       const finalists = getFinalists();
       const select = document.getElementById('finalistSelect');
@@ -803,7 +1514,7 @@
       const name = document.getElementById('finalistSelect').value;
       const g = getFinalists().find(x => x.name === name);
       const profile = document.getElementById('judgeProfile');
-      if (!g) { profile.innerHTML = '<div class="profile-section"><h4>No finalist selected</h4><p>Go to the dashboard and mark nominees as Finalist or Shortlisted.</p></div>'; return; }
+      if (!g) { profile.innerHTML = '<div class="profile-section"><h4>No finalist selected</h4><p>Go to the dashboard and mark nominees as Finalist.</p></div>'; return; }
       profile.innerHTML = `<div class="profile-title"><h3>${g.name}</h3><p>${g.company} · Primary Value: ${g.primaryValue}</p></div><div class="profile-section"><h4>Summary</h4><p>${summariseStory(g.best.story)}</p></div><div class="profile-section"><h4>Impact</h4><p>This story benefited: ${[...new Set(g.list.flatMap(n => n.beneficiaries))].join(', ') || 'Not specified'}.</p></div><div class="profile-section"><h4>Supporting Evidence</h4><p>${g.total} peer nomination(s) · ${g.confidence} confidence · Status: ${g.status}.</p></div><div class="profile-section"><h4>Why this reflects BTRT</h4><p>The nomination is linked to ${g.primaryValue} and has been standardised so judges compare the behaviour and impact, not the nominator’s writing style.</p></div>`;
       const j = g.list.find(n => n.judge)?.judge;
       if (j) { document.getElementById('judgeNotes').value = j.note; }
@@ -834,4 +1545,3 @@
   </script>
 </body>
 </html>
-
