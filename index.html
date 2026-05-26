@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BTRT Awards Working Prototype · 20 Finalists</title>
+  <title>BTRT Awards Simplified Prototype</title>
   <style>
     :root {
       --blue: #0072bc;
       --blue-dark: #004b7c;
       --blue-soft: #e8f4fb;
       --ink: #1f2933;
-      --muted: #6b7280;
-      --line: #d9e2ec;
+      --muted: #657080;
+      --line: #d8e2ec;
       --bg: #f6f8fb;
       --card: #ffffff;
       --green: #0f8a5f;
@@ -33,7 +33,7 @@
 
     .hero {
       background:
-        radial-gradient(circle at top left, rgba(255,255,255,0.26), transparent 30%),
+        radial-gradient(circle at top left, rgba(255,255,255,0.24), transparent 28%),
         linear-gradient(135deg, var(--blue-dark), var(--blue));
       color: white;
       padding: 34px 42px 42px;
@@ -72,8 +72,8 @@
     h1 {
       margin: 0;
       font-size: 42px;
-      line-height: 1.05;
-      max-width: 820px;
+      line-height: 1.06;
+      max-width: 880px;
     }
 
     .hero p {
@@ -96,6 +96,26 @@
       white-space: nowrap;
     }
 
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 22px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .flow-card {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 14px;
+      padding: 13px;
+      min-height: 92px;
+    }
+
+    .flow-card b { display: block; font-size: 13px; margin-bottom: 7px; }
+    .flow-card span { display: block; font-size: 12px; opacity: 0.86; line-height: 1.35; }
+
     .container {
       width: min(1280px, calc(100% - 40px));
       margin: -26px auto 60px;
@@ -105,7 +125,7 @@
 
     .tabs {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 12px;
       margin-bottom: 18px;
     }
@@ -180,7 +200,7 @@
       border: 1px solid var(--line);
       border-radius: 14px;
       background: white;
-      min-height: 102px;
+      min-height: 94px;
       cursor: pointer;
       transition: 0.18s ease;
     }
@@ -207,7 +227,11 @@
       background: white;
     }
 
-    input:focus, select:focus, textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,114,188,0.12); }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(0,114,188,0.12);
+    }
+
     textarea { min-height: 150px; resize: vertical; line-height: 1.5; }
 
     .two-col {
@@ -257,37 +281,23 @@
     .primary { background: var(--blue); color: white; }
     .secondary { background: var(--blue-soft); color: var(--blue-dark); }
     .ghost { background: #f3f6fa; color: var(--ink); }
-    .danger { background: #fff0ee; color: var(--red); }
 
-    .process { display: grid; gap: 12px; }
-
-    .step {
-      display: grid;
-      grid-template-columns: 40px 1fr;
-      gap: 12px;
-      padding: 14px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: white;
+    .callout {
+      background: #fff8e8;
+      border: 1px solid #f1d28b;
+      border-radius: 16px;
+      padding: 16px;
+      color: #62410a;
+      line-height: 1.5;
+      margin-top: 14px;
     }
 
-    .num {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--blue-soft);
-      color: var(--blue-dark);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-    }
-
-    .step b { display: block; margin-bottom: 4px; }
-    .step span { color: var(--muted); font-size: 13px; line-height: 1.45; }
+    .success { background: #e7f8ef; border-color: #b6e4cc; color: #0f5132; }
+    .hidden { display: none !important; }
 
     .metric-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 12px;
       margin-bottom: 18px;
     }
@@ -302,6 +312,16 @@
 
     .metric span { color: var(--muted); font-size: 12px; }
     .metric b { display: block; font-size: 26px; margin-top: 7px; }
+
+    .tool-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .tool-row > div { min-width: 180px; flex: 1; }
 
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { padding: 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
@@ -324,13 +344,33 @@
     .tag.blue { background: var(--blue-soft); color: var(--blue-dark); }
     .tag.purple { background: #f1ebff; color: var(--purple); }
 
-    .dashboard-layout, .profile-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 18px; }
-    .mini-bars { display: grid; gap: 13px; }
-    .bar-row { display: grid; grid-template-columns: 140px 1fr 40px; gap: 10px; align-items: center; font-size: 13px; }
-    .bar-track { height: 10px; background: #eef2f7; border-radius: 999px; overflow: hidden; }
-    .bar-fill { height: 100%; background: var(--blue); border-radius: 999px; transition: 0.3s ease; }
+    .hr-status-select { min-width: 150px; padding: 9px 10px; }
 
-    .profile-card { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: white; }
+    .process { display: grid; gap: 12px; }
+    .step {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: white;
+    }
+    .num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      color: var(--blue-dark);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+    .step b { display: block; margin-bottom: 4px; }
+    .step span { color: var(--muted); font-size: 13px; line-height: 1.45; }
+
+    .profile-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 18px; }
+    .profile-card { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: white; box-shadow: var(--shadow); }
     .profile-title { padding: 18px; background: linear-gradient(135deg, var(--blue-dark), var(--blue)); color: white; }
     .profile-title h3 { margin: 0; font-size: 24px; }
     .profile-title p { margin: 6px 0 0; opacity: 0.88; }
@@ -343,64 +383,7 @@
     .score-box label { margin: 0 0 8px; display: flex; justify-content: space-between; }
     input[type="range"] { padding: 0; }
 
-    .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 18px; }
-    .time-block { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.24); border-radius: 14px; padding: 12px; min-height: 96px; }
-    .time-block b { display: block; font-size: 13px; margin-bottom: 6px; }
-    .time-block span { display: block; font-size: 12px; opacity: 0.84; line-height: 1.35; }
-
-    .callout { background: #fff8e8; border: 1px solid #f1d28b; border-radius: 16px; padding: 16px; color: #62410a; line-height: 1.5; margin-top: 14px; }
-    .success { background: #e7f8ef; border-color: #b6e4cc; color: #0f5132; }
-    .hidden { display: none !important; }
-
-    .tool-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin-bottom: 16px; }
-    .tool-row > div { min-width: 180px; flex: 1; }
     .small-note { color: var(--muted); font-size: 12px; line-height: 1.45; margin-top: 8px; }
-
-    .status-board {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 12px;
-    }
-
-    .status-column {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: #fbfdff;
-      overflow: hidden;
-      min-height: 160px;
-    }
-
-    .status-column h4 {
-      margin: 0;
-      padding: 14px 14px 10px;
-      border-bottom: 1px solid var(--line);
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .status-list {
-      padding: 10px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .status-name {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: white;
-      padding: 9px 10px;
-      font-size: 12px;
-      line-height: 1.35;
-      cursor: pointer;
-    }
-
-    .status-name:hover { border-color: var(--blue); background: var(--blue-soft); }
-    .status-name b { display: block; font-size: 13px; margin-bottom: 2px; }
-    .status-name span { color: var(--muted); }
-
 
     .modal-backdrop {
       position: fixed;
@@ -421,13 +404,12 @@
     .x { background: #f3f6fa; padding: 8px 11px; border-radius: 10px; }
 
     @media (max-width: 980px) {
-      .grid, .dashboard-layout, .profile-grid { grid-template-columns: 1fr; }
+      .grid, .profile-grid { grid-template-columns: 1fr; }
       .metric-grid { grid-template-columns: repeat(2, 1fr); }
       .values { grid-template-columns: repeat(2, 1fr); }
       .tabs { grid-template-columns: 1fr; }
-      .timeline { grid-template-columns: repeat(2, 1fr); }
+      .flow { grid-template-columns: repeat(2, 1fr); }
       .two-col { grid-template-columns: 1fr; }
-      .status-board { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
@@ -437,35 +419,33 @@
       <div class="hero-top">
         <div>
           <div class="brand-kicker">YTL Group Internal Recognition Prototype</div>
-          <h1>BTRT Awards Working Prototype</h1>
-          <p>Submit nominations, auto-generate dashboard summaries, validate nominees, shortlist finalists, and score winners. This is a front-end demo only: data is stored locally in your browser.</p>
+          <h1>BTRT Awards Simplified Prototype</h1>
+          <p>A clearer version for presentation: employees submit nominations, HR/YTLCC reviews them in one working table, finalists move to judges, and winners are ranked by rubric.</p>
         </div>
-        <div class="pill">Working Demo · Form → Dashboard → Judges</div>
+        <div class="pill">Simple Demo · Form → HR → Judges</div>
       </div>
-      <div class="timeline">
-        <div class="time-block"><b>1–19 Jul</b><span>Build form, rubric, dashboard and data structure.</span></div>
-        <div class="time-block"><b>22–31 Jul</b><span>Pilot with HR, HOD and YTLCC.</span></div>
-        <div class="time-block"><b>1–30 Aug</b><span>Launch 90-second Say Thanks nominations.</span></div>
-        <div class="time-block"><b>2–30 Sep</b><span>Clean, group, follow up, validate.</span></div>
-        <div class="time-block"><b>1–25 Oct</b><span>Shortlist and prepare finalist profiles.</span></div>
-        <div class="time-block"><b>28 Oct–19 Nov</b><span>Judge, confirm winners and award day.</span></div>
+      <div class="flow">
+        <div class="flow-card"><b>1. Employee Form</b><span>Collect nominations and BTRT stories.</span></div>
+        <div class="flow-card"><b>2. HR Review</b><span>Review nominees in one table.</span></div>
+        <div class="flow-card"><b>3. Status Update</b><span>Move each nominee from Submitted to Finalist.</span></div>
+        <div class="flow-card"><b>4. Judges Pack</b><span>Judges only see confirmed finalists.</span></div>
+        <div class="flow-card"><b>5. Winners</b><span>Scores create a final ranking.</span></div>
       </div>
     </section>
 
     <section class="container">
       <div class="tabs">
-        <div class="tab active" onclick="showPanel('form', this)"><b>1. Employee Form</b><small>Submit a nomination and see it enter the dashboard.</small></div>
-        <div class="tab" onclick="showPanel('dashboard', this)"><b>2. HR / YTLCC Dashboard</b><small>Group, filter, validate and shortlist nominees.</small></div>
-        <div class="tab" onclick="showPanel('judges', this)"><b>3. Judges Pack</b><small>Score finalists and see winner ranking.</small></div>
-        <div class="tab" onclick="showPanel('settings', this)"><b>4. Demo Controls</b><small>Reset sample data or export records.</small></div>
+        <div class="tab active" onclick="showPanel('form', this)"><b>1. Employee Form</b><small>Simple nomination form. No live scoring.</small></div>
+        <div class="tab" onclick="showPanel('dashboard', this)"><b>2. HR / YTLCC Review</b><small>One clean dashboard table with HR Status dropdown.</small></div>
+        <div class="tab" onclick="showPanel('judges', this)"><b>3. Judges Pack</b><small>20 finalists and scoring rubric.</small></div>
       </div>
 
       <section id="form" class="panel active">
         <div class="grid">
           <div class="card">
             <div class="card-header">
-              <h2>BTRT Awards 2026: Say Thanks</h2>
-              <p>Take 90 seconds to recognise someone who brought Building The Right Thing to life. No perfect writing needed. Just share a real moment.</p>
+              <h2>BTRT Awards 2026: Nomination Form</h2>
+              <p>Recognise someone who brought Building The Right Thing to life. Keep it simple: choose the value and share a real example.</p>
               <div class="values" id="valueCards"></div>
             </div>
             <div class="card-body">
@@ -486,7 +466,6 @@
                 <div class="checkbox-grid" id="beneficiaryGrid"></div>
                 <div class="btn-row">
                   <button class="primary" type="submit">Submit nomination</button>
-                  <button class="secondary" type="button" onclick="improveStory()">Help me make this clearer</button>
                   <button class="ghost" type="button" onclick="fillRandomExample()">Try another example</button>
                 </div>
               </form>
@@ -496,12 +475,17 @@
 
           <div class="card">
             <div class="card-header">
-              <h3>Live Story Check</h3>
-              <p>This simulates privacy-safe AI support. It checks clarity, not award-worthiness.</p>
+              <h3>What employees see</h3>
+              <p>This version keeps the employee experience light and non-intimidating.</p>
             </div>
             <div class="card-body">
-              <div class="process" id="storyCheck"></div>
-              <div class="callout"><b>Privacy-safe AI note:</b> in a real build, send only the story and an anonymised nominee ID to AI. Do not send phone numbers, HR comments, conduct concerns or judge scores.</div>
+              <div class="process">
+                <div class="step"><div class="num">1</div><div><b>Choose a colleague</b><span>Employee enters nominee details.</span></div></div>
+                <div class="step"><div class="num">2</div><div><b>Choose one BTRT value</b><span>Keeps the nomination focused.</span></div></div>
+                <div class="step"><div class="num">3</div><div><b>Share a real story</b><span>No AI score, no complicated helper, no extra pressure.</span></div></div>
+                <div class="step"><div class="num">4</div><div><b>Submit</b><span>The record appears in HR/YTLCC Review.</span></div></div>
+              </div>
+              <div class="callout"><b>Presentation line:</b> The employee form stays simple so we do not reduce participation.</div>
             </div>
           </div>
         </div>
@@ -509,52 +493,31 @@
 
       <section id="dashboard" class="panel">
         <div class="metric-grid" id="metrics"></div>
+
         <div class="card" style="margin-bottom:18px;">
           <div class="card-header">
-            <h3>Dashboard Filters</h3>
-            <p>Use this like a working review view: filter by value, status or search by nominee.</p>
+            <h3>HR / YTLCC Review Dashboard</h3>
+            <p>One working table. HR/YTLCC reviews nominee summaries, adds notes, and updates HR Status. This avoids over-explaining the process.</p>
           </div>
           <div class="card-body">
             <div class="tool-row">
               <div><label>Search nominee</label><input id="searchInput" placeholder="Type a name..." oninput="renderDashboard()" /></div>
               <div><label>Value</label><select id="valueFilter" onchange="renderDashboard()"><option value="All">All values</option></select></div>
-              <div><label>Status</label><select id="statusFilter" onchange="renderDashboard()"><option value="All">All statuses</option><option>Submitted</option><option>Needs Detail</option><option>Validated</option><option>Shortlisted</option><option>Finalist</option><option>Not Selected</option></select></div>
-              <button class="secondary" onclick="autoScoreAll()">Auto-score all</button>
+              <div><label>HR Status</label><select id="statusFilter" onchange="renderDashboard()"><option value="All">All statuses</option><option>Submitted</option><option>Needs Detail</option><option>Validated</option><option>Shortlisted</option><option>Finalist</option><option>Not Selected</option></select></div>
+              <button class="secondary" onclick="resetData()">Reset demo data</button>
             </div>
-            <div class="small-note">Click any nominee row to open the HR/YTLCC review modal.</div>
+            <div class="small-note">Change the HR Status dropdown directly in the table. Click a nominee row for more notes.</div>
           </div>
         </div>
 
-
-        <div class="card" style="margin-bottom:18px;">
-          <div class="card-header">
-            <h3>HR Status Board</h3>
-            <p>Names are grouped by workflow status so HR/YTLCC can quickly see who needs follow-up, validation, shortlisting or judging.</p>
+        <div class="card">
+          <div class="card-header"><h3>Nominee Review Table</h3><p>Grouped by nominee, not raw votes. This prevents it becoming a popularity contest.</p></div>
+          <div class="card-body" style="overflow:auto;">
+            <table>
+              <thead><tr><th>Nominee</th><th>Company / Dept</th><th>No. of Nominations</th><th>BTRT Value</th><th>Story Summary</th><th>HR Notes</th><th>HR Status</th></tr></thead>
+              <tbody id="nomineeTable"></tbody>
+            </table>
           </div>
-          <div class="card-body">
-            <div class="status-board" id="statusBoard"></div>
-            <div class="small-note">This is based on nominee-level status, not raw nomination count. Click names in the summary table below to review or move them to another category.</div>
-          </div>
-        </div>
-
-        <div class="dashboard-layout">
-          <div class="card">
-            <div class="card-header"><h3>Campaign Health</h3><p>Live totals based on nominations currently in the demo.</p></div>
-            <div class="card-body">
-              <h4>Nominations by BTRT Value</h4>
-              <div class="mini-bars" id="valueBars"></div>
-              <div class="callout"><b>Action signal:</b> under-represented values can be pushed in reminder comms with value-specific prompts.</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3>Nominee Summary View</h3><p>Grouped by nominee, not raw votes. This prevents a popularity contest.</p></div>
-            <div class="card-body" style="overflow:auto;"><table><thead><tr><th>Nominee</th><th>Noms</th><th>Value</th><th>Best Story Summary</th><th>Strength</th><th>Confidence</th><th>Status</th></tr></thead><tbody id="nomineeTable"></tbody></table></div>
-          </div>
-        </div>
-
-        <div class="card" style="margin-top:18px;">
-          <div class="card-header"><h3>Raw Nominations</h3><p>Audit trail. Judges should not work from this view.</p></div>
-          <div class="card-body" style="overflow:auto;"><table><thead><tr><th>ID</th><th>Date</th><th>Nominator</th><th>Nominee</th><th>Value</th><th>Story</th></tr></thead><tbody id="rawTable"></tbody></table></div>
         </div>
       </section>
 
@@ -562,7 +525,7 @@
         <div class="profile-grid">
           <div class="profile-card" id="judgeProfile"></div>
           <div class="card">
-            <div class="card-header"><h3>Judge Scorecard</h3><p>Select a finalist, score them, then submit. Weighted score updates immediately.</p></div>
+            <div class="card-header"><h3>Judge Scorecard</h3><p>Judges only score confirmed finalists. The demo includes 20 finalist names.</p></div>
             <div class="card-body">
               <label>Select finalist</label>
               <select id="finalistSelect" onchange="selectFinalist()"></select>
@@ -571,40 +534,17 @@
               <div class="score-box"><label>Role Model Quality <b><span id="s3Label">5</span>/5 · 25%</b></label><input id="s3" type="range" min="1" max="5" value="5" oninput="updateScorePreview()" /></div>
               <div class="score-box"><label>Distinctiveness <b><span id="s4Label">4</span>/5 · 15%</b></label><input id="s4" type="range" min="1" max="5" value="4" oninput="updateScorePreview()" /></div>
               <label>Judge notes</label>
-              <textarea id="judgeNotes" style="min-height:110px;">Strong team culture example. The story is specific, validated, and easy for others to learn from.</textarea>
+              <textarea id="judgeNotes" style="min-height:110px;">Strong example. The behaviour is specific, validated, and easy for others to learn from.</textarea>
               <div class="metric" style="margin-top:14px;"><span>Weighted score preview</span><b id="scorePreview">91</b></div>
-              <div class="btn-row"><button class="primary" onclick="submitJudgeScore()">Submit score</button><button class="secondary" onclick="autoPickTopFinalists()">Make top shortlisted into finalists</button></div>
-              <div class="callout"><b>Decision rule:</b> AI may draft summaries, but YTLCC approves copy, HR/HOD validates facts, and judges determine winners.</div>
+              <div class="btn-row"><button class="primary" onclick="submitJudgeScore()">Submit score</button></div>
+              <div class="callout"><b>Presentation line:</b> HR confirms the finalist pool first. Judges then score only the 20 finalists.</div>
             </div>
           </div>
         </div>
         <div class="card" style="margin-top:18px;">
-          <div class="card-header"><h3>Finalist Comparison</h3><p>Live ranking based on judge scores submitted in this demo.</p></div>
-          <div class="card-body" style="overflow:auto;"><table><thead><tr><th>Rank</th><th>Finalist</th><th>Value</th><th>Noms</th><th>Nomination Strength</th><th>Judge Score</th><th>Judge Note</th></tr></thead><tbody id="finalistTable"></tbody></table></div>
-        </div>
-      </section>
-
-      <section id="settings" class="panel">
-        <div class="grid">
-          <div class="card">
-            <div class="card-header"><h3>Demo Controls</h3><p>This mock stores data locally in the browser only.</p></div>
-            <div class="card-body">
-              <div class="btn-row"><button class="primary" onclick="exportJson()">Export JSON</button><button class="secondary" onclick="exportCsv()">Export CSV</button><button class="ghost" onclick="seedData(true)">Reset sample data</button><button class="danger" onclick="clearData()">Clear all</button></div>
-              <div id="exportBox" class="callout hidden"></div>
-              <div class="callout"><b>Real-world build:</b> Microsoft Forms → SharePoint List → Power BI/Power Apps dashboard → Judge scorecard. AI should only summarise anonymised story records unless HR/Legal approves wider use.</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><h3>What this demo actually does</h3><p>Functional pieces included in this prototype.</p></div>
-            <div class="card-body">
-              <div class="process">
-                <div class="step"><div class="num">✓</div><div><b>Form submission works</b><span>New nominations appear in the dashboard immediately.</span></div></div>
-                <div class="step"><div class="num">✓</div><div><b>Nominees are grouped</b><span>Multiple nominations for the same person become one nominee summary.</span></div></div>
-                <div class="step"><div class="num">✓</div><div><b>Story checks run live</b><span>The system flags missing action, value and impact details.</span></div></div>
-                <div class="step"><div class="num">✓</div><div><b>Scores are calculated</b><span>Nomination strength and judge weighted scores are computed.</span></div></div>
-                <div class="step"><div class="num">✓</div><div><b>Status workflow works</b><span>Review, validate, shortlist and finalist statuses can be changed.</span></div></div>
-              </div>
-            </div>
+          <div class="card-header"><h3>20 Finalists: Judge Comparison</h3><p>Live ranking based on judge scores submitted in this demo.</p></div>
+          <div class="card-body" style="overflow:auto;">
+            <table><thead><tr><th>Rank</th><th>Finalist</th><th>Value</th><th>Nominations</th><th>HR Notes</th><th>Judge Score</th><th>Judge Note</th></tr></thead><tbody id="finalistTable"></tbody></table>
           </div>
         </div>
       </section>
@@ -627,655 +567,72 @@
       { name: 'Vitality', desc: 'Bringing energy, resilience and positivity.' }
     ];
     const beneficiaries = ['Me', 'Our team', 'Our department', 'Customers / stakeholders', 'The company', 'The community'];
+    const statuses = ['Submitted', 'Needs Detail', 'Validated', 'Shortlisted', 'Finalist', 'Not Selected'];
     let nominations = [];
     let selectedReviewName = null;
 
     const sampleData = [
-      {
-            "id": 1,
-            "date": "2026-09-02",
-            "nominatorName": "Nominator 1",
-            "nominatorEmail": "nominator1@ytl.com",
-            "nomineeName": "Amir Hassan",
-            "nomineeCompany": "YTL Cement \u00b7 Operations",
-            "btrtValue": "Honesty",
-            "story": "Amir flagged incorrect figures in a pre-submission report despite deadline pressure, traced the error with the team, and helped correct the final submission before it reached management.",
-            "beneficiaries": [
-                  "Our department",
-                  "The company"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 94,
-                  "note": "Powerful integrity example."
-            }
-      },
-      {
-            "id": 2,
-            "date": "2026-09-03",
-            "nominatorName": "Nominator 2",
-            "nominatorEmail": "nominator2@ytl.com",
-            "nomineeName": "Priya Menon",
-            "nomineeCompany": "ERL \u00b7 Customer Experience",
-            "btrtValue": "Moral Responsibility",
-            "story": "During a service disruption, Priya coordinated support for stranded passengers, checked on elderly passengers, and kept the frontline team calm until operations stabilised.",
-            "beneficiaries": [
-                  "Customers / stakeholders"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 92,
-                  "note": "Strong customer care story."
-            }
-      },
-      {
-            "id": 3,
-            "date": "2026-09-04",
-            "nominatorName": "Nominator 3",
-            "nominatorEmail": "nominator3@ytl.com",
-            "nomineeName": "Sarah Lim",
-            "nomineeCompany": "YTL Power \u00b7 Finance",
-            "btrtValue": "Togetherness",
-            "story": "Sarah guided two junior team members through a system migration, created a simple checklist, and helped the team avoid repeated reporting mistakes.",
-            "beneficiaries": [
-                  "Our team",
-                  "Our department"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 91,
-                  "note": "Strong team culture example."
-            }
-      },
-      {
-            "id": 4,
-            "date": "2026-09-05",
-            "nominatorName": "Nominator 4",
-            "nominatorEmail": "nominator4@ytl.com",
-            "nomineeName": "Chloe Ng",
-            "nomineeCompany": "YTL Communications \u00b7 Marketing",
-            "btrtValue": "Vitality",
-            "story": "Chloe kept the campaign team energised during a difficult launch period by organising quick check-ins, unblocking copy approvals, and keeping everyone focused.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 89,
-                  "note": "Clear vitality and resilience."
-            }
-      },
-      {
-            "id": 5,
-            "date": "2026-09-06",
-            "nominatorName": "Nominator 5",
-            "nominatorEmail": "nominator5@ytl.com",
-            "nomineeName": "Daniel Tan",
-            "nomineeCompany": "YTL Land \u00b7 Retail",
-            "btrtValue": "Hard Work",
-            "story": "Daniel personally tracked late-night store readiness issues before an opening, coordinated fixes with vendors, and ensured the launch team could proceed without delay.",
-            "beneficiaries": [
-                  "Our team",
-                  "Customers / stakeholders"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 88,
-                  "note": "Good hard work example."
-            }
-      },
-      {
-            "id": 6,
-            "date": "2026-09-07",
-            "nominatorName": "Nominator 6",
-            "nominatorEmail": "nominator6@ytl.com",
-            "nomineeName": "Nadia Rahman",
-            "nomineeCompany": "YTL Foundation \u00b7 Programmes",
-            "btrtValue": "Moral Responsibility",
-            "story": "Nadia redesigned a volunteer briefing so beneficiaries were treated with more care and dignity, helping volunteers understand the community context before arrival.",
-            "beneficiaries": [
-                  "The community"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 90,
-                  "note": "Strong care and responsibility."
-            }
-      },
-      {
-            "id": 7,
-            "date": "2026-09-08",
-            "nominatorName": "Nominator 7",
-            "nominatorEmail": "nominator7@ytl.com",
-            "nomineeName": "Jason Ong",
-            "nomineeCompany": "YTL Hotels \u00b7 Operations",
-            "btrtValue": "Togetherness",
-            "story": "Jason brought kitchen, service and housekeeping teams together to resolve a guest recovery issue quickly, ensuring the guest felt cared for instead of passed around.",
-            "beneficiaries": [
-                  "Customers / stakeholders",
-                  "Our team"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 87,
-                  "note": "Good cross-team teamwork."
-            }
-      },
-      {
-            "id": 8,
-            "date": "2026-09-09",
-            "nominatorName": "Nominator 8",
-            "nominatorEmail": "nominator8@ytl.com",
-            "nomineeName": "Mei Chen",
-            "nomineeCompany": "YTL AI Labs \u00b7 Product",
-            "btrtValue": "Vitality",
-            "story": "Mei helped the team recover momentum after a failed demo by reframing the problem, preparing a new test plan, and encouraging everyone to keep improving.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 86,
-                  "note": "Positive and specific."
-            }
-      },
-      {
-            "id": 9,
-            "date": "2026-09-10",
-            "nominatorName": "Nominator 9",
-            "nominatorEmail": "nominator9@ytl.com",
-            "nomineeName": "Farah Ali",
-            "nomineeCompany": "YTL Construction \u00b7 Project Team",
-            "btrtValue": "Hard Work",
-            "story": "Farah followed up on safety documentation across multiple workstreams, stayed late to close gaps, and helped the project team prepare for inspection.",
-            "beneficiaries": [
-                  "Our department",
-                  "The company"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 88,
-                  "note": "Reliable execution."
-            }
-      },
-      {
-            "id": 10,
-            "date": "2026-09-11",
-            "nominatorName": "Nominator 10",
-            "nominatorEmail": "nominator10@ytl.com",
-            "nomineeName": "Adam Wong",
-            "nomineeCompany": "Geneco \u00b7 Sustainability",
-            "btrtValue": "Moral Responsibility",
-            "story": "Adam organised a recycling education session for colleagues and turned a small internal effort into a repeatable habit across the team.",
-            "beneficiaries": [
-                  "Our team",
-                  "The community"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 85,
-                  "note": "Good BTRT behaviour."
-            }
-      },
-      {
-            "id": 11,
-            "date": "2026-09-12",
-            "nominatorName": "Nominator 11",
-            "nominatorEmail": "nominator11@ytl.com",
-            "nomineeName": "Ravi Kumar",
-            "nomineeCompany": "Wessex Water \u00b7 Engineering",
-            "btrtValue": "Honesty",
-            "story": "Ravi escalated a potential compliance concern early, even though it created extra work, and helped the team address it before it became a larger issue.",
-            "beneficiaries": [
-                  "The company",
-                  "The community"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 91,
-                  "note": "Strong risk prevention."
-            }
-      },
-      {
-            "id": 12,
-            "date": "2026-09-13",
-            "nominatorName": "Nominator 12",
-            "nominatorEmail": "nominator12@ytl.com",
-            "nomineeName": "Dina Lee",
-            "nomineeCompany": "Starhill \u00b7 Leasing",
-            "btrtValue": "Togetherness",
-            "story": "Dina helped coordinate between tenants, operations and marketing during a late change, keeping everyone aligned and preventing confusion on launch week.",
-            "beneficiaries": [
-                  "Our department",
-                  "Customers / stakeholders"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 84,
-                  "note": "Good stakeholder alignment."
-            }
-      },
-      {
-            "id": 13,
-            "date": "2026-09-14",
-            "nominatorName": "Nominator 13",
-            "nominatorEmail": "nominator13@ytl.com",
-            "nomineeName": "Marcus Teo",
-            "nomineeCompany": "YTL Data Center \u00b7 Facilities",
-            "btrtValue": "Hard Work",
-            "story": "Marcus worked through a critical handover checklist, identified missing items, and coordinated follow-ups so the facilities team could close readiness gaps.",
-            "beneficiaries": [
-                  "Our team",
-                  "The company"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 86,
-                  "note": "Strong ownership."
-            }
-      },
-      {
-            "id": 14,
-            "date": "2026-09-15",
-            "nominatorName": "Nominator 14",
-            "nominatorEmail": "nominator14@ytl.com",
-            "nomineeName": "Aisha Karim",
-            "nomineeCompany": "YTL PowerSeraya \u00b7 HR",
-            "btrtValue": "Togetherness",
-            "story": "Aisha supported a new joiner cohort by creating a buddy tracker, checking in weekly, and helping managers respond faster to onboarding issues.",
-            "beneficiaries": [
-                  "Our team",
-                  "Our department"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 85,
-                  "note": "Good people-first example."
-            }
-      },
-      {
-            "id": 15,
-            "date": "2026-09-16",
-            "nominatorName": "Nominator 15",
-            "nominatorEmail": "nominator15@ytl.com",
-            "nomineeName": "Wei Jian",
-            "nomineeCompany": "YTL Communications \u00b7 Network",
-            "btrtValue": "Hard Work",
-            "story": "Wei Jian responded quickly to repeated service issues, documented the pattern, and coordinated with engineering until the root cause was narrowed down.",
-            "beneficiaries": [
-                  "Customers / stakeholders",
-                  "The company"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 87,
-                  "note": "Strong persistence."
-            }
-      },
-      {
-            "id": 16,
-            "date": "2026-09-17",
-            "nominatorName": "Nominator 16",
-            "nominatorEmail": "nominator16@ytl.com",
-            "nomineeName": "Siti Amina",
-            "nomineeCompany": "YTLCC \u00b7 Design",
-            "btrtValue": "Vitality",
-            "story": "Siti kept a high-pressure design sprint moving by preparing clear options, encouraging feedback early, and helping the team stay positive through revisions.",
-            "beneficiaries": [
-                  "Our team",
-                  "Our department"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 86,
-                  "note": "Good creative energy."
-            }
-      },
-      {
-            "id": 17,
-            "date": "2026-09-18",
-            "nominatorName": "Nominator 17",
-            "nominatorEmail": "nominator17@ytl.com",
-            "nomineeName": "Kenneth Low",
-            "nomineeCompany": "YTL Cement \u00b7 Sales",
-            "btrtValue": "Honesty",
-            "story": "Kenneth corrected a client-facing quotation error before approval, explained the issue clearly, and helped preserve trust with the customer.",
-            "beneficiaries": [
-                  "Customers / stakeholders",
-                  "The company"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 90,
-                  "note": "Strong honesty example."
-            }
-      },
-      {
-            "id": 18,
-            "date": "2026-09-19",
-            "nominatorName": "Nominator 18",
-            "nominatorEmail": "nominator18@ytl.com",
-            "nomineeName": "Liyana Zain",
-            "nomineeCompany": "YTL Hotels \u00b7 Sustainability",
-            "btrtValue": "Moral Responsibility",
-            "story": "Liyana helped turn a beach clean-up into a learning activity by explaining the impact of waste on marine life and encouraging colleagues to keep contributing.",
-            "beneficiaries": [
-                  "The community",
-                  "Our team"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 84,
-                  "note": "Good community impact."
-            }
-      },
-      {
-            "id": 19,
-            "date": "2026-09-20",
-            "nominatorName": "Nominator 19",
-            "nominatorEmail": "nominator19@ytl.com",
-            "nomineeName": "Ivan Ho",
-            "nomineeCompany": "ERL \u00b7 Maintenance",
-            "btrtValue": "Hard Work",
-            "story": "Ivan volunteered to support weekend checks after recurring equipment issues and helped the team identify a practical preventive maintenance routine.",
-            "beneficiaries": [
-                  "Customers / stakeholders",
-                  "Our team"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 85,
-                  "note": "Solid operational commitment."
-            }
-      },
-      {
-            "id": 20,
-            "date": "2026-09-21",
-            "nominatorName": "Nominator 20",
-            "nominatorEmail": "nominator20@ytl.com",
-            "nomineeName": "Grace Tan",
-            "nomineeCompany": "YTL Land \u00b7 Customer Service",
-            "btrtValue": "Togetherness",
-            "story": "Grace mediated a tense customer handover by coordinating updates between sales, defects and management, helping the customer receive a clearer resolution path.",
-            "beneficiaries": [
-                  "Customers / stakeholders",
-                  "Our department"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": {
-                  "score": 88,
-                  "note": "Strong collaboration."
-            }
-      },
-      {
-            "id": 21,
-            "date": "2026-09-22",
-            "nominatorName": "Nominator 21",
-            "nominatorEmail": "nominator21@ytl.com",
-            "nomineeName": "Sarah Lim",
-            "nomineeCompany": "YTL Power \u00b7 Finance",
-            "btrtValue": "Togetherness",
-            "story": "Sarah also created a short guide that made the new finance workflow easier for everyone to follow.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 22,
-            "date": "2026-09-23",
-            "nominatorName": "Nominator 22",
-            "nominatorEmail": "nominator22@ytl.com",
-            "nomineeName": "Amir Hassan",
-            "nomineeCompany": "YTL Cement \u00b7 Operations",
-            "btrtValue": "Honesty",
-            "story": "Amir handled the reporting issue transparently and helped the team correct it before it caused problems.",
-            "beneficiaries": [
-                  "The company"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 23,
-            "date": "2026-09-24",
-            "nominatorName": "Nominator 23",
-            "nominatorEmail": "nominator23@ytl.com",
-            "nomineeName": "Priya Menon",
-            "nomineeCompany": "ERL \u00b7 Customer Experience",
-            "btrtValue": "Moral Responsibility",
-            "story": "Priya stayed calm with passengers and supported the frontline team during the disruption.",
-            "beneficiaries": [
-                  "Customers / stakeholders"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 24,
-            "date": "2026-09-25",
-            "nominatorName": "Nominator 24",
-            "nominatorEmail": "nominator24@ytl.com",
-            "nomineeName": "Grace Tan",
-            "nomineeCompany": "YTL Land \u00b7 Customer Service",
-            "btrtValue": "Togetherness",
-            "story": "Grace coordinated follow-ups across departments so the customer had one clear response.",
-            "beneficiaries": [
-                  "Customers / stakeholders"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 25,
-            "date": "2026-09-26",
-            "nominatorName": "Nominator 25",
-            "nominatorEmail": "nominator25@ytl.com",
-            "nomineeName": "Kenneth Low",
-            "nomineeCompany": "YTL Cement \u00b7 Sales",
-            "btrtValue": "Honesty",
-            "story": "Kenneth chose to correct the quotation even though it delayed approval, protecting customer trust.",
-            "beneficiaries": [
-                  "Customers / stakeholders"
-            ],
-            "status": "Finalist",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 26,
-            "date": "2026-09-27",
-            "nominatorName": "Nominator 26",
-            "nominatorEmail": "nominator26@ytl.com",
-            "nomineeName": "Kelvin Yap",
-            "nomineeCompany": "YTL Power \u00b7 IT",
-            "btrtValue": "Vitality",
-            "story": "Kelvin has been helpful and positive during IT support periods.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Submitted",
-            "validated": false,
-            "judge": null
-      },
-      {
-            "id": 27,
-            "date": "2026-09-28",
-            "nominatorName": "Nominator 27",
-            "nominatorEmail": "nominator27@ytl.com",
-            "nomineeName": "Rachel Foo",
-            "nomineeCompany": "YTL Foundation \u00b7 Comms",
-            "btrtValue": "Togetherness",
-            "story": "Rachel helped the team with a few urgent comms items and was very supportive.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Submitted",
-            "validated": false,
-            "judge": null
-      },
-      {
-            "id": 28,
-            "date": "2026-09-01",
-            "nominatorName": "Nominator 28",
-            "nominatorEmail": "nominator28@ytl.com",
-            "nomineeName": "Hafiz Noor",
-            "nomineeCompany": "YTL Cement \u00b7 Logistics",
-            "btrtValue": "Hard Work",
-            "story": "Hafiz always works hard and deserves recognition.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Needs Detail",
-            "validated": false,
-            "judge": null
-      },
-      {
-            "id": 29,
-            "date": "2026-09-02",
-            "nominatorName": "Nominator 29",
-            "nominatorEmail": "nominator29@ytl.com",
-            "nomineeName": "Joanne Lee",
-            "nomineeCompany": "YTL Hotels \u00b7 Sales",
-            "btrtValue": "Honesty",
-            "story": "Joanne is honest and reliable.",
-            "beneficiaries": [
-                  "Our department"
-            ],
-            "status": "Needs Detail",
-            "validated": false,
-            "judge": null
-      },
-      {
-            "id": 30,
-            "date": "2026-09-03",
-            "nominatorName": "Nominator 30",
-            "nominatorEmail": "nominator30@ytl.com",
-            "nomineeName": "Arun Das",
-            "nomineeCompany": "YTL Construction \u00b7 Safety",
-            "btrtValue": "Moral Responsibility",
-            "story": "Arun reminded site teams to follow safety checks during a rushed period and helped avoid shortcuts.",
-            "beneficiaries": [
-                  "Our team",
-                  "The company"
-            ],
-            "status": "Validated",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 31,
-            "date": "2026-09-04",
-            "nominatorName": "Nominator 31",
-            "nominatorEmail": "nominator31@ytl.com",
-            "nomineeName": "Emily Wong",
-            "nomineeCompany": "Starhill \u00b7 Marketing",
-            "btrtValue": "Vitality",
-            "story": "Emily brought good energy during campaign prep and helped the team stay focused.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Validated",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 32,
-            "date": "2026-09-05",
-            "nominatorName": "Nominator 32",
-            "nominatorEmail": "nominator32@ytl.com",
-            "nomineeName": "Ben Chua",
-            "nomineeCompany": "YTL Data Center \u00b7 Project Office",
-            "btrtValue": "Hard Work",
-            "story": "Ben took ownership of tracker updates, chased dependencies and made sure the team did not miss critical handover items.",
-            "beneficiaries": [
-                  "Our team",
-                  "The company"
-            ],
-            "status": "Shortlisted",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 33,
-            "date": "2026-09-06",
-            "nominatorName": "Nominator 33",
-            "nominatorEmail": "nominator33@ytl.com",
-            "nomineeName": "Hui Min",
-            "nomineeCompany": "YTL Communications \u00b7 CX",
-            "btrtValue": "Togetherness",
-            "story": "Hui Min helped resolve repeated customer pain points by coordinating between frontline and technical teams.",
-            "beneficiaries": [
-                  "Customers / stakeholders",
-                  "Our team"
-            ],
-            "status": "Shortlisted",
-            "validated": true,
-            "judge": null
-      },
-      {
-            "id": 34,
-            "date": "2026-09-07",
-            "nominatorName": "Nominator 34",
-            "nominatorEmail": "nominator34@ytl.com",
-            "nomineeName": "Oscar Lim",
-            "nomineeCompany": "YTL Land \u00b7 Admin",
-            "btrtValue": "Togetherness",
-            "story": "Oscar is nice to everyone and often helps around the office.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Not Selected",
-            "validated": false,
-            "judge": null
-      },
-      {
-            "id": 35,
-            "date": "2026-09-08",
-            "nominatorName": "Nominator 35",
-            "nominatorEmail": "nominator35@ytl.com",
-            "nomineeName": "Tara Singh",
-            "nomineeCompany": "ERL \u00b7 Admin",
-            "btrtValue": "Vitality",
-            "story": "Tara is cheerful at work and keeps morale up.",
-            "beneficiaries": [
-                  "Our team"
-            ],
-            "status": "Not Selected",
-            "validated": false,
-            "judge": null
-      }
-];
+      ['Sarah Lim','YTL Power · Finance','Togetherness','During a system migration, Sarah stayed back to guide two junior team members, created a simple checklist, and helped the team avoid repeated mistakes during a critical reporting period.','Strong story, validated by HOD.','Finalist',3,91],
+      ['Amir Hassan','YTL Cement · Operations','Honesty','Before a report was submitted, Amir noticed incorrect figures. He flagged the issue despite deadline pressure and helped the team correct the submission.','Strong integrity example.','Finalist',2,89],
+      ['Priya Menon','ERL · Customer Experience','Moral Responsibility','During a service disruption, Priya coordinated support for stranded passengers, checked on elderly passengers, and supported the frontline team until the situation stabilised.','Strong customer care story.','Finalist',4,90],
+      ['Chloe Ng','YTL Communications · Marketing','Vitality','Chloe kept the campaign team energised during a difficult launch period, organised quick check-ins, and helped unblock copy approvals.','Clear energy and morale example.','Finalist',2,86],
+      ['Daniel Tan','YTL Land · Retail','Hard Work','Daniel worked late across several nights to support a tenant launch, reviewed details carefully, and helped the team meet the opening deadline.','Good operational example.','Finalist',3,85],
+      ['Farah Aziz','YTL Hotels · Operations','Togetherness','Farah coordinated between housekeeping, front office and F&B during a high-occupancy weekend to ensure guest issues were resolved quickly.','Cross-team support is strong.','Finalist',2,84],
+      ['Jason Ong','YTL Construction · Project Team','Hard Work','Jason personally followed up on site documentation gaps, helped the team close pending items, and ensured the project update was ready for management review.','Strong ownership.','Finalist',3,83],
+      ['Mei Chen','YTL Foundation · Programmes','Moral Responsibility','Mei organised support for beneficiary families, followed up patiently with partners, and ensured every child received the correct assistance.','Strong community impact.','Finalist',4,88],
+      ['Ravi Kumar','YTL Cement · Safety','Honesty','Ravi paused a rushed process when he noticed a safety checklist had not been completed properly, then helped the team close the gap before work continued.','Good values alignment.','Finalist',2,87],
+      ['Nadia Rahman','YTL Communications · Corporate Comms','Togetherness','Nadia helped coordinate messages across teams, clarified ownership, and kept stakeholders aligned during a tight announcement timeline.','Good collaborative behaviour.','Finalist',3,82],
+      ['Leon Tan','YTL Data Center · Engineering','Hard Work','Leon worked through a complex technical handover, documented open issues clearly, and helped the next shift continue without confusion.','Strong behind-the-scenes effort.','Finalist',2,81],
+      ['Grace Wong','Starhill · Leasing','Vitality','Grace brought positive energy during a difficult negotiation period, kept the team focused, and helped maintain good relationships with stakeholders.','Good positivity example.','Finalist',2,80],
+      ['Aisha Karim','YTL PowerSeraya · Customer Team','Moral Responsibility','Aisha took extra care with a vulnerable customer case, escalated it properly, and followed through until the issue was resolved.','Strong care and responsibility.','Finalist',3,86],
+      ['Marcus Lee','YTL AI Labs · Product','Togetherness','Marcus helped non-technical colleagues understand an AI workflow by simplifying the process and creating a step-by-step guide.','Useful team enablement story.','Finalist',2,83],
+      ['Evelyn Goh','YTL Corp · Finance','Honesty','Evelyn corrected a reporting inconsistency before submission and explained the issue clearly so the team could prevent it from recurring.','Strong accountability.','Finalist',2,84],
+      ['Hafiz Rahman','YTL Construction · Procurement','Hard Work','Hafiz followed up with multiple vendors under tight timelines and helped secure key materials without compromising documentation.','Good effort and process discipline.','Finalist',3,82],
+      ['Samantha Teo','YTL Land · Marketing','Vitality','Samantha kept the project team motivated during several late revisions and helped turn feedback into a cleaner campaign direction.','Good energy under pressure.','Finalist',2,81],
+      ['Kevin Lim','ERL · Operations','Moral Responsibility','Kevin stayed calm during a passenger issue, coordinated the right support, and ensured the incident was handled respectfully.','Clear passenger care.','Finalist',2,80],
+      ['Nur Izzati','YTL Foundation · Education','Togetherness','Izzati brought volunteers together, briefed them clearly, and helped the team deliver the school activity smoothly.','Good volunteer coordination.','Finalist',3,85],
+      ['Wei Jian','YTL Communications · Network','Hard Work','Wei Jian worked through a weekend maintenance window, documented the outcome, and helped reduce repeated follow-up questions.','Strong technical ownership.','Finalist',2,83],
+      ['Michelle Tan','YTL Hotels · Brand','Vitality','Michelle brings good ideas and energy to every project. She is always cheerful and helpful.','Needs stronger specific example.','Needs Detail',1,null],
+      ['Ivan Ho','YTL Land · Property Management','Hard Work','Ivan is very hardworking and reliable.','Needs more detail before validation.','Needs Detail',1,null],
+      ['Carmen Lim','YTL Corp · Legal','Honesty','Carmen gave clear guidance when a document required further checks before release.','Good example, awaiting validation.','Validated',1,null],
+      ['Omar Malik','YTL Cement · Logistics','Togetherness','Omar helped coordinate across teams during a delivery delay and kept everyone updated.','Validated by line manager.','Validated',2,null],
+      ['Elaine Foo','YTL Power · HR','Moral Responsibility','Elaine helped a new joiner settle in by explaining policies and checking in regularly.','Could be shortlisted if more support comes in.','Shortlisted',2,null],
+      ['Terence Yap','YTL Construction · Design','Hard Work','Terence helped revise multiple drawings under a short deadline and kept the team moving.','Good work ethic story.','Shortlisted',2,null],
+      ['Poh Yee','ERL · Commercial','Togetherness','Poh Yee supported another department during a campaign handover.','Fresh nomination.','Submitted',1,null],
+      ['Raj Singh','YTL Data Center · Security','Moral Responsibility','Raj handled an access concern carefully and escalated according to procedure.','Fresh nomination.','Submitted',1,null],
+      ['Lydia Chan','Starhill · Guest Services','Vitality','Lydia is friendly and always smiles.','Not enough detail for awards review.','Not Selected',1,null],
+      ['Ben Teoh','YTL Corp · Admin','Hard Work','Ben helps with many office requests.','Appreciated, but story is too general.','Not Selected',1,null]
+    ];
 
-    function save() { localStorage.setItem('btrtNominations20Finalists', JSON.stringify(nominations)); }
-    function load() { const stored = localStorage.getItem('btrtNominations20Finalists'); nominations = stored ? JSON.parse(stored) : sampleData; save(); }
-    function seedData(force=false) { if (force || !localStorage.getItem('btrtNominations20Finalists')) { nominations = JSON.parse(JSON.stringify(sampleData)); save(); } renderAll(); }
-    function clearData() { nominations = []; save(); renderAll(); }
+    function makeRecords() {
+      const records = [];
+      let id = 1;
+      sampleData.forEach(row => {
+        const [name, company, value, story, hrNotes, status, count, judgeScore] = row;
+        for (let i = 0; i < count; i++) {
+          records.push({
+            id: id++,
+            date: `2026-08-${String(2 + (id % 27)).padStart(2,'0')}`,
+            nominatorName: ['Adam Wong','Mei Chen','Ravi Kumar','Dina Lee','Farah Ali','Jason Ong','Nadia Rahman'][id % 7],
+            nominatorEmail: 'employee@ytl.com',
+            nomineeName: name,
+            nomineeCompany: company,
+            btrtValue: value,
+            story: i === 0 ? story : story.replace('.', `, and this was noticed by several colleagues.`),
+            beneficiaries: ['Our team'],
+            status,
+            hrNotes,
+            validated: ['Validated','Shortlisted','Finalist'].includes(status),
+            judge: judgeScore ? { score: judgeScore, note: hrNotes } : null
+          });
+        }
+      });
+      return records;
+    }
+
+    function save() { localStorage.setItem('btrtSimpleNominations', JSON.stringify(nominations)); }
+    function load() { const stored = localStorage.getItem('btrtSimpleNominations'); nominations = stored ? JSON.parse(stored) : makeRecords(); save(); }
+    function resetData() { nominations = makeRecords(); save(); renderAll(); }
 
     function showPanel(id, tab) {
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -1299,50 +656,14 @@
     function setValue(value) {
       document.getElementById('btrtValue').value = value;
       document.querySelectorAll('.value-card').forEach(card => card.classList.toggle('selected', card.innerText.includes(value)));
-      renderStoryCheck();
     }
 
     function getSelectedBeneficiaries() { return [...document.querySelectorAll('#beneficiaryGrid input:checked')].map(x => x.value); }
 
-    function checkStory(story) {
-      const words = story.trim().split(/\s+/).filter(Boolean).length;
-      const hasAction = /help|created|flagged|supported|guided|coordinated|solved|improved|stayed|organised|managed|checked/i.test(story);
-      const hasImpact = /helped|avoid|reduced|improved|benefit|confidence|submitted|support|used|stabilised|easier|accurate/i.test(story);
-      const hasSituation = /during|when|before|after|because|deadline|migration|launch|disruption|period|issue/i.test(story);
-      const score = Math.min(100, Math.round((words >= 25 ? 25 : words) + (hasAction ? 25 : 0) + (hasImpact ? 25 : 0) + (hasSituation ? 25 : 0)));
-      return { words, hasAction, hasImpact, hasSituation, score };
-    }
-
-    function renderStoryCheck() {
-      const story = document.getElementById('story')?.value || '';
-      const c = checkStory(story);
-      const rows = [
-        ['Specific action', c.hasAction, 'Does it say what the person did?'],
-        ['Situation/context', c.hasSituation, 'Does it mention when or where it happened?'],
-        ['Impact', c.hasImpact, 'Does it explain who benefited or what changed?'],
-        ['Enough detail', c.words >= 25, `${c.words} words. Aim for 25–80 words.`]
-      ];
-      document.getElementById('storyCheck').innerHTML = rows.map((r, i) => `<div class="step"><div class="num">${r[1] ? '✓' : '!'}</div><div><b>${r[0]}</b><span>${r[2]}</span></div></div>`).join('') + `<div class="metric"><span>Clarity check</span><b>${c.score}/100</b></div>`;
-    }
-
-    function improveStory() {
-      const story = document.getElementById('story').value;
-      const c = checkStory(story);
-      const tips = [];
-      if (!c.hasSituation) tips.push('add when or during what situation this happened');
-      if (!c.hasAction) tips.push('add the specific action they took');
-      if (!c.hasImpact) tips.push('add who benefited and what changed');
-      if (c.words < 25) tips.push('add one or two more sentences so the story has enough detail');
-      const msg = tips.length ? `Good start. To make this clearer, please ${tips.join(', ')}.` : 'This is clear enough for a nomination. It has a situation, action and impact.';
-      const box = document.getElementById('formMessage');
-      box.className = 'callout';
-      box.innerHTML = `<b>Story helper:</b> ${msg}`;
-    }
-
     function fillRandomExample() {
       const examples = [
-        ['Amir Hassan', 'YTL Cement · Operations', 'Honesty', 'Before a report was submitted, Amir noticed incorrect figures in one section. Even though the team was under deadline pressure, he flagged the issue, helped trace the source of the error, and worked with colleagues to correct the submission.'],
-        ['Priya Menon', 'ERL · Customer Experience', 'Moral Responsibility', 'During a service disruption, Priya calmly coordinated support for stranded passengers. She helped manage updates, checked on elderly passengers, and supported the frontline team until the situation stabilised.'],
+        ['Amir Hassan', 'YTL Cement · Operations', 'Honesty', 'Before a report was submitted, Amir noticed incorrect figures in one section. Even though the team was under deadline pressure, he flagged the issue and helped correct the submission.'],
+        ['Priya Menon', 'ERL · Customer Experience', 'Moral Responsibility', 'During a service disruption, Priya calmly coordinated support for stranded passengers, checked on elderly passengers, and supported the frontline team until the situation stabilised.'],
         ['Chloe Ng', 'YTL Communications · Marketing', 'Vitality', 'Chloe kept the campaign team energised during a difficult launch period. She organised quick check-ins, helped unblock copy approvals, and kept everyone focused even when timelines changed.']
       ];
       const e = examples[Math.floor(Math.random() * examples.length)];
@@ -1351,10 +672,7 @@
       document.getElementById('btrtValue').value = e[2];
       document.getElementById('story').value = e[3];
       setValue(e[2]);
-      renderStoryCheck();
     }
-
-    document.addEventListener('input', (e) => { if (e.target && e.target.id === 'story') renderStoryCheck(); });
 
     document.addEventListener('submit', (e) => {
       if (e.target.id !== 'nominationForm') return;
@@ -1371,6 +689,7 @@
         story: document.getElementById('story').value.trim(),
         beneficiaries: getSelectedBeneficiaries(),
         status: 'Submitted',
+        hrNotes: 'New nomination. Pending HR/YTLCC review.',
         validated: false,
         judge: null
       });
@@ -1378,7 +697,7 @@
       renderAll();
       const box = document.getElementById('formMessage');
       box.className = 'callout success';
-      box.innerHTML = '<b>Nomination submitted.</b> It has been added to the HR/YTLCC dashboard and grouped under the nominee summary view.';
+      box.innerHTML = '<b>Nomination submitted.</b> It has been added to the HR/YTLCC review table.';
     });
 
     function getNomineeGroups() {
@@ -1390,70 +709,39 @@
       });
       return Object.values(map).map(list => {
         const first = list[0];
-        const best = [...list].sort((a,b) => checkStory(b.story).score - checkStory(a.story).score)[0];
         const valuesCount = {};
         list.forEach(n => valuesCount[n.btrtValue] = (valuesCount[n.btrtValue] || 0) + 1);
         const primaryValue = Object.entries(valuesCount).sort((a,b) => b[1]-a[1])[0]?.[0] || first.btrtValue;
-        const avgQuality = Math.round(list.reduce((sum,n) => sum + checkStory(n.story).score,0) / list.length);
-        const validationBonus = list.some(n => n.validated) ? 10 : 0;
-        const nominationBonus = Math.min(10, list.length * 2);
-        const strength = Math.min(100, avgQuality + validationBonus + nominationBonus);
-        let label = 'General Appreciation';
-        if (strength >= 85) label = 'Finalist Potential'; else if (strength >= 70) label = 'Promising'; else if (strength >= 50) label = 'Supporting Evidence';
         const statusPriority = ['Finalist','Shortlisted','Validated','Needs Detail','Submitted','Not Selected'];
         const status = statusPriority.find(s => list.some(n => n.status === s)) || first.status;
-        const confidence = list.some(n => n.validated) ? 'High' : (checkStory(best.story).score >= 70 ? 'Medium' : 'Low');
-        return { name: first.nomineeName, company: first.nomineeCompany, list, total: list.length, primaryValue, best, strength, label, confidence, status };
-      }).sort((a,b) => b.strength - a.strength);
+        const hrNotes = list.find(n => n.hrNotes)?.hrNotes || '';
+        const judge = list.find(n => n.judge)?.judge || null;
+        return { name: first.nomineeName, company: first.nomineeCompany, list, total: list.length, primaryValue, best: list[0], status, hrNotes, judge };
+      }).sort((a,b) => {
+        const order = { Finalist: 1, Shortlisted: 2, Validated: 3, 'Needs Detail': 4, Submitted: 5, 'Not Selected': 6 };
+        return order[a.status] - order[b.status] || b.total - a.total;
+      });
     }
 
     function tagClass(label) {
-      if (['High','Finalist Potential','Finalist','Shortlisted','Validated'].includes(label)) return 'green';
-      if (['Medium','Promising','Needs Detail','Validate','Submitted'].includes(label)) return 'amber';
-      if (['Low','Not Selected'].includes(label)) return 'red';
-      if (label === 'Supporting Evidence') return 'purple';
+      if (['Finalist','Validated'].includes(label)) return 'green';
+      if (['Shortlisted','Submitted'].includes(label)) return 'amber';
+      if (['Needs Detail','Not Selected'].includes(label)) return 'red';
       return 'blue';
     }
 
     function summariseStory(story) {
       const sentence = story.split(/[.!?]/).map(s => s.trim()).filter(Boolean)[0] || story;
-      return sentence.length > 140 ? sentence.slice(0,137) + '...' : sentence + '.';
+      return sentence.length > 135 ? sentence.slice(0,132) + '...' : sentence + '.';
     }
 
     function renderMetrics(groups) {
-      const strong = groups.filter(g => g.strength >= 70).length;
-      const pending = groups.filter(g => !g.list.some(n => n.validated)).length;
-      const finalistReady = groups.filter(g => g.status === 'Finalist' || g.status === 'Shortlisted').length;
+      const finalists = groups.filter(g => g.status === 'Finalist').length;
+      const shortlisted = groups.filter(g => g.status === 'Shortlisted').length;
+      const needsDetail = groups.filter(g => g.status === 'Needs Detail').length;
       const companies = new Set(nominations.map(n => n.nomineeCompany.split('·')[0].trim())).size;
-      const metrics = [['Total nominations', nominations.length], ['Unique nominees', groups.length], ['Companies represented', companies], ['Strong stories', strong], ['Pending validation', pending], ['Finalist-ready', finalistReady]];
+      const metrics = [['Total nominations', nominations.length], ['Unique nominees', groups.length], ['Companies represented', companies], ['Shortlisted', shortlisted], ['Finalists', finalists]];
       document.getElementById('metrics').innerHTML = metrics.map(m => `<div class="metric"><span>${m[0]}</span><b>${m[1]}</b></div>`).join('');
-    }
-
-    function renderValueBars() {
-      const counts = {};
-      values.forEach(v => counts[v.name] = 0);
-      nominations.forEach(n => counts[n.btrtValue] = (counts[n.btrtValue] || 0) + 1);
-      const max = Math.max(1, ...Object.values(counts));
-      document.getElementById('valueBars').innerHTML = Object.entries(counts).map(([k,v]) => `<div class="bar-row"><span>${k}</span><div class="bar-track"><div class="bar-fill" style="width:${(v/max)*100}%"></div></div><b>${v}</b></div>`).join('');
-    }
-
-
-    function renderStatusBoard(groups) {
-      const statuses = ['Submitted', 'Needs Detail', 'Validated', 'Shortlisted', 'Finalist', 'Not Selected'];
-      const board = document.getElementById('statusBoard');
-      if (!board) return;
-      board.innerHTML = statuses.map(status => {
-        const list = groups.filter(g => g.status === status).sort((a,b) => a.name.localeCompare(b.name));
-        const shown = list.slice(0, 8);
-        const remaining = Math.max(0, list.length - shown.length);
-        return `<div class="status-column">
-          <h4>${status} <span class="tag ${tagClass(status)}">${list.length}</span></h4>
-          <div class="status-list">
-            ${shown.map(g => `<div class="status-name" onclick="openReview('${g.name.replace(/'/g, "\\'")}')"><b>${g.name}</b><span>${g.primaryValue} · ${g.total} nom.</span></div>`).join('') || '<div class="status-name"><span>No names yet</span></div>'}
-            ${remaining ? `<div class="status-name"><span>+${remaining} more</span></div>` : ''}
-          </div>
-        </div>`;
-      }).join('');
     }
 
     function renderDashboard() {
@@ -1462,11 +750,19 @@
       const sf = document.getElementById('statusFilter')?.value || 'All';
       let groups = getNomineeGroups();
       renderMetrics(groups);
-      renderValueBars();
-      renderStatusBoard(groups);
       groups = groups.filter(g => (!search || g.name.toLowerCase().includes(search)) && (vf === 'All' || g.primaryValue === vf) && (sf === 'All' || g.status === sf));
-      document.getElementById('nomineeTable').innerHTML = groups.map(g => `<tr class="clickable" onclick="openReview('${g.name.replace(/'/g, "\\'")}')"><td><b>${g.name}</b><br><span style="color:var(--muted)">${g.company}</span></td><td>${g.total}</td><td>${g.primaryValue}</td><td>${summariseStory(g.best.story)}</td><td><span class="tag ${tagClass(g.label)}">${g.strength} · ${g.label}</span></td><td><span class="tag ${tagClass(g.confidence)}">${g.confidence}</span></td><td><span class="tag ${tagClass(g.status)}">${g.status}</span></td></tr>`).join('') || '<tr><td colspan="7">No records found.</td></tr>';
-      document.getElementById('rawTable').innerHTML = nominations.slice().reverse().map(n => `<tr><td>${n.id}</td><td>${n.date}</td><td>${n.nominatorName}</td><td>${n.nomineeName}<br><span style="color:var(--muted)">${n.nomineeCompany}</span></td><td>${n.btrtValue}</td><td>${n.story}</td></tr>`).join('') || '<tr><td colspan="6">No nominations yet.</td></tr>';
+      document.getElementById('nomineeTable').innerHTML = groups.map(g => `<tr class="clickable"><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')"><b>${g.name}</b></td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.company}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.total}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.primaryValue}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${summariseStory(g.best.story)}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.hrNotes}</td><td><select class="hr-status-select" onchange="updateGroupStatus('${g.name.replace(/'/g, "\\'")}', this.value)">${statuses.map(s => `<option ${s === g.status ? 'selected' : ''}>${s}</option>`).join('')}</select></td></tr>`).join('') || '<tr><td colspan="7">No records found.</td></tr>';
+    }
+
+    function updateGroupStatus(name, status) {
+      nominations.forEach(n => {
+        if (n.nomineeName === name) {
+          n.status = status;
+          n.validated = ['Validated','Shortlisted','Finalist'].includes(status);
+          if (status === 'Finalist' && !n.hrNotes.includes('Finalist')) n.hrNotes = 'Confirmed finalist for judges review.';
+        }
+      });
+      save(); renderAll();
     }
 
     function openReview(name) {
@@ -1476,55 +772,55 @@
       document.getElementById('modalTitle').textContent = `Review: ${g.name}`;
       document.getElementById('modalSubtitle').textContent = `${g.company} · ${g.total} nomination(s) · ${g.primaryValue}`;
       document.getElementById('modalBody').innerHTML = `
-        <div class="metric-grid" style="grid-template-columns:repeat(3,1fr);"><div class="metric"><span>Nomination Strength</span><b>${g.strength}</b></div><div class="metric"><span>Confidence</span><b>${g.confidence}</b></div><div class="metric"><span>Status</span><b style="font-size:20px;">${g.status}</b></div></div>
-        <label>Best story summary</label><textarea id="reviewSummary">${summariseStory(g.best.story)}</textarea>
-        <label>HR/HOD validation comment</label><textarea id="validationComment">${g.list.some(n=>n.validated) ? 'HR/HOD confirms the story is broadly credible and nominee is eligible.' : ''}</textarea>
-        <div class="two-col"><div><label>Set status</label><select id="reviewStatus"><option>Submitted</option><option>Needs Detail</option><option>Validated</option><option>Shortlisted</option><option>Finalist</option><option>Not Selected</option></select></div><div><label>Validated?</label><select id="reviewValidated"><option value="false">No</option><option value="true">Yes</option></select></div></div>
+        <div class="two-col"><div><label>HR Status</label><select id="reviewStatus">${statuses.map(s => `<option ${s === g.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div><div><label>No. of nominations</label><input value="${g.total}" disabled /></div></div>
+        <label>Story summary</label><textarea id="reviewSummary">${summariseStory(g.best.story)}</textarea>
+        <label>HR / YTLCC notes</label><textarea id="reviewNotes">${g.hrNotes}</textarea>
         <div class="btn-row"><button class="primary" onclick="saveReview()">Save review</button><button class="secondary" onclick="makeFinalist()">Make finalist</button><button class="ghost" onclick="closeModal()">Cancel</button></div>
-        <label>All nominations for this person</label>
+        <label>All nominations for this nominee</label>
         <div style="overflow:auto;"><table><thead><tr><th>Nominator</th><th>Value</th><th>Story</th></tr></thead><tbody>${g.list.map(n => `<tr><td>${n.nominatorName}</td><td>${n.btrtValue}</td><td>${n.story}</td></tr>`).join('')}</tbody></table></div>`;
-      document.getElementById('reviewStatus').value = g.status;
-      document.getElementById('reviewValidated').value = g.list.some(n => n.validated) ? 'true' : 'false';
       document.getElementById('reviewModal').classList.add('show');
     }
 
     function closeModal() { document.getElementById('reviewModal').classList.remove('show'); }
     function saveReview() {
       const status = document.getElementById('reviewStatus').value;
-      const validated = document.getElementById('reviewValidated').value === 'true';
-      nominations.forEach(n => { if (n.nomineeName === selectedReviewName) { n.status = status; n.validated = validated; } });
+      const notes = document.getElementById('reviewNotes').value;
+      nominations.forEach(n => { if (n.nomineeName === selectedReviewName) { n.status = status; n.hrNotes = notes; n.validated = ['Validated','Shortlisted','Finalist'].includes(status); } });
       save(); closeModal(); renderAll();
     }
-    function makeFinalist() { document.getElementById('reviewStatus').value = 'Finalist'; document.getElementById('reviewValidated').value = 'true'; saveReview(); }
-    function autoScoreAll() { nominations.forEach(n => { if (checkStory(n.story).score < 60 && n.status === 'Submitted') n.status = 'Needs Detail'; if (checkStory(n.story).score >= 80 && n.status === 'Submitted') n.status = 'Shortlisted'; }); save(); renderAll(); }
-    function autoPickTopFinalists() { const top = getNomineeGroups().filter(g => g.strength >= 80).slice(0,20); top.forEach(g => nominations.forEach(n => { if (n.nomineeName === g.name) { n.status = 'Finalist'; n.validated = true; } })); save(); renderAll(); }
+    function makeFinalist() { document.getElementById('reviewStatus').value = 'Finalist'; saveReview(); }
 
-    function getFinalists() { return getNomineeGroups().filter(g => g.status === 'Finalist').sort((a,b) => (b.list.find(n=>n.judge)?.judge?.score || b.strength) - (a.list.find(n=>n.judge)?.judge?.score || a.strength)); }
+    function getFinalists() {
+      return getNomineeGroups().filter(g => g.status === 'Finalist').sort((a,b) => (b.judge?.score || 0) - (a.judge?.score || 0) || b.total - a.total);
+    }
+
     function renderJudges() {
       const finalists = getFinalists();
       const select = document.getElementById('finalistSelect');
       select.innerHTML = finalists.map(g => `<option value="${g.name}">${g.name} · ${g.primaryValue}</option>`).join('') || '<option>No finalists yet</option>';
       selectFinalist();
       document.getElementById('finalistTable').innerHTML = finalists.map((g,i) => {
-        const j = g.list.find(n => n.judge)?.judge;
-        return `<tr><td>${i+1}</td><td><b>${g.name}</b><br><span style="color:var(--muted)">${g.company}</span></td><td>${g.primaryValue}</td><td>${g.total}</td><td><span class="tag ${tagClass(g.label)}">${g.strength}</span></td><td><span class="tag ${tagClass(j ? 'High' : 'Medium')}">${j ? j.score : 'Not scored'}</span></td><td>${j ? j.note : '-'}</td></tr>`;
-      }).join('') || '<tr><td colspan="7">No finalists yet. Use the dashboard to make nominees finalists.</td></tr>';
+        const j = g.judge;
+        return `<tr><td>${i+1}</td><td><b>${g.name}</b><br><span style="color:var(--muted)">${g.company}</span></td><td>${g.primaryValue}</td><td>${g.total}</td><td>${g.hrNotes}</td><td><span class="tag ${j ? 'green' : 'amber'}">${j ? j.score : 'Not scored'}</span></td><td>${j ? j.note : '-'}</td></tr>`;
+      }).join('') || '<tr><td colspan="7">No finalists yet. Use the HR Review table to mark nominees as Finalist.</td></tr>';
     }
+
     function selectFinalist() {
       const name = document.getElementById('finalistSelect').value;
       const g = getFinalists().find(x => x.name === name);
       const profile = document.getElementById('judgeProfile');
-      if (!g) { profile.innerHTML = '<div class="profile-section"><h4>No finalist selected</h4><p>Go to the dashboard and mark nominees as Finalist.</p></div>'; return; }
-      profile.innerHTML = `<div class="profile-title"><h3>${g.name}</h3><p>${g.company} · Primary Value: ${g.primaryValue}</p></div><div class="profile-section"><h4>Summary</h4><p>${summariseStory(g.best.story)}</p></div><div class="profile-section"><h4>Impact</h4><p>This story benefited: ${[...new Set(g.list.flatMap(n => n.beneficiaries))].join(', ') || 'Not specified'}.</p></div><div class="profile-section"><h4>Supporting Evidence</h4><p>${g.total} peer nomination(s) · ${g.confidence} confidence · Status: ${g.status}.</p></div><div class="profile-section"><h4>Why this reflects BTRT</h4><p>The nomination is linked to ${g.primaryValue} and has been standardised so judges compare the behaviour and impact, not the nominator’s writing style.</p></div>`;
-      const j = g.list.find(n => n.judge)?.judge;
-      if (j) { document.getElementById('judgeNotes').value = j.note; }
+      if (!g) { profile.innerHTML = '<div class="profile-section"><h4>No finalist selected</h4><p>Go to the HR Review table and mark nominees as Finalist.</p></div>'; return; }
+      profile.innerHTML = `<div class="profile-title"><h3>${g.name}</h3><p>${g.company} · Primary Value: ${g.primaryValue}</p></div><div class="profile-section"><h4>Nomination Summary</h4><p>${summariseStory(g.best.story)}</p></div><div class="profile-section"><h4>Supporting Evidence</h4><p>${g.total} peer nomination(s). HR/YTLCC note: ${g.hrNotes}</p></div><div class="profile-section"><h4>Why this reflects BTRT</h4><p>The story is linked to ${g.primaryValue} and has been prepared for judge comparison.</p></div>`;
+      if (g.judge) { document.getElementById('judgeNotes').value = g.judge.note; }
       updateScorePreview();
     }
+
     function updateScorePreview() {
       ['s1','s2','s3','s4'].forEach(id => document.getElementById(id+'Label').textContent = document.getElementById(id).value);
-      const s = Math.round(((+s1.value/5)*30 + (+s2.value/5)*30 + (+s3.value/5)*25 + (+s4.value/5)*15));
-      document.getElementById('scorePreview').textContent = s;
+      const score = Math.round(((+document.getElementById('s1').value/5)*30 + (+document.getElementById('s2').value/5)*30 + (+document.getElementById('s3').value/5)*25 + (+document.getElementById('s4').value/5)*15));
+      document.getElementById('scorePreview').textContent = score;
     }
+
     function submitJudgeScore() {
       const name = document.getElementById('finalistSelect').value;
       const score = +document.getElementById('scorePreview').textContent;
@@ -1533,14 +829,7 @@
       save(); renderAll();
     }
 
-    function exportJson() { const box = document.getElementById('exportBox'); box.className = 'callout'; box.innerHTML = `<b>JSON export:</b><pre style="white-space:pre-wrap;max-height:280px;overflow:auto;">${JSON.stringify(nominations, null, 2)}</pre>`; }
-    function exportCsv() {
-      const headers = ['id','date','nominatorName','nomineeName','nomineeCompany','btrtValue','status','validated','story'];
-      const csv = [headers.join(',')].concat(nominations.map(n => headers.map(h => `"${String(n[h] ?? '').replace(/"/g,'""')}"`).join(','))).join('\n');
-      const box = document.getElementById('exportBox'); box.className = 'callout'; box.innerHTML = `<b>CSV export:</b><pre style="white-space:pre-wrap;max-height:280px;overflow:auto;">${csv}</pre>`;
-    }
-
-    function renderAll() { renderStoryCheck(); renderDashboard(); renderJudges(); }
+    function renderAll() { renderDashboard(); renderJudges(); }
     initFormOptions(); load(); renderAll();
   </script>
 </body>
