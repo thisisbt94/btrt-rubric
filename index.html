@@ -379,6 +379,16 @@
     .profile-section h4 { margin: 0 0 8px; }
     .profile-section p { margin: 0; color: var(--muted); line-height: 1.55; }
 
+    .dossier-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 18px; border-bottom: 1px solid var(--line); }
+    .dossier-tile { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: #fbfdff; }
+    .dossier-tile span { display: block; color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .dossier-tile b { display: block; font-size: 18px; }
+    .story-list { display: grid; gap: 10px; margin-top: 10px; }
+    .story-card { border: 1px solid var(--line); border-radius: 14px; padding: 12px; background: #fbfdff; }
+    .story-card b { display: block; margin-bottom: 5px; font-size: 13px; }
+    .story-card p { font-size: 13px; }
+    .rubric-list { margin: 8px 0 0; padding-left: 18px; color: var(--muted); line-height: 1.55; }
+
     .score-box { border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
     .score-box label { margin: 0 0 8px; display: flex; justify-content: space-between; }
     input[type="range"] { padding: 0; }
@@ -437,7 +447,7 @@
       <div class="tabs">
         <div class="tab active" onclick="showPanel('form', this)"><b>1. Employee Form</b><small>Simple nomination form. No live scoring.</small></div>
         <div class="tab" onclick="showPanel('dashboard', this)"><b>2. HR / YTLCC Review</b><small>One clean dashboard table with HR Status dropdown.</small></div>
-        <div class="tab" onclick="showPanel('judges', this)"><b>3. Judges Pack</b><small>20 finalists and scoring rubric.</small></div>
+        <div class="tab" onclick="showPanel('judges', this)"><b>3. Judges Pack</b><small>20 finalist dossiers and scoring rubric.</small></div>
       </div>
 
       <section id="form" class="panel active">
@@ -456,8 +466,10 @@
                 </div>
                 <div class="two-col">
                   <div><label>Who would you like to recognise?</label><input id="nomineeName" value="Sarah Lim" required /></div>
-                  <div><label>Nominee company / department</label><input id="nomineeCompany" value="YTL Power · Finance" required /></div>
+                  <div><label>Nominee email</label><input id="nomineeEmail" type="email" value="sarah.lim@ytl.com" required /></div>
                 </div>
+                <label>Nominee company / department</label>
+                <input id="nomineeCompany" value="YTL Power · Finance" required />
                 <label>Which BTRT value did they show most?</label>
                 <select id="btrtValue" required></select>
                 <label>What did they do?</label>
@@ -480,7 +492,7 @@
             </div>
             <div class="card-body">
               <div class="process">
-                <div class="step"><div class="num">1</div><div><b>Choose a colleague</b><span>Employee enters nominee details.</span></div></div>
+                <div class="step"><div class="num">1</div><div><b>Choose a colleague</b><span>Employee enters nominee name, email and department.</span></div></div>
                 <div class="step"><div class="num">2</div><div><b>Choose one BTRT value</b><span>Keeps the nomination focused.</span></div></div>
                 <div class="step"><div class="num">3</div><div><b>Share a real story</b><span>No AI score, no complicated helper, no extra pressure.</span></div></div>
                 <div class="step"><div class="num">4</div><div><b>Submit</b><span>The record appears in HR/YTLCC Review.</span></div></div>
@@ -501,7 +513,7 @@
           </div>
           <div class="card-body">
             <div class="tool-row">
-              <div><label>Search nominee</label><input id="searchInput" placeholder="Type a name..." oninput="renderDashboard()" /></div>
+              <div><label>Search nominee</label><input id="searchInput" placeholder="Type a name or email..." oninput="renderDashboard()" /></div>
               <div><label>Value</label><select id="valueFilter" onchange="renderDashboard()"><option value="All">All values</option></select></div>
               <div><label>HR Status</label><select id="statusFilter" onchange="renderDashboard()"><option value="All">All statuses</option><option>Submitted</option><option>Needs Detail</option><option>Validated</option><option>Shortlisted</option><option>Finalist</option><option>Not Selected</option></select></div>
               <button class="secondary" onclick="resetData()">Reset demo data</button>
@@ -514,7 +526,7 @@
           <div class="card-header"><h3>Nominee Review Table</h3><p>Grouped by nominee, not raw votes. This prevents it becoming a popularity contest.</p></div>
           <div class="card-body" style="overflow:auto;">
             <table>
-              <thead><tr><th>Nominee</th><th>Company / Dept</th><th>No. of Nominations</th><th>BTRT Value</th><th>Story Summary</th><th>HR Notes</th><th>HR Status</th></tr></thead>
+              <thead><tr><th>Nominee</th><th>Nominee Email</th><th>Company / Dept</th><th>No. of Nominations</th><th>BTRT Value</th><th>Story Summary</th><th>HR Notes</th><th>HR Status</th></tr></thead>
               <tbody id="nomineeTable"></tbody>
             </table>
           </div>
@@ -525,7 +537,7 @@
         <div class="profile-grid">
           <div class="profile-card" id="judgeProfile"></div>
           <div class="card">
-            <div class="card-header"><h3>Judge Scorecard</h3><p>Judges only score confirmed finalists. The demo includes 20 finalist names.</p></div>
+            <div class="card-header"><h3>Judge Scorecard</h3><p>Judges select a finalist, review the dossier, then score using the same rubric.</p></div>
             <div class="card-body">
               <label>Select finalist</label>
               <select id="finalistSelect" onchange="selectFinalist()"></select>
@@ -537,14 +549,14 @@
               <textarea id="judgeNotes" style="min-height:110px;">Strong example. The behaviour is specific, validated, and easy for others to learn from.</textarea>
               <div class="metric" style="margin-top:14px;"><span>Weighted score preview</span><b id="scorePreview">91</b></div>
               <div class="btn-row"><button class="primary" onclick="submitJudgeScore()">Submit score</button></div>
-              <div class="callout"><b>Presentation line:</b> HR confirms the finalist pool first. Judges then score only the 20 finalists.</div>
+              <div class="callout"><b>Presentation line:</b> HR prepares a clean finalist dossier first. Judges do not need to read raw messy submissions, but they can still see enough detail to score fairly.</div>
             </div>
           </div>
         </div>
         <div class="card" style="margin-top:18px;">
-          <div class="card-header"><h3>20 Finalists: Judge Comparison</h3><p>Live ranking based on judge scores submitted in this demo.</p></div>
+          <div class="card-header"><h3>20 Finalists: Judge Comparison</h3><p>Ranking remains simple, but each finalist row includes a quick evidence snapshot.</p></div>
           <div class="card-body" style="overflow:auto;">
-            <table><thead><tr><th>Rank</th><th>Finalist</th><th>Value</th><th>Nominations</th><th>HR Notes</th><th>Judge Score</th><th>Judge Note</th></tr></thead><tbody id="finalistTable"></tbody></table>
+            <table><thead><tr><th>Rank</th><th>Finalist</th><th>Value</th><th>Nominations</th><th>Evidence Snapshot</th><th>HR Validation</th><th>Judge Score</th><th>Judge Note</th></tr></thead><tbody id="finalistTable"></tbody></table>
           </div>
         </div>
       </section>
@@ -604,11 +616,16 @@
       ['Ben Teoh','YTL Corp · Admin','Hard Work','Ben helps with many office requests.','Appreciated, but story is too general.','Not Selected',1,null]
     ];
 
+    function emailFromName(name) {
+      return name.toLowerCase().replace(/[^a-z ]/g, '').trim().replace(/\s+/g, '.') + '@ytl.com';
+    }
+
     function makeRecords() {
       const records = [];
       let id = 1;
       sampleData.forEach(row => {
         const [name, company, value, story, hrNotes, status, count, judgeScore] = row;
+        const nomineeEmail = emailFromName(name);
         for (let i = 0; i < count; i++) {
           records.push({
             id: id++,
@@ -616,6 +633,7 @@
             nominatorName: ['Adam Wong','Mei Chen','Ravi Kumar','Dina Lee','Farah Ali','Jason Ong','Nadia Rahman'][id % 7],
             nominatorEmail: 'employee@ytl.com',
             nomineeName: name,
+            nomineeEmail,
             nomineeCompany: company,
             btrtValue: value,
             story: i === 0 ? story : story.replace('.', `, and this was noticed by several colleagues.`),
@@ -630,8 +648,8 @@
       return records;
     }
 
-    function save() { localStorage.setItem('btrtSimpleNominations', JSON.stringify(nominations)); }
-    function load() { const stored = localStorage.getItem('btrtSimpleNominations'); nominations = stored ? JSON.parse(stored) : makeRecords(); save(); }
+    function save() { localStorage.setItem('btrtSimpleNominationsRichJudges', JSON.stringify(nominations)); }
+    function load() { const stored = localStorage.getItem('btrtSimpleNominationsRichJudges'); nominations = stored ? JSON.parse(stored) : makeRecords(); save(); }
     function resetData() { nominations = makeRecords(); save(); renderAll(); }
 
     function showPanel(id, tab) {
@@ -662,16 +680,17 @@
 
     function fillRandomExample() {
       const examples = [
-        ['Amir Hassan', 'YTL Cement · Operations', 'Honesty', 'Before a report was submitted, Amir noticed incorrect figures in one section. Even though the team was under deadline pressure, he flagged the issue and helped correct the submission.'],
-        ['Priya Menon', 'ERL · Customer Experience', 'Moral Responsibility', 'During a service disruption, Priya calmly coordinated support for stranded passengers, checked on elderly passengers, and supported the frontline team until the situation stabilised.'],
-        ['Chloe Ng', 'YTL Communications · Marketing', 'Vitality', 'Chloe kept the campaign team energised during a difficult launch period. She organised quick check-ins, helped unblock copy approvals, and kept everyone focused even when timelines changed.']
+        ['Amir Hassan', 'amir.hassan@ytl.com', 'YTL Cement · Operations', 'Honesty', 'Before a report was submitted, Amir noticed incorrect figures in one section. Even though the team was under deadline pressure, he flagged the issue and helped correct the submission.'],
+        ['Priya Menon', 'priya.menon@ytl.com', 'ERL · Customer Experience', 'Moral Responsibility', 'During a service disruption, Priya calmly coordinated support for stranded passengers, checked on elderly passengers, and supported the frontline team until the situation stabilised.'],
+        ['Chloe Ng', 'chloe.ng@ytl.com', 'YTL Communications · Marketing', 'Vitality', 'Chloe kept the campaign team energised during a difficult launch period. She organised quick check-ins, helped unblock copy approvals, and kept everyone focused even when timelines changed.']
       ];
       const e = examples[Math.floor(Math.random() * examples.length)];
       document.getElementById('nomineeName').value = e[0];
-      document.getElementById('nomineeCompany').value = e[1];
-      document.getElementById('btrtValue').value = e[2];
-      document.getElementById('story').value = e[3];
-      setValue(e[2]);
+      document.getElementById('nomineeEmail').value = e[1];
+      document.getElementById('nomineeCompany').value = e[2];
+      document.getElementById('btrtValue').value = e[3];
+      document.getElementById('story').value = e[4];
+      setValue(e[3]);
     }
 
     document.addEventListener('submit', (e) => {
@@ -684,6 +703,7 @@
         nominatorName: document.getElementById('nominatorName').value,
         nominatorEmail: document.getElementById('nominatorEmail').value,
         nomineeName: document.getElementById('nomineeName').value.trim(),
+        nomineeEmail: document.getElementById('nomineeEmail').value.trim().toLowerCase(),
         nomineeCompany: document.getElementById('nomineeCompany').value.trim(),
         btrtValue: document.getElementById('btrtValue').value,
         story: document.getElementById('story').value.trim(),
@@ -703,7 +723,7 @@
     function getNomineeGroups() {
       const map = {};
       nominations.forEach(n => {
-        const key = n.nomineeName.toLowerCase().trim();
+        const key = (n.nomineeEmail || n.nomineeName).toLowerCase().trim();
         if (!map[key]) map[key] = [];
         map[key].push(n);
       });
@@ -716,7 +736,7 @@
         const status = statusPriority.find(s => list.some(n => n.status === s)) || first.status;
         const hrNotes = list.find(n => n.hrNotes)?.hrNotes || '';
         const judge = list.find(n => n.judge)?.judge || null;
-        return { name: first.nomineeName, company: first.nomineeCompany, list, total: list.length, primaryValue, best: list[0], status, hrNotes, judge };
+        return { name: first.nomineeName, email: first.nomineeEmail || '', company: first.nomineeCompany, list, total: list.length, primaryValue, best: list[0], status, hrNotes, judge };
       }).sort((a,b) => {
         const order = { Finalist: 1, Shortlisted: 2, Validated: 3, 'Needs Detail': 4, Submitted: 5, 'Not Selected': 6 };
         return order[a.status] - order[b.status] || b.total - a.total;
@@ -750,13 +770,13 @@
       const sf = document.getElementById('statusFilter')?.value || 'All';
       let groups = getNomineeGroups();
       renderMetrics(groups);
-      groups = groups.filter(g => (!search || g.name.toLowerCase().includes(search)) && (vf === 'All' || g.primaryValue === vf) && (sf === 'All' || g.status === sf));
-      document.getElementById('nomineeTable').innerHTML = groups.map(g => `<tr class="clickable"><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')"><b>${g.name}</b></td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.company}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.total}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.primaryValue}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${summariseStory(g.best.story)}</td><td onclick="openReview('${g.name.replace(/'/g, "\\'")}')">${g.hrNotes}</td><td><select class="hr-status-select" onchange="updateGroupStatus('${g.name.replace(/'/g, "\\'")}', this.value)">${statuses.map(s => `<option ${s === g.status ? 'selected' : ''}>${s}</option>`).join('')}</select></td></tr>`).join('') || '<tr><td colspan="7">No records found.</td></tr>';
+      groups = groups.filter(g => (!search || g.name.toLowerCase().includes(search) || (g.email || '').toLowerCase().includes(search)) && (vf === 'All' || g.primaryValue === vf) && (sf === 'All' || g.status === sf));
+      document.getElementById('nomineeTable').innerHTML = groups.map(g => `<tr class="clickable"><td onclick="openReview('${g.email || g.name}')"><b>${g.name}</b></td><td onclick="openReview('${g.email || g.name}')">${g.email || '-'}</td><td onclick="openReview('${g.email || g.name}')">${g.company}</td><td onclick="openReview('${g.email || g.name}')">${g.total}</td><td onclick="openReview('${g.email || g.name}')">${g.primaryValue}</td><td onclick="openReview('${g.email || g.name}')">${summariseStory(g.best.story)}</td><td onclick="openReview('${g.email || g.name}')">${g.hrNotes}</td><td><select class="hr-status-select" onchange="updateGroupStatus('${g.email || g.name}', this.value)">${statuses.map(s => `<option ${s === g.status ? 'selected' : ''}>${s}</option>`).join('')}</select></td></tr>`).join('') || '<tr><td colspan="8">No records found.</td></tr>';
     }
 
     function updateGroupStatus(name, status) {
       nominations.forEach(n => {
-        if (n.nomineeName === name) {
+        if ((n.nomineeEmail || n.nomineeName) === name || n.nomineeName === name) {
           n.status = status;
           n.validated = ['Validated','Shortlisted','Finalist'].includes(status);
           if (status === 'Finalist' && !n.hrNotes.includes('Finalist')) n.hrNotes = 'Confirmed finalist for judges review.';
@@ -767,12 +787,13 @@
 
     function openReview(name) {
       selectedReviewName = name;
-      const g = getNomineeGroups().find(x => x.name === name);
+      const g = getNomineeGroups().find(x => (x.email || x.name) === name || x.name === name);
       if (!g) return;
       document.getElementById('modalTitle').textContent = `Review: ${g.name}`;
-      document.getElementById('modalSubtitle').textContent = `${g.company} · ${g.total} nomination(s) · ${g.primaryValue}`;
+      document.getElementById('modalSubtitle').textContent = `${g.email || 'No email captured'} · ${g.company} · ${g.total} nomination(s) · ${g.primaryValue}`;
       document.getElementById('modalBody').innerHTML = `
-        <div class="two-col"><div><label>HR Status</label><select id="reviewStatus">${statuses.map(s => `<option ${s === g.status ? 'selected' : ''}>${s}</option>`).join('')}</select></div><div><label>No. of nominations</label><input value="${g.total}" disabled /></div></div>
+        <div class="two-col"><div><label>Nominee email</label><input value="${g.email || '-'}" disabled /></div><div><label>No. of nominations</label><input value="${g.total}" disabled /></div></div>
+        <label>HR Status</label><select id="reviewStatus">${statuses.map(s => `<option ${s === g.status ? 'selected' : ''}>${s}</option>`).join('')}</select>
         <label>Story summary</label><textarea id="reviewSummary">${summariseStory(g.best.story)}</textarea>
         <label>HR / YTLCC notes</label><textarea id="reviewNotes">${g.hrNotes}</textarea>
         <div class="btn-row"><button class="primary" onclick="saveReview()">Save review</button><button class="secondary" onclick="makeFinalist()">Make finalist</button><button class="ghost" onclick="closeModal()">Cancel</button></div>
@@ -794,23 +815,54 @@
       return getNomineeGroups().filter(g => g.status === 'Finalist').sort((a,b) => (b.judge?.score || 0) - (a.judge?.score || 0) || b.total - a.total);
     }
 
+    function evidenceSnapshot(g) {
+      const people = [...new Set(g.list.map(n => n.nominatorName))].slice(0, 3).join(', ');
+      return `${g.total} nomination(s) from ${people}${g.total > 3 ? ' and others' : ''}.`;
+    }
+
+    function impactLine(g) {
+      const beneficiaries = [...new Set(g.list.flatMap(n => n.beneficiaries || []))].filter(Boolean);
+      const who = beneficiaries.length ? beneficiaries.join(', ') : 'the team / stakeholders';
+      return `Benefited: ${who}.`;
+    }
+
     function renderJudges() {
       const finalists = getFinalists();
       const select = document.getElementById('finalistSelect');
-      select.innerHTML = finalists.map(g => `<option value="${g.name}">${g.name} · ${g.primaryValue}</option>`).join('') || '<option>No finalists yet</option>';
+      select.innerHTML = finalists.map(g => `<option value="${g.email || g.name}">${g.name} · ${g.primaryValue}</option>`).join('') || '<option>No finalists yet</option>';
       selectFinalist();
       document.getElementById('finalistTable').innerHTML = finalists.map((g,i) => {
         const j = g.judge;
-        return `<tr><td>${i+1}</td><td><b>${g.name}</b><br><span style="color:var(--muted)">${g.company}</span></td><td>${g.primaryValue}</td><td>${g.total}</td><td>${g.hrNotes}</td><td><span class="tag ${j ? 'green' : 'amber'}">${j ? j.score : 'Not scored'}</span></td><td>${j ? j.note : '-'}</td></tr>`;
-      }).join('') || '<tr><td colspan="7">No finalists yet. Use the HR Review table to mark nominees as Finalist.</td></tr>';
+        return `<tr class="clickable" onclick="selectFinalistFromTable('${g.name.replace(/'/g, "\'")}')"><td>${i+1}</td><td><b>${g.name}</b><br><span style="color:var(--muted)">${g.email || '-'}</span><br><span style="color:var(--muted)">${g.company}</span></td><td>${g.primaryValue}</td><td>${g.total}</td><td>${evidenceSnapshot(g)}<br><span style="color:var(--muted)">${summariseStory(g.best.story)}</span></td><td>${g.hrNotes}</td><td><span class="tag ${j ? 'green' : 'amber'}">${j ? j.score : 'Not scored'}</span></td><td>${j ? j.note : '-'}</td></tr>`;
+      }).join('') || '<tr><td colspan="8">No finalists yet. Use the HR Review table to mark nominees as Finalist.</td></tr>';
+    }
+
+    function selectFinalistFromTable(name) {
+      document.getElementById('finalistSelect').value = name;
+      selectFinalist();
+      window.scrollTo({ top: document.getElementById('judges').offsetTop - 20, behavior: 'smooth' });
     }
 
     function selectFinalist() {
       const name = document.getElementById('finalistSelect').value;
-      const g = getFinalists().find(x => x.name === name);
+      const g = getFinalists().find(x => (x.email || x.name) === name || x.name === name);
       const profile = document.getElementById('judgeProfile');
       if (!g) { profile.innerHTML = '<div class="profile-section"><h4>No finalist selected</h4><p>Go to the HR Review table and mark nominees as Finalist.</p></div>'; return; }
-      profile.innerHTML = `<div class="profile-title"><h3>${g.name}</h3><p>${g.company} · Primary Value: ${g.primaryValue}</p></div><div class="profile-section"><h4>Nomination Summary</h4><p>${summariseStory(g.best.story)}</p></div><div class="profile-section"><h4>Supporting Evidence</h4><p>${g.total} peer nomination(s). HR/YTLCC note: ${g.hrNotes}</p></div><div class="profile-section"><h4>Why this reflects BTRT</h4><p>The story is linked to ${g.primaryValue} and has been prepared for judge comparison.</p></div>`;
+      const stories = g.list.slice(0, 4).map((n, idx) => `<div class="story-card"><b>Nomination ${idx + 1} · ${n.nominatorName}</b><p>${n.story}</p></div>`).join('');
+      profile.innerHTML = `
+        <div class="profile-title"><h3>${g.name}</h3><p>${g.email || 'No email captured'} · ${g.company} · Primary Value: ${g.primaryValue}</p></div>
+        <div class="dossier-grid">
+          <div class="dossier-tile"><span>Peer nominations</span><b>${g.total}</b></div>
+          <div class="dossier-tile"><span>HR status</span><b>${g.status}</b></div>
+          <div class="dossier-tile"><span>Main value</span><b>${g.primaryValue}</b></div>
+          <div class="dossier-tile"><span>Judge score</span><b>${g.judge ? g.judge.score : 'Pending'}</b></div>
+        </div>
+        <div class="profile-section"><h4>Finalist Story Summary</h4><p>${summariseStory(g.best.story)}</p></div>
+        <div class="profile-section"><h4>Behaviour Observed</h4><p>The nomination highlights a specific action linked to <b>${g.primaryValue}</b>, supported by peer submissions and HR/YTLCC review.</p></div>
+        <div class="profile-section"><h4>Impact / Beneficiary</h4><p>${impactLine(g)} The story should be judged on what changed because of the nominee’s behaviour, not how beautifully the nomination was written.</p></div>
+        <div class="profile-section"><h4>HR / YTLCC Validation</h4><p>${g.hrNotes || 'Pending validation note.'}</p></div>
+        <div class="profile-section"><h4>Nomination Evidence</h4><p>Judges can skim the original supporting nominations below if they want more context.</p><div class="story-list">${stories}</div></div>
+        <div class="profile-section"><h4>Scoring Reminder</h4><ul class="rubric-list"><li><b>Value alignment:</b> Does the behaviour clearly reflect the selected BTRT value?</li><li><b>Impact:</b> Who benefited and how meaningful was the outcome?</li><li><b>Role model quality:</b> Is this behaviour worth encouraging across the Group?</li><li><b>Distinctiveness:</b> Does this stand out from normal expected performance?</li></ul></div>`;
       if (g.judge) { document.getElementById('judgeNotes').value = g.judge.note; }
       updateScorePreview();
     }
