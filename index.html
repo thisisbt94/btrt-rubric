@@ -3,76 +3,81 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BTRT Awards 2026 Mock Nomination Platform</title>
+  <title>BTRT Awards 2026 Mock Nomination Portal</title>
+  <meta name="description" content="Mock BTRT Awards nomination, HR review and judges scoring portal for GitHub Pages." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow">YTL Group Internal Recognition Prototype</p>
-      <h1>BTRT Awards 2026 Nomination Platform</h1>
-      <p class="lead">Mock submission flow for peer nominations, company validation, Director endorsement and Judge scoring.</p>
-      <div class="chips">
-        <span>Peer nominated</span>
-        <span>HR / HOD reviewed</span>
-        <span>Director endorsed</span>
-        <span>Judge scored</span>
+  <header class="site-header">
+    <div class="shell header-grid">
+      <div>
+        <p class="eyebrow">YTL Group Internal Recognition Prototype</p>
+        <h1>BTRT Awards 2026 Mock Portal</h1>
+        <p class="lead">A realistic test flow for peer nomination, HR/HOD validation, Director endorsement, Judge login and weighted scoring.</p>
+      </div>
+      <div class="login-card" id="loginCard">
+        <div class="login-status">
+          <span class="status-dot"></span>
+          <span id="activeRoleLabel">Employee View</span>
+        </div>
+        <button class="btn ghost" type="button" data-open-login>Switch role / Judge login</button>
+        <p class="tiny">Demo login only. Not secure for real confidential data.</p>
       </div>
     </div>
   </header>
 
   <main class="shell">
-    <section class="notice">
-      <strong>Mock test mode:</strong> Submissions are saved in this browser using localStorage. This is suitable for a GitHub Pages demo, but not for real confidential employee data.
+    <section class="process-strip" aria-label="Process overview">
+      <div><strong>1</strong><span>Peer Nomination</span></div>
+      <div><strong>2</strong><span>HR / HOD Review</span></div>
+      <div><strong>3</strong><span>Director Endorsement</span></div>
+      <div><strong>4</strong><span>20 Finalists</span></div>
+      <div><strong>5</strong><span>Judges Score</span></div>
     </section>
 
-    <nav class="tabs" aria-label="BTRT mock platform sections">
-      <button class="tab active" data-tab="employee">1. Peer Nomination</button>
-      <button class="tab" data-tab="company">2. Company Submission</button>
-      <button class="tab" data-tab="dashboard">3. HR / HOD Dashboard</button>
-      <button class="tab" data-tab="judges">4. Judges Pack</button>
-      <button class="tab" data-tab="guide">5. Briefing Notes</button>
+    <nav class="tabs" aria-label="Portal sections">
+      <button class="tab active" data-tab="peer">Peer Nomination</button>
+      <button class="tab" data-tab="company">Company Submission</button>
+      <button class="tab locked" data-tab="hr" data-requires="hr">HR / HOD Dashboard</button>
+      <button class="tab locked" data-tab="judges" data-requires="judge">Judges Portal</button>
+      <button class="tab locked" data-tab="admin" data-requires="admin">Admin / Export</button>
     </nav>
 
-    <section id="employee" class="panel active">
-      <div class="grid two">
+    <section class="panel active" id="peer">
+      <div class="two-col">
         <div>
-          <p class="section-label">Employee-facing form</p>
-          <h2>Nominate a colleague who brought BTRT values to life</h2>
-          <p>This form is intentionally simple. Peer nominations provide the first story and signal, then HR / HOD validates the nomination before any finalist goes to Group judging.</p>
+          <p class="eyebrow">Employee-facing form</p>
+          <h2>Nominate someone who brought BTRT values to life</h2>
+          <p>Keep it simple. Share a real example. Nominations are reviewed by HR/HODs and Directors before they are passed to Judges.</p>
+          <div class="notice soft"><strong>Positioning:</strong> This is peer-nominated and peer-reviewed, but finalists are validated internally. It is not a popularity vote.</div>
         </div>
-        <div class="process-card">
-          <h3>What happens after submission?</h3>
-          <ol>
-            <li>HR / HOD reviews the peer nomination.</li>
-            <li>Company validates evidence and decides whether to endorse.</li>
-            <li>Shortlisted official submissions go to the Judges Pack.</li>
-          </ol>
+        <div class="metric-card">
+          <span id="peerCount">0</span>
+          <p>peer nominations captured in this browser</p>
         </div>
       </div>
 
-      <form id="peerForm" class="card form-card">
-        <div class="form-grid">
-          <label>Your name <input required name="nominatorName" placeholder="Full name" /></label>
-          <label>Your email <input required type="email" name="nominatorEmail" placeholder="name@company.com" /></label>
-          <label>Nominee full name <input required name="nomineeName" placeholder="Who are you nominating?" /></label>
-          <label>Nominee email <input type="email" name="nomineeEmail" placeholder="name@company.com" /></label>
-          <label>Nominee company / department <input required name="companyDept" placeholder="e.g. YTL Cement, Group HR, YTL Hotels" /></label>
+      <form id="peerForm" class="form-card">
+        <h3>Peer Nomination Form</h3>
+        <div class="grid-2">
+          <label>Your name<input required name="nominatorName" autocomplete="name" placeholder="e.g. Asha Lee" /></label>
+          <label>Your work email<input required name="nominatorEmail" type="email" autocomplete="email" placeholder="name@company.com" /></label>
+          <label>Your company / business unit<input required name="nominatorCompany" placeholder="e.g. YTL Power, YTL Cement" /></label>
           <label>Your relationship to nominee
             <select required name="relationship">
               <option value="">Select one</option>
-              <option>Direct Manager</option>
-              <option>HOD / Functional Head</option>
-              <option>Team Member</option>
-              <option>Colleague from another team</option>
-              <option>Project Stakeholder</option>
+              <option>Direct Manager</option><option>Functional Head</option><option>Team Member</option><option>Peer / Colleague</option><option>Cross-functional Partner</option><option>Other</option>
             </select>
           </label>
+          <label>Nominee full name<input required name="nomineeName" placeholder="Full name" /></label>
+          <label>Nominee work email<input required name="nomineeEmail" type="email" placeholder="nominee@company.com" /></label>
+          <label>Nominee company / business unit<input required name="nomineeCompany" placeholder="e.g. YTL Hotels" /></label>
+          <label>Nominee department / function<input required name="nomineeDepartment" placeholder="e.g. Finance, Operations, Brand" /></label>
         </div>
 
         <fieldset>
           <legend>YTL Core Value(s) demonstrated</legend>
-          <div class="checks">
+          <div class="check-grid">
             <label><input type="checkbox" name="values" value="Hard Work" /> Hard Work</label>
             <label><input type="checkbox" name="values" value="Honesty" /> Honesty</label>
             <label><input type="checkbox" name="values" value="Moral Responsibility" /> Moral Responsibility</label>
@@ -81,234 +86,260 @@
           </div>
         </fieldset>
 
-        <label>What did they do? Give one real example.
-          <textarea required name="story" rows="7" data-counter="peerStoryCount" placeholder="Example: During a critical project period, the nominee noticed..., took action by..., and the result was..."></textarea>
-          <small><span id="peerStoryCount">0</span> characters. Strong nominations usually include Situation, Task, Action and Result.</small>
-        </label>
-
-        <label>Who benefited from this action?
-          <input name="benefit" placeholder="e.g. team, customer, department, community, company" />
-        </label>
-
-        <div class="actions">
-          <button type="submit">Submit peer nomination</button>
-          <button type="button" class="secondary" id="loadExamplePeer">Load example</button>
-        </div>
-      </form>
-    </section>
-
-    <section id="company" class="panel">
-      <div class="section-head">
-        <div>
-          <p class="section-label">Official company package</p>
-          <h2>Company Submission Form</h2>
-          <p>Use this to simulate the formal HR / HOD / Director validated package before it goes to Group judging.</p>
-        </div>
-        <button class="secondary" id="prefillFromPeer">Prefill from latest peer nomination</button>
-      </div>
-
-      <form id="companyForm" class="card form-card official">
-        <div class="part-title">Part A: Company Details</div>
-        <div class="form-grid">
-          <label>Company / Business Unit <input required name="company" placeholder="e.g. YTL Power, YTL Cement, Wessex Water, YTL Hotels" /></label>
-          <label>Submission Date <input required type="date" name="submissionDate" /></label>
-          <label>Submitted by — Director Name <input required name="directorName" placeholder="Full name of approving Director" /></label>
-          <label>Director Designation <input required name="directorDesignation" /></label>
-          <label>HR / Comms PIC <input required name="pic" placeholder="Name and email of coordinating PIC" /></label>
+        <div class="star-box">
+          <h4>S.T.A.R. Evidence</h4>
+          <label>S — Situation<textarea required name="situation" rows="3" placeholder="Describe the context, challenge or opportunity."></textarea></label>
+          <label>T — Task<textarea required name="task" rows="3" placeholder="What was the nominee responsible for or trying to achieve?"></textarea></label>
+          <label>A — Action<textarea required name="action" rows="4" placeholder="What did the nominee specifically do? Describe individual contribution and approach."></textarea></label>
+          <label>R — Result<textarea required name="result" rows="4" placeholder="What was the measurable outcome or impact? Include data or specific evidence where possible."></textarea></label>
         </div>
 
-        <div class="part-title">Part B: Nominee Details</div>
-        <div class="form-grid">
-          <label>Full Name <input required name="nomineeName" /></label>
-          <label>Employee ID <input name="employeeId" /></label>
-          <label>Designation / Job Title <input required name="jobTitle" /></label>
-          <label>Department / Function <input required name="department" /></label>
-          <label>Years with YTL Group <input type="number" min="0" max="60" name="years" /></label>
-          <label>Direct Reporting Manager <input name="manager" /></label>
-          <label>Work Location / Country <input name="location" /></label>
-        </div>
-
-        <div class="part-title">Part C: Nominator & Endorsement</div>
-        <div class="form-grid">
-          <label>Nominated by — HOD / Manager <input required name="hodName" placeholder="Full name of nominating HOD or Manager" /></label>
-          <label>Nominator Designation <input required name="hodDesignation" /></label>
-          <label>Relationship to Nominee <input required name="relationship" placeholder="e.g. Direct Manager, Functional Head" /></label>
-          <label>Date of Internal Nomination <input type="date" name="internalDate" /></label>
-          <label>Director Approval Confirmed?
-            <select required name="directorApproval">
+        <div class="grid-2">
+          <label>Who benefited from this action?
+            <select required name="impactArea">
               <option value="">Select one</option>
-              <option>Yes</option>
-              <option>No</option>
+              <option>Customers / Residents / Community</option><option>Team / Department</option><option>Company / Business Unit</option><option>YTL Group</option><option>External Partners</option>
+            </select>
+          </label>
+          <label>Evidence strength
+            <select required name="evidenceStrength">
+              <option value="">Select one</option>
+              <option>Specific story only</option><option>Has manager validation</option><option>Has data / report / KPI evidence</option><option>Has media / customer / stakeholder evidence</option>
             </select>
           </label>
         </div>
 
-        <div class="part-title">Part D: Values Demonstration — S.T.A.R. Evidence</div>
-        <p class="hint">Provide at least one S.T.A.R. evidence. A second evidence can demonstrate a different context.</p>
+        <label class="consent"><input required type="checkbox" name="truthCheck" /> I confirm this nomination is submitted in good faith and may be reviewed by HR/HODs/Directors.</label>
 
-        <div class="evidence-block">
-          <h3>Evidence 1</h3>
-          <fieldset>
-            <legend>YTL Core Value(s)</legend>
-            <div class="checks">
-              <label><input type="checkbox" name="values1" value="Hard Work" /> Hard Work</label>
-              <label><input type="checkbox" name="values1" value="Honesty" /> Honesty</label>
-              <label><input type="checkbox" name="values1" value="Moral Responsibility" /> Moral Responsibility</label>
-              <label><input type="checkbox" name="values1" value="Togetherness" /> Togetherness</label>
-              <label><input type="checkbox" name="values1" value="Vitality" /> Vitality</label>
-            </div>
-          </fieldset>
-          <label>S — Situation <textarea required rows="4" name="situation1" placeholder="Describe the context, challenge, or opportunity."></textarea></label>
-          <label>T — Task <textarea required rows="3" name="task1" placeholder="What was the nominee responsible for?"></textarea></label>
-          <label>A — Action <textarea required rows="5" name="action1" placeholder="What did the nominee specifically do? Describe individual contribution and approach."></textarea></label>
-          <label>R — Result <textarea required rows="5" name="result1" placeholder="What was the measurable outcome or impact? Include data or specific evidence where possible."></textarea></label>
-        </div>
-
-        <div class="evidence-block muted-block">
-          <h3>Evidence 2 <span>(Optional)</span></h3>
-          <fieldset>
-            <legend>YTL Core Value(s)</legend>
-            <div class="checks">
-              <label><input type="checkbox" name="values2" value="Hard Work" /> Hard Work</label>
-              <label><input type="checkbox" name="values2" value="Honesty" /> Honesty</label>
-              <label><input type="checkbox" name="values2" value="Moral Responsibility" /> Moral Responsibility</label>
-              <label><input type="checkbox" name="values2" value="Togetherness" /> Togetherness</label>
-              <label><input type="checkbox" name="values2" value="Vitality" /> Vitality</label>
-            </div>
-          </fieldset>
-          <label>S — Situation <textarea rows="3" name="situation2"></textarea></label>
-          <label>T — Task <textarea rows="3" name="task2"></textarea></label>
-          <label>A — Action <textarea rows="4" name="action2"></textarea></label>
-          <label>R — Result <textarea rows="4" name="result2"></textarea></label>
-        </div>
-
-        <div class="part-title">Part E: Company Assessment</div>
-        <div class="score-table-wrap">
-          <table class="score-table">
-            <thead><tr><th>Criteria</th><th>Weight</th><th>Your Rating (1–5)</th><th>Brief Justification</th></tr></thead>
-            <tbody id="assessmentRows"></tbody>
-            <tfoot><tr><th>Estimated Total Score</th><th>100%</th><th id="companyWeightedScore">0</th><th>Sum of rating × weight</th></tr></tfoot>
-          </table>
-        </div>
-
-        <div class="part-title">Part F: Supporting Documents Checklist</div>
-        <div class="checks vertical">
-          <label><input type="checkbox" name="docs" value="Completed nomination form" /> Completed nomination form</label>
-          <label><input type="checkbox" name="docs" value="Peer nomination letters or endorsements" /> Peer nomination letters or endorsements</label>
-          <label><input type="checkbox" name="docs" value="Performance appraisal excerpts or KPI evidence" /> Relevant performance appraisal excerpts or KPI evidence</label>
-          <label><input type="checkbox" name="docs" value="Project reports or data outputs" /> Supporting evidence referenced in S.T.A.R. examples</label>
-          <label><input type="checkbox" name="docs" value="Media coverage or communications material" /> Media coverage, internal recognition, or supporting material</label>
-          <label><input type="checkbox" name="docs" value="Director written endorsement" /> Director's written endorsement</label>
-        </div>
-        <label>Mock attachment notes <textarea rows="3" name="attachmentNotes" placeholder="For demo only: list file names or evidence notes. Real upload can be added later with Forms/SharePoint/backend."></textarea></label>
-
-        <div class="actions sticky-actions">
-          <button type="submit">Submit official package</button>
-          <button type="button" class="secondary" id="loadExampleCompany">Load full example</button>
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Submit peer nomination</button>
+          <button class="btn ghost" type="button" id="fillPeerExample">Fill sample</button>
         </div>
       </form>
     </section>
 
-    <section id="dashboard" class="panel">
+    <section class="panel" id="company">
       <div class="section-head">
         <div>
-          <p class="section-label">Reviewer workspace</p>
-          <h2>HR / HOD Review Dashboard</h2>
-          <p>Grouped by nominee so it does not become a popularity contest. Review status, shortlist and export test data.</p>
+          <p class="eyebrow">Internal company package</p>
+          <h2>Company Submission Form</h2>
+          <p>This mirrors the attached nomination package: Company Details, Nominee Details, Nominator/Endorsement, S.T.A.R. Evidence, Company Assessment and checklist.</p>
         </div>
-        <div class="actions">
-          <button class="secondary" id="exportJson">Export JSON</button>
-          <button class="secondary" id="exportCsv">Export CSV</button>
-          <button class="danger" id="resetData">Reset demo data</button>
+        <button class="btn ghost" id="loadFromPeer" type="button">Load latest peer nomination</button>
+      </div>
+
+      <form id="companyForm" class="form-card dense">
+        <h3>Part A: Company Details</h3>
+        <div class="grid-2">
+          <label>Company / Business Unit<input required name="companyUnit" placeholder="e.g. YTL Power, Wessex Water, YTL Hotels" /></label>
+          <label>Submission Date<input required name="submissionDate" type="date" /></label>
+          <label>Submitted by — Director Name<input required name="directorName" placeholder="Full name of approving Director" /></label>
+          <label>Director Designation<input required name="directorDesignation" /></label>
+          <label>HR / Comms PIC<input required name="hrCommsPic" placeholder="Name and email of coordinating PIC" /></label>
+          <label>Director approval confirmed?
+            <select required name="directorApproval"><option value="">Select</option><option>Yes</option><option>No</option><option>Pending</option></select>
+          </label>
         </div>
-      </div>
 
-      <div class="filters card">
-        <input id="searchBox" placeholder="Search nominee, company, value..." />
-        <select id="statusFilter">
-          <option value="">All statuses</option>
-          <option>Peer Submitted</option>
-          <option>Needs Detail</option>
-          <option>Validated</option>
-          <option>Shortlisted</option>
-          <option>Finalist</option>
-          <option>Not Selected</option>
-        </select>
-      </div>
+        <h3>Part B: Nominee Details</h3>
+        <div class="grid-2">
+          <label>Full Name<input required name="fullName" /></label>
+          <label>Employee ID<input name="employeeId" /></label>
+          <label>Designation / Job Title<input required name="jobTitle" /></label>
+          <label>Department / Function<input required name="department" /></label>
+          <label>Years with YTL Group<input name="yearsWithYtl" type="number" min="0" step="0.5" /></label>
+          <label>Direct Reporting Manager<input name="reportingManager" /></label>
+          <label>Work Location / Country<input name="workLocation" /></label>
+          <label>Nominee Email<input required name="nomineeEmail" type="email" /></label>
+        </div>
 
-      <div class="table-wrap card">
-        <table>
-          <thead><tr><th>ID</th><th>Nominee</th><th>Company / Dept</th><th>Values</th><th>Type</th><th>Score</th><th>HR Status</th><th>Actions</th></tr></thead>
-          <tbody id="dashboardRows"></tbody>
-        </table>
-      </div>
+        <h3>Part C: Nominator & Endorsement</h3>
+        <div class="grid-2">
+          <label>Nominated by — HOD / Manager<input required name="nominatedBy" /></label>
+          <label>Nominator Designation<input required name="nominatorDesignation" /></label>
+          <label>Relationship to Nominee<input required name="relationshipToNominee" placeholder="e.g. Direct Manager, Functional Head" /></label>
+          <label>Date of Internal Nomination<input required name="internalNominationDate" type="date" /></label>
+        </div>
 
-      <div id="reviewPanel" class="review-panel card hidden"></div>
+        <h3>Part D: Values Demonstration — S.T.A.R. Evidence</h3>
+        <div class="star-box">
+          <fieldset>
+            <legend>Evidence 1 — YTL Core Value(s)</legend>
+            <div class="check-grid">
+              <label><input type="checkbox" name="coreValues1" value="Hard Work" /> Hard Work</label>
+              <label><input type="checkbox" name="coreValues1" value="Honesty" /> Honesty</label>
+              <label><input type="checkbox" name="coreValues1" value="Moral Responsibility" /> Moral Responsibility</label>
+              <label><input type="checkbox" name="coreValues1" value="Togetherness" /> Togetherness</label>
+              <label><input type="checkbox" name="coreValues1" value="Vitality" /> Vitality</label>
+            </div>
+          </fieldset>
+          <label>S — Situation<textarea required name="situation1" rows="3"></textarea></label>
+          <label>T — Task<textarea required name="task1" rows="3"></textarea></label>
+          <label>A — Action<textarea required name="action1" rows="4"></textarea></label>
+          <label>R — Result<textarea required name="result1" rows="4"></textarea></label>
+        </div>
+
+        <details class="optional-block">
+          <summary>Evidence 2 Optional</summary>
+          <fieldset>
+            <legend>Evidence 2 — YTL Core Value(s)</legend>
+            <div class="check-grid">
+              <label><input type="checkbox" name="coreValues2" value="Hard Work" /> Hard Work</label>
+              <label><input type="checkbox" name="coreValues2" value="Honesty" /> Honesty</label>
+              <label><input type="checkbox" name="coreValues2" value="Moral Responsibility" /> Moral Responsibility</label>
+              <label><input type="checkbox" name="coreValues2" value="Togetherness" /> Togetherness</label>
+              <label><input type="checkbox" name="coreValues2" value="Vitality" /> Vitality</label>
+            </div>
+          </fieldset>
+          <label>S — Situation<textarea name="situation2" rows="3"></textarea></label>
+          <label>T — Task<textarea name="task2" rows="3"></textarea></label>
+          <label>A — Action<textarea name="action2" rows="4"></textarea></label>
+          <label>R — Result<textarea name="result2" rows="4"></textarea></label>
+        </details>
+
+        <h3>Part E: Company Assessment</h3>
+        <div class="rubric-table-wrap">
+          <table class="rubric-table">
+            <thead><tr><th>Criteria</th><th>Weight</th><th>Your Rating (1–5)</th><th>Brief Justification</th></tr></thead>
+            <tbody>
+              <tr><td>Values Demonstration</td><td>40%</td><td><input required type="number" min="1" max="5" name="rateValues" /></td><td><input required name="justValues" /></td></tr>
+              <tr><td>Impact (Business + People)</td><td>30%</td><td><input required type="number" min="1" max="5" name="rateImpact" /></td><td><input required name="justImpact" /></td></tr>
+              <tr><td>Scale & Influence</td><td>10%</td><td><input required type="number" min="1" max="5" name="rateScale" /></td><td><input required name="justScale" /></td></tr>
+              <tr><td>Difficulty & Context</td><td>10%</td><td><input required type="number" min="1" max="5" name="rateDifficulty" /></td><td><input required name="justDifficulty" /></td></tr>
+              <tr><td>Story & Replicability</td><td>10%</td><td><input required type="number" min="1" max="5" name="rateStory" /></td><td><input required name="justStory" /></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="score-line">Estimated Total Score: <strong id="companyScorePreview">0</strong> / 100</p>
+
+        <h3>Part F: Supporting Documents Checklist</h3>
+        <div class="check-grid wide">
+          <label><input type="checkbox" name="supporting" value="Completed nomination form" /> Completed nomination form</label>
+          <label><input type="checkbox" name="supporting" value="Peer nomination letters or endorsements" /> Peer nomination letters or endorsements</label>
+          <label><input type="checkbox" name="supporting" value="Relevant appraisal excerpts or KPI evidence" /> Relevant appraisal excerpts or KPI evidence</label>
+          <label><input type="checkbox" name="supporting" value="Project reports or data outputs" /> Project reports or data outputs</label>
+          <label><input type="checkbox" name="supporting" value="Media coverage or internal recognition" /> Media coverage or internal recognition</label>
+          <label><input type="checkbox" name="supporting" value="Director written endorsement" /> Director written endorsement</label>
+        </div>
+        <label>Supporting document notes / links<textarea name="supportingNotes" rows="3" placeholder="Paste links or describe files. Mock only; no upload storage."></textarea></label>
+
+        <div class="form-actions">
+          <button class="btn primary" type="submit">Submit company package</button>
+          <button class="btn ghost" type="button" id="fillCompanyExample">Fill company sample</button>
+        </div>
+      </form>
     </section>
 
-    <section id="judges" class="panel">
+    <section class="panel" id="hr">
       <div class="section-head">
         <div>
-          <p class="section-label">Director-level judging</p>
-          <h2>Judges Pack</h2>
-          <p>Judges only review confirmed finalists. Scores are saved locally for the mock test.</p>
+          <p class="eyebrow">Restricted demo area</p>
+          <h2>HR / HOD Review Dashboard</h2>
+          <p>Validate nominations, add notes, update status and mark Director endorsement. Only finalists appear in the Judges Portal.</p>
         </div>
-        <button class="secondary" onclick="window.print()">Print Judges Pack</button>
+        <div class="toolbar">
+          <input id="hrSearch" placeholder="Search nominee / company" />
+          <select id="hrStatusFilter"><option value="">All statuses</option><option>Submitted</option><option>Needs Detail</option><option>Validated</option><option>Shortlisted</option><option>Finalist</option><option>Not Selected</option></select>
+        </div>
+      </div>
+      <div class="table-card"><table id="hrTable"><thead><tr><th>Nominee</th><th>Company</th><th>Values</th><th>Score</th><th>Status</th><th>Director</th><th>HR Notes</th><th>Action</th></tr></thead><tbody></tbody></table></div>
+      <div id="hrEmpty" class="empty">No company packages yet. Submit one from the Company Submission tab.</div>
+    </section>
+
+    <section class="panel" id="judges">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Judge login required</p>
+          <h2>Judges Portal</h2>
+          <p>Judges only see HR/HOD and Director-endorsed finalists. Score each finalist using the weighted criteria.</p>
+        </div>
+        <div class="judge-badge" id="judgeBadge">Not logged in as judge</div>
       </div>
 
-      <div class="grid two">
-        <div class="card">
-          <label>Select finalist
-            <select id="judgeSelect"></select>
-          </label>
-          <div id="judgeDossier" class="dossier"></div>
+      <div class="grid-2 judges-layout">
+        <div class="form-card">
+          <h3>Finalist Dossier</h3>
+          <label>Select finalist<select id="finalistSelect"></select></label>
+          <article id="dossier" class="dossier empty">No finalist selected.</article>
         </div>
-        <form id="judgeForm" class="card form-card">
+        <form id="judgeScoreForm" class="form-card">
           <h3>Judge Scorecard</h3>
-          <div id="judgeScoreRows"></div>
-          <label>Judge notes <textarea rows="5" name="judgeNotes" placeholder="What makes this finalist stand out?"></textarea></label>
-          <div class="score-preview">Weighted score preview: <strong id="judgeScorePreview">0</strong></div>
-          <button type="submit">Submit judge score</button>
+          <input type="hidden" name="packageId" />
+          <div class="rubric-mini">
+            <label>Values Demonstration <span>40%</span><input required type="range" min="1" max="5" value="3" name="judgeValues" /><b>3</b></label>
+            <label>Impact (Business + People) <span>30%</span><input required type="range" min="1" max="5" value="3" name="judgeImpact" /><b>3</b></label>
+            <label>Scale & Influence <span>10%</span><input required type="range" min="1" max="5" value="3" name="judgeScale" /><b>3</b></label>
+            <label>Difficulty & Context <span>10%</span><input required type="range" min="1" max="5" value="3" name="judgeDifficulty" /><b>3</b></label>
+            <label>Story & Replicability <span>10%</span><input required type="range" min="1" max="5" value="3" name="judgeStory" /><b>3</b></label>
+          </div>
+          <label>Judge notes<textarea required name="judgeNotes" rows="4" placeholder="Reason for score, strengths, concerns."></textarea></label>
+          <p class="score-line">Weighted score preview: <strong id="judgeScorePreview">60</strong> / 100</p>
+          <button class="btn primary" type="submit">Submit judge score</button>
         </form>
       </div>
 
-      <div class="table-wrap card">
-        <h3>Finalist Comparison</h3>
-        <table>
-          <thead><tr><th>Rank</th><th>Finalist</th><th>Value(s)</th><th>Evidence Snapshot</th><th>Company Score</th><th>Judge Score</th><th>Judge Note</th></tr></thead>
-          <tbody id="finalistRows"></tbody>
-        </table>
+      <div class="table-card">
+        <h3>Finalist Ranking</h3>
+        <table id="rankingTable"><thead><tr><th>Rank</th><th>Finalist</th><th>Company</th><th>Values</th><th>HR Score</th><th>Judge Avg</th><th>No. of Judges</th></tr></thead><tbody></tbody></table>
       </div>
     </section>
 
-    <section id="guide" class="panel">
-      <div class="card guide">
-        <h2>Briefing Notes for Mock Test</h2>
-        <div class="info-grid">
-          <div><strong>Nomination period</strong><span>1 July – 15 September 2026</span></div>
-          <div><strong>Submission deadline</strong><span>16 September 2026</span></div>
-          <div><strong>Finalists to Judges</strong><span>20 shortlisted names</span></div>
-          <div><strong>Platform</strong><span>To be confirmed</span></div>
+    <section class="panel" id="admin">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Mock admin</p>
+          <h2>Admin / Export / Backend Settings</h2>
+          <p>For GitHub Pages, this mock stores data in browser localStorage. Use export/import for testing or connect a webhook for a real backend later.</p>
         </div>
-        <h3>Other Sources: Peer Nominations via Monday Memo</h3>
-        <p>Peer nominations collected Group-wide are supporting evidence for HR / HOD review. They do not automatically proceed to Group judging unless validated and endorsed by the relevant HOD and Director.</p>
-        <h3>Key Deliverables from Companies</h3>
-        <table>
-          <thead><tr><th>What</th><th>Who</th><th>By When</th><th>Format</th></tr></thead>
-          <tbody>
-            <tr><td>Register Company HR/Comms PIC</td><td>HR / Comms Lead</td><td>30 Jun 2026</td><td>Email confirmation to YTLCC PIC</td></tr>
-            <tr><td>Run internal nomination campaign</td><td>HR / Comms + HODs</td><td>1 Jul – 15 Aug</td><td>Per company's own process</td></tr>
-            <tr><td>Complete evidence documentation and scoring</td><td>HOD / Manager</td><td>16 Aug – 15 Sep</td><td>Using BTRT rubric</td></tr>
-            <tr><td>Review peer nominations from Monday Memo</td><td>HR / Comms</td><td>As received</td><td>Shared by YTLCC</td></tr>
-            <tr><td>Obtain Director endorsement</td><td>HR / Comms</td><td>By 15 Sep 2026</td><td>Written endorsement / form sign-off</td></tr>
-            <tr><td>Submit completed nomination package</td><td>HR / Comms</td><td>16 Sep 2026</td><td>Via centralised nomination platform</td></tr>
-          </tbody>
-        </table>
+      </div>
+      <div class="grid-2">
+        <div class="form-card">
+          <h3>Export data</h3>
+          <p>Download mock data for your presentation or test pack.</p>
+          <div class="form-actions stack">
+            <button class="btn primary" type="button" id="exportJson">Export JSON</button>
+            <button class="btn ghost" type="button" id="exportCsv">Export CSV</button>
+            <button class="btn primary" type="button" id="loadDemoData">Load 6 demo nominations</button>
+            <button class="btn danger" type="button" id="resetData">Reset demo data</button>
+          </div>
+        </div>
+        <div class="form-card">
+          <h3>Optional backend webhook</h3>
+          <p class="tiny">Paste a Formspree, Make, n8n, Google Apps Script or Supabase Edge Function endpoint. The mock will attempt to POST submissions there as well as save locally.</p>
+          <label>Webhook URL<input id="webhookUrl" placeholder="https://..." /></label>
+          <button class="btn ghost" type="button" id="saveWebhook">Save webhook URL</button>
+          <p class="tiny">Real login should be done with Microsoft Entra ID / SSO, not this mock passcode.</p>
+        </div>
+      </div>
+      <div class="form-card">
+        <h3>Import JSON</h3>
+        <textarea id="importBox" rows="8" placeholder="Paste exported JSON here"></textarea>
+        <button class="btn ghost" id="importJson" type="button">Import</button>
       </div>
     </section>
   </main>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="loginDialog" class="login-dialog">
+    <form method="dialog" id="loginForm">
+      <button class="close" value="cancel" aria-label="Close">×</button>
+      <h2>Role login</h2>
+      <p>This is a demo gate for mock testing, not real security.</p>
+      <label>Role
+        <select name="role" required>
+          <option value="employee">Employee / Peer Nominator</option>
+          <option value="hr">HR / HOD / YTLCC PIC</option>
+          <option value="judge">Judge</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+      <label>Display name<input name="displayName" placeholder="e.g. Judge 01" /></label>
+      <label>Passcode<input name="passcode" type="password" placeholder="Required for HR, Judge and Admin" /></label>
+      <div class="notice"><strong>Demo passcodes:</strong> HR2026, JUDGE2026, ADMIN2026</div>
+      <div class="form-actions"><button class="btn primary" value="default" type="submit">Enter portal</button><button class="btn ghost" value="cancel">Cancel</button></div>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast"></div>
   <script src="script.js"></script>
 </body>
 </html>
