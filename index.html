@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BTRT Awards 2026 Nomination Portal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div>
+        <p class="eyebrow">YTL Group Internal Recognition Prototype</p>
+        <h1>BTRT Awards 2026 Nomination Portal</h1>
+        <p class="lead">A realistic GitHub Pages mock for peer nomination, HR/HOD validation, Director endorsement, finalist shortlisting and Judge scoring.</p>
+      </div>
+      <div class="login-card">
+        <span class="role-badge" id="roleBadge">Employee View</span>
+        <button class="btn primary" id="openLogin">Reviewer / Judge Login</button>
+        <button class="btn ghost hidden" id="logoutBtn">Exit Reviewer Mode</button>
+        <p class="hint">Demo passcode: <strong>BTRT2026</strong></p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="process-card" aria-label="BTRT workflow">
+      <div class="process-step active"><span>1</span><strong>Peer Nomination</strong><small>Employee submits story</small></div>
+      <div class="process-step"><span>2</span><strong>HR / HOD Review</strong><small>Evidence checked</small></div>
+      <div class="process-step"><span>3</span><strong>Director Endorsement</strong><small>Company approval</small></div>
+      <div class="process-step"><span>4</span><strong>Finalist Pack</strong><small>Shortlist prepared</small></div>
+      <div class="process-step"><span>5</span><strong>Judges Score</strong><small>Weighted rubric</small></div>
+    </section>
+
+    <section class="stats-grid" id="statsGrid"></section>
+
+    <nav class="tabs" aria-label="Portal sections">
+      <button class="tab active" data-tab="nominate">Nomination Form</button>
+      <button class="tab protected" data-tab="review">Review Workspace</button>
+      <button class="tab protected" data-tab="judge">Judge Scoring</button>
+      <button class="tab protected" data-tab="reports">Reports / Export</button>
+    </nav>
+
+    <section class="panel active" id="nominate">
+      <div class="section-heading">
+        <p class="eyebrow">Employee-facing form</p>
+        <h2>Nominate someone who brought BTRT values to life</h2>
+        <p>Share a real example. The nomination will be reviewed by HR, HODs and Directors before any finalist is passed to the Judges.</p>
+      </div>
+
+      <div class="notice">
+        <strong>Positioning:</strong> This is peer-nominated and peer-reviewed, but finalists are validated internally. It is not a popularity vote.
+      </div>
+
+      <form id="nominationForm" class="card form-grid">
+        <h3 class="full">Nominator Details</h3>
+        <label>Your full name<input required name="nominatorName" placeholder="e.g. Asha Lee" /></label>
+        <label>Your work email<input required type="email" name="nominatorEmail" placeholder="name@company.com" /></label>
+        <label>Your company / business unit<input required name="nominatorCompany" placeholder="e.g. YTL Power, YTL Cement" /></label>
+        <label>Your relationship to nominee
+          <select required name="relationship">
+            <option value="">Select one</option>
+            <option>Peer / colleague</option>
+            <option>Direct manager</option>
+            <option>HOD / Functional Head</option>
+            <option>Cross-company collaborator</option>
+            <option>Other</option>
+          </select>
+        </label>
+
+        <h3 class="full">Nominee Details</h3>
+        <label>Nominee full name<input required name="nomineeName" placeholder="Full name" /></label>
+        <label>Nominee work email<input name="nomineeEmail" placeholder="nominee@company.com" /></label>
+        <label>Nominee company / business unit<input required name="nomineeCompany" placeholder="e.g. YTL Hotels" /></label>
+        <label>Nominee department / function<input required name="nomineeDepartment" placeholder="e.g. Finance, Operations, Brand" /></label>
+        <label>Nominee designation / job title<input name="jobTitle" placeholder="e.g. Executive, Manager, Engineer" /></label>
+        <label>Work location / country<input name="location" placeholder="e.g. Kuala Lumpur, Malaysia" /></label>
+
+        <fieldset class="full values-box">
+          <legend>YTL Core Value(s) Demonstrated</legend>
+          <label><input type="checkbox" name="values" value="Hard Work" /> <span>Hard Work</span></label>
+          <label><input type="checkbox" name="values" value="Honesty" /> <span>Honesty</span></label>
+          <label><input type="checkbox" name="values" value="Moral Responsibility" /> <span>Moral Responsibility</span></label>
+          <label><input type="checkbox" name="values" value="Togetherness" /> <span>Togetherness</span></label>
+          <label><input type="checkbox" name="values" value="Vitality" /> <span>Vitality</span></label>
+        </fieldset>
+
+        <h3 class="full">S.T.A.R. Evidence</h3>
+        <label class="full">S — Situation<textarea required name="situation" placeholder="Describe the context, challenge or opportunity the nominee faced."></textarea></label>
+        <label class="full">T — Task<textarea required name="task" placeholder="What was the nominee responsible for or trying to achieve?"></textarea></label>
+        <label class="full">A — Action<textarea required name="action" placeholder="What did the nominee specifically do? Describe their individual contribution and approach."></textarea></label>
+        <label class="full">R — Result<textarea required name="result" placeholder="What was the measurable outcome or impact? Include data or specific evidence where possible."></textarea></label>
+
+        <label>Who benefited from this action?
+          <select name="impactScope">
+            <option>Team</option>
+            <option>Department</option>
+            <option>Company / Business Unit</option>
+            <option>Group-wide</option>
+            <option>Customer / Community</option>
+          </select>
+        </label>
+        <label>Evidence strength
+          <select name="evidenceStrength">
+            <option>Clear outcome, some evidence</option>
+            <option>Strong measurable impact</option>
+            <option>Exceptional business and people impact</option>
+            <option>Needs more detail</option>
+          </select>
+        </label>
+        <label class="full">Supporting evidence reference, link or file name<textarea name="evidenceNotes" placeholder="Optional: project report name, campaign link, KPI reference, appraisal excerpt, media coverage, etc."></textarea></label>
+
+        <label class="full consent"><input type="checkbox" required name="consent" /> <span>I confirm this nomination is submitted in good faith and may be reviewed by HR, HODs, Directors and Judges.</span></label>
+
+        <div class="actions full">
+          <button class="btn primary" type="submit">Submit Nomination</button>
+          <button class="btn" type="button" id="fillNominationSample">Fill Sample</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel" id="review">
+      <div class="section-heading">
+        <p class="eyebrow">Reviewer workspace</p>
+        <h2>HR / HOD / Director Review</h2>
+        <p>Use one internal login to validate nominations, complete company assessment, confirm Director endorsement and mark finalists.</p>
+      </div>
+
+      <div class="toolbar card compact">
+        <div>
+          <label>Search nominations<input id="reviewSearch" placeholder="Search nominee, company, values or ID" /></label>
+        </div>
+        <div>
+          <label>Status filter
+            <select id="statusFilter">
+              <option value="all">All statuses</option>
+              <option>Peer Submitted</option>
+              <option>HR / HOD Review</option>
+              <option>More Info Needed</option>
+              <option>Director Endorsed</option>
+              <option>Finalist</option>
+              <option>Not Shortlisted</option>
+            </select>
+          </label>
+        </div>
+        <div class="toolbar-actions">
+          <button class="btn" id="loadDemoData">Load Demo Data</button>
+          <button class="btn danger" id="clearData">Clear Data</button>
+        </div>
+      </div>
+
+      <div id="reviewList" class="cards-list"></div>
+    </section>
+
+    <section class="panel" id="judge">
+      <div class="section-heading">
+        <p class="eyebrow">Judge scoring area</p>
+        <h2>Finalist Judging</h2>
+        <p>Only nominations marked as <strong>Finalist</strong> appear here. Scores are weighted based on the company assessment criteria.</p>
+      </div>
+
+      <div class="card compact judge-intro">
+        <label>Judge name for this demo<input id="judgeName" placeholder="e.g. Judge 01" /></label>
+        <p class="hint">In a real version, this would be tied to SSO. In this mock, the name lets you test multiple judge score records.</p>
+      </div>
+
+      <div id="judgeList" class="cards-list"></div>
+
+      <div class="card">
+        <h3>Current Finalist Ranking</h3>
+        <div class="table-wrap">
+          <table id="rankingTable">
+            <thead><tr><th>Rank</th><th>Nominee</th><th>Company</th><th>Status</th><th>Average Judge Score</th><th>Score Count</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="reports">
+      <div class="section-heading">
+        <p class="eyebrow">Admin mock</p>
+        <h2>Reports, Export and Backend Placeholder</h2>
+        <p>GitHub Pages is static, so this mock saves data in the browser. Export the data for tomorrow’s test, or connect a backend later.</p>
+      </div>
+
+      <div class="report-grid">
+        <div class="card">
+          <h3>Mock backend options</h3>
+          <label>Future webhook URL<input id="webhookUrl" placeholder="Optional: n8n / Power Automate / Supabase endpoint" /></label>
+          <p class="hint">For the real build, this should be Microsoft SSO + SharePoint List / Dataverse / Supabase / n8n backend. The prototype below keeps working without it.</p>
+        </div>
+        <div class="card">
+          <h3>Export</h3>
+          <div class="actions stacked">
+            <button class="btn primary" id="exportJson">Download JSON</button>
+            <button class="btn" id="exportCsv">Download CSV</button>
+            <button class="btn" id="copyJudgePack">Copy Finalist Judge Pack</button>
+          </div>
+        </div>
+      </div>
+
+      <pre id="adminPreview" class="preview"></pre>
+    </section>
+  </main>
+
+  <dialog id="loginDialog">
+    <form method="dialog" class="login-modal">
+      <h2>Reviewer / Judge Login</h2>
+      <p class="muted">One demo login unlocks the review workspace, judge scoring and exports.</p>
+      <label>Passcode<input id="loginCode" placeholder="BTRT2026" /></label>
+      <div class="actions">
+        <button class="btn" value="cancel">Cancel</button>
+        <button class="btn primary" id="loginSubmit" value="default">Login</button>
+      </div>
+      <p class="hint">Mock login only. Do not use confidential employee data on GitHub Pages.</p>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
